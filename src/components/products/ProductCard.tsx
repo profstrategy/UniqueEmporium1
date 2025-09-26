@@ -225,12 +225,12 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
           {/* Mobile "Add to Cart" and "Compare" Buttons */}
           <div className="md:hidden absolute bottom-2 left-2 z-10">
-            <Button variant="secondary" size="icon" className="h-8 w-8">
+            <Button variant="secondary" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
               <ShoppingCart className="h-4 w-4" />
             </Button>
           </div>
           <div className="md:hidden absolute bottom-2 right-2 z-10">
-            <Button variant="secondary" size="icon" className="h-8 w-8">
+            <Button variant="secondary" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
               <Scale className="h-4 w-4" />
             </Button>
           </div>
