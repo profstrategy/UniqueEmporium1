@@ -272,21 +272,19 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
         {product.specs && product.specs.length > 0 && (
           <div
             ref={specsScrollRef} // Attach ref here
-            className="flex overflow-x-auto no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0 space-x-2"
+            className="flex overflow-x-auto no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0 space-x-2" // Added space-x-2 for gap between spec cards
           >
             {product.specs.map((spec, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="flex-shrink-0 min-w-[100px] border rounded-md bg-background p-2 flex items-center cursor-pointer transition-all duration-200"
-                whileHover={{ scale: 1.03, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
-                whileTap={{ scale: 0.98 }}
+                className="flex-shrink-0 min-w-[100px] border rounded-md bg-background p-2 flex items-center" // Added card-like styling
               >
                 <spec.icon className="w-4 h-4 text-primary mr-1" />
                 <div>
                   <p className="text-xs text-muted-foreground leading-none">{spec.label}</p>
                   <p className="text-xs font-medium text-foreground leading-none">{spec.value}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}
