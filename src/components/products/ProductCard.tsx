@@ -222,15 +222,15 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </div>
         </CardContent>
 
-        {/* Horizontal Scrolling Specifications Section */}
+        {/* Full Essential Specifications Section */}
         {product.specs && product.specs.length > 0 && (
-          <div className="flex overflow-x-auto no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-1 rounded-b-lg border-t border-border bg-muted/50 py-3 px-3 flex-shrink-0">
             {product.specs.map((spec, index) => (
-              <div key={index} className="flex-shrink-0 min-w-[100px] py-1 px-2 flex items-center">
-                <spec.icon className="w-4 h-4 text-primary mr-1" />
+              <div key={index} className="flex items-center">
+                <spec.icon className="w-3 h-3 text-primary mr-1 flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-muted-foreground leading-none">{spec.label}</p>
-                  <p className="text-xs font-medium text-foreground leading-none">{spec.value}</p>
+                  <p className="text-[0.6rem] text-muted-foreground leading-none">{spec.label}</p>
+                  <p className="text-[0.65rem] font-medium text-foreground leading-none">{spec.value}</p>
                 </div>
               </div>
             ))}
