@@ -1,17 +1,21 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+"use client";
 
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import HeroCarousel from "@/components/hero-carousel/HeroCarousel";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">
-          Start building your amazing project here!
-        </p>
-      </div>
-      <MadeWithDyad />
+    <div className="relative min-h-screen w-full">
+      <HeroCarousel />
+      {/* Placeholder for the "Featured Products" section that the CTA button scrolls to */}
+      <section id="featured-products" className="min-h-screen bg-gray-50 p-8">
+        <div className="mx-auto max-w-7xl text-center">
+          <h2 className="text-4xl font-bold text-gray-800">Featured Products</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Explore our latest and greatest offerings.
+          </p>
+          {/* Add your product cards or other content here */}
+        </div>
+      </section>
     </div>
   );
 };
