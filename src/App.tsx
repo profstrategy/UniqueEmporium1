@@ -3,16 +3,17 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index.tsx"; // Added .tsx extension
-import NotFound from "./pages/NotFound.tsx"; // Added .tsx extension
-import Header from "./components/layout/Header.tsx"; // Added .tsx extension
-import Footer from "./components/layout/Footer.tsx"; // Added .tsx extension
-import Favorites from "./pages/Favorites.tsx"; // Added .tsx extension
-import Compare from "./pages/Compare.tsx"; // Added .tsx extension
-import Cart from "./pages/Cart.tsx"; // Added .tsx extension
-import Products from "./pages/Products.tsx"; // Added .tsx extension
-import About from "./pages/About.tsx"; // Added .tsx extension
-import Contact from "./pages/Contact.tsx"; // Added .tsx extension
+import Index from "./pages/Index.tsx";
+import NotFound from "./pages/NotFound.tsx";
+import Header from "./components/layout/Header.tsx";
+import Footer from "./components/layout/Footer.tsx";
+import Favorites from "./pages/Favorites.tsx";
+import Compare from "./pages/Compare.tsx";
+import Cart from "./pages/Cart.tsx";
+import Products from "./pages/Products.tsx";
+import About from "./pages/About.tsx";
+import Contact from "./pages/Contact.tsx";
+import FAQ from "./pages/FAQ.tsx"; // Import the new FAQ page
 
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} /> {/* Add the new FAQ route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
