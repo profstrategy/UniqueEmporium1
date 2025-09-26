@@ -67,17 +67,17 @@ const AboutValues = () => {
       </motion.div>
 
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-12"
+        className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 mt-12"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
         {values.map((value, index) => (
-          <motion.div key={index} variants={fadeInUp} className="w-[250px] mx-auto sm:w-auto"> {/* Added w-[250px] and mx-auto for mobile, sm:w-auto to reset on larger screens */}
-            <Card className="p-8 h-full flex flex-col items-center text-center rounded-2xl">
-              <value.icon className="h-10 w-10 text-primary mb-4" />
-              <h3 className="text-lg font-semibold mb-4 text-foreground">{value.title}</h3>
+          <motion.div key={index} variants={fadeInUp}>
+            <Card className="p-4 h-[130px] flex flex-col items-center justify-center text-center rounded-2xl">
+              <value.icon className="h-8 w-8 text-primary mb-2" />
+              <h3 className="text-base font-semibold mb-1 text-foreground">{value.title}</h3>
               <p className="text-xs text-muted-foreground">{value.description}</p>
             </Card>
           </motion.div>
