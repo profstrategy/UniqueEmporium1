@@ -21,10 +21,10 @@ const PrivacyHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Our Commitment to Your Privacy
         </Badge>
-        <h1 className="font-poppins text-3xl md:text-6xl font-bold mb-6 text-foreground">
+        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
           Privacy Policy
         </h1>
-        <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
           Understand how we collect, use, protect, and manage your personal information.
         </p>
       </motion.div>
