@@ -193,10 +193,14 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
           {/* Price Display */}
           <div className="flex items-center gap-2 mb-2">
-            <p className="font-bold text-base text-primary">₦{product.price.toFixed(2)}</p>
+            <p className="font-bold text-base text-primary">
+              {product.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+            </p>
             {product.originalPrice && product.price < product.originalPrice && (
               <>
-                <p className="text-xs text-gray-400 line-through">₦{product.originalPrice.toFixed(2)}</p>
+                <p className="text-xs text-gray-400 line-through">
+                  {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                </p>
                 {discount > 0 && (
                   <Badge variant="destructive" className="text-[0.6rem] font-medium px-1.5 py-0.5">
                     -{discount}%
