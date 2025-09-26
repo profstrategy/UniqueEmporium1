@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Heart, Scale, Laptop, Tablet, Headphones, Home, Info, Mail, LayoutGrid } from "lucide-react";
-import Badge from "@/components/common/Badge.tsx"; // Re-adding .tsx extension
+import Badge from "@/components/common/Badge.tsx"; // Added .tsx extension
 import { motion, Easing } from "framer-motion";
 
 interface MobileMenuProps {

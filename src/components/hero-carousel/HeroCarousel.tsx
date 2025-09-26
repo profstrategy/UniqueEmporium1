@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ElectroProLogo3D from "./ElectroProLogo3D.tsx"; // Re-adding .tsx extension
+import ElectroProLogo3D from "./ElectroProLogo3D.tsx"; // Added .tsx extension
 
 interface CarouselItem {
   id: string;

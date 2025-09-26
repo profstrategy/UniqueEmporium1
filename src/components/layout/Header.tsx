@@ -5,11 +5,11 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, Heart, Scale, ChevronDown, Laptop, Tablet, Headphones, Home, Info, Mail, LayoutGrid } from "lucide-react";
-import Badge from "@/components/common/Badge.tsx"; // Re-adding .tsx extension
-import CartIcon from "@/components/common/CartIcon.tsx"; // Re-adding .tsx extension
-import SlideOutSearchBar from "./SlideOutSearchBar.tsx"; // Re-adding .tsx extension
-import MobileMenu from "./MobileMenu.tsx"; // Re-adding .tsx extension
-import CartDrawer from "./CartDrawer.tsx"; // Re-adding .tsx extension
+import Badge from "@/components/common/Badge.tsx"; // Added .tsx extension
+import CartIcon from "@/components/common/CartIcon.tsx"; // Added .tsx extension
+import SlideOutSearchBar from "./SlideOutSearchBar.tsx"; // Added .tsx extension
+import MobileMenu from "./MobileMenu.tsx"; // Added .tsx extension
+import CartDrawer from "./CartDrawer.tsx"; // Added .tsx extension
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 
