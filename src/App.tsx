@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index.tsx"; // Added .tsx extension
 import NotFound from "./pages/NotFound.tsx"; // Added .tsx extension
 import Header from "./components/layout/Header.tsx"; // Added .tsx extension
+import Footer from "./components/layout/Footer.tsx"; // Added .tsx extension
 import Favorites from "./pages/Favorites.tsx"; // Added .tsx extension
 import Compare from "./pages/Compare.tsx"; // Added .tsx extension
 import Cart from "./pages/Cart.tsx"; // Added .tsx extension
@@ -34,6 +35,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
