@@ -76,7 +76,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
     >
       <Card className="relative flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
         {product.tag && (
-          <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute -top-2 -right-2 z-50" />
+          <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute -top-2 left-2 md:-right-2 md:left-auto z-50" />
         )}
 
         <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
