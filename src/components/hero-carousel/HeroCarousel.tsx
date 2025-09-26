@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion"; // Import Easing and RepeatType
+import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ElectroProLogo3D from "./ElectroProLogo3D";
+import ElectroProLogo3D from "./ElectroProLogo3D.tsx"; // Add .tsx extension
 
 interface CarouselItem {
   id: string;
@@ -81,7 +81,7 @@ const HeroCarousel = () => {
 
   const fadeInUpVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as Easing } }, // Cast ease
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as Easing } },
   };
 
   const ctaFloatVariants = {
@@ -92,11 +92,11 @@ const HeroCarousel = () => {
       transition: {
         y: {
           duration: 2,
-          ease: "easeInOut" as Easing, // Cast ease
+          ease: "easeInOut" as Easing,
           repeat: Infinity,
-          repeatType: "reverse" as RepeatType, // Cast repeatType
+          repeatType: "reverse" as RepeatType,
         },
-        opacity: { duration: 0.8, ease: "easeOut" as Easing }, // Cast ease
+        opacity: { duration: 0.8, ease: "easeOut" as Easing },
       },
     },
     hover: {
@@ -134,7 +134,7 @@ const HeroCarousel = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: "easeOut" as Easing }} // Cast ease
+          transition={{ duration: 1, ease: "easeOut" as Easing }}
         />
       </AnimatePresence>
 
@@ -157,7 +157,7 @@ const HeroCarousel = () => {
             variants={fadeInUpVariants}
             initial="hidden"
             animate="visible"
-            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" as Easing }} // Cast ease
+            transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" as Easing }}
           >
             {currentItem.subHeadline}
           </motion.p>
@@ -168,7 +168,7 @@ const HeroCarousel = () => {
             variants={fadeInUpVariants}
             initial="hidden"
             animate="visible"
-            transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }} // Cast ease
+            transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }}
           >
             <h3 className="font-poppins text-base font-semibold text-white md:text-xl">
               {currentItem.productName}

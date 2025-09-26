@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Badge from "./Badge"; // Removed .tsx extension
+import Badge from "./Badge.tsx"; // Add .tsx extension
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CartIconProps {
