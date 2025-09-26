@@ -21,10 +21,10 @@ const ShippingHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Delivery Details
         </Badge>
-        <h1 className="font-poppins text-3xl md:text-6xl font-bold mb-6 text-foreground">
+        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
           Shipping & Delivery
         </h1>
-        <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-lg md:text-lg text-muted-foreground max-w-3xl mx-auto">
           Everything you need to know about our shipping options, delivery times, and tracking your order.
         </p>
       </motion.div>
