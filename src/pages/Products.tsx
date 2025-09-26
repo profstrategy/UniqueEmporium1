@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon } from "lucide-react"; // Import icons for specs and categories
+import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon, SlidersHorizontal } from "lucide-react"; // Import icons for specs and categories
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
-import { motion, Easing } from "framer-motion";
+import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Placeholder product data (keeping it here for now as it's already in the file)
@@ -76,6 +76,7 @@ const Products = () => {
   const [currentQuery, setCurrentQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState("default");
+  const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false); // State for mobile filter panel
 
   useEffect(() => {
     setCurrentQuery(initialQuery);
@@ -147,6 +148,7 @@ const Products = () => {
     setSelectedCategory("all");
     setSortBy("default");
     setSearchParams({}); // Clear all search params
+    setIsMobileFilterPanelOpen(false); // Close panel on clear
   };
 
   return (
@@ -160,7 +162,7 @@ const Products = () => {
         className="text-center mb-8"
       >
         <motion.h1
-          className="font-poppins text-4xl font-bold text-foreground mb-2"
+          className="font-poppins text-3xl md:text-4xl font-bold text-foreground mb-2"
           variants={fadeInUp}
         >
           All Electronics
@@ -195,7 +197,8 @@ const Products = () => {
           <Button type="submit">Search</Button>
         </form>
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+        {/* Desktop Filters */}
+        <div className="hidden lg:flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
           {/* Category Select */}
           <Select value={selectedCategory} onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-full sm:w-[180px]">
@@ -224,7 +227,58 @@ const Products = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Mobile Filter Toggle Button */}
+        <Button
+          variant="outline"
+          className="lg:hidden w-full flex items-center justify-center gap-2"
+          onClick={() => setIsMobileFilterPanelOpen(!isMobileFilterPanelOpen)}
+        >
+          <SlidersHorizontal className="h-4 w-4" /> Filters
+        </Button>
       </motion.div>
+
+      {/* Mobile Filter Panel */}
+      <AnimatePresence>
+        {isMobileFilterPanelOpen && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={fadeInUp}
+            className="lg:hidden w-full p-4 border rounded-lg bg-card flex flex-col gap-4 mb-8"
+          >
+            {/* Category Select */}
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Sort By Select */}
+            <Select value={sortBy} onValueChange={handleSortByChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button onClick={handleClearFilters}>Clear Filters</Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Results Count */}
       <motion.p
@@ -239,7 +293,7 @@ const Products = () => {
 
       {/* Product Grid Display */}
       {displayedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5">
           {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} disableEntryAnimation={true} />
           ))}
