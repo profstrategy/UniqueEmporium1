@@ -19,7 +19,9 @@ const AboutStory = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <Badge variant="outline" className="mb-4 text-sm">Our Story</Badge>
+          <div className="text-center md:text-left">
+            <Badge variant="outline" className="mb-4 text-sm">Our Story</Badge>
+          </div>
           <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-foreground">
             From a Vision to a Digital Reality
           </h2>
