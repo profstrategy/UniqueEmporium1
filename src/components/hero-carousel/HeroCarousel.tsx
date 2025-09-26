@@ -13,7 +13,7 @@ interface CarouselItem {
   subHeadline: string;
   productName: string;
   productDescription: string;
-  price: number; // Changed to number
+  price: string;
   ctaText: string;
   ctaLink: string;
 }
@@ -26,7 +26,7 @@ const carouselItems: CarouselItem[] = [
     subHeadline: "From powerful laptops to smart devices – explore the future of technology.",
     productName: "ZenBook Pro 14 OLED",
     productDescription: "Unleash your creativity with stunning visuals and powerful performance.",
-    price: 950000.00, // Changed to number
+    price: "₦950,000",
     ctaText: "Shop Laptops Now",
     ctaLink: "#featured-products",
   },
@@ -37,7 +37,7 @@ const carouselItems: CarouselItem[] = [
     subHeadline: "Discover the latest in smart home, audio, and personal tech.",
     productName: "SoundWave Max Headphones",
     productDescription: "Immersive audio and supreme comfort for the ultimate listening experience.",
-    price: 175000.00, // Changed to number
+    price: "₦175,000",
     ctaText: "Explore Audio Gear",
     ctaLink: "#featured-products",
   },
@@ -48,7 +48,7 @@ const carouselItems: CarouselItem[] = [
     subHeadline: "High-performance monitors and accessories for professionals and gamers.",
     productName: "UltraView 32-inch Monitor",
     productDescription: "Stunning 4K display with vibrant colors and lightning-fast refresh rates.",
-    price: 400000.00, // Changed to number
+    price: "₦400,000",
     ctaText: "View Monitors",
     ctaLink: "#featured-products",
   },
@@ -177,7 +177,7 @@ const HeroCarousel = () => {
               {currentItem.productDescription}
             </p>
             <p className="mt-2 font-bold text-xl text-accent md:text-2xl">
-              ₦{currentItem.price.toFixed(2)}
+              {currentItem.price}
             </p>
           </motion.div>
 
