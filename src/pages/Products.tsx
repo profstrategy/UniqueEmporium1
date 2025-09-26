@@ -13,8 +13,8 @@ const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
   name: `ElectroPro Laptop ${index + 1}`,
   category: "Laptops",
   images: ["/placeholder.svg", "/placeholder.svg"],
-  price: 899.99 + index * 50,
-  originalPrice: (899.99 + index * 50) * 1.1, // 10% higher original price
+  price: 450000 + index * 25000, // Adjusted to Naira values
+  originalPrice: (450000 + index * 25000) * 1.1, // 10% higher original price
   discountPercentage: 10,
   rating: Math.min(5, 3.5 + index * 0.1),
   reviews: 50 + index * 10,

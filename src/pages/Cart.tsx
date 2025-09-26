@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 const Cart = () => {
   // Placeholder for cart items
   const cartItems = [
-    { id: "1", name: "ZenBook Pro 14 OLED", price: 1899, quantity: 1 },
-    { id: "2", name: "SoundWave Max Headphones", price: 349, quantity: 2 },
+    { id: "1", name: "ZenBook Pro 14 OLED", price: 950000, quantity: 1 },
+    { id: "2", name: "SoundWave Max Headphones", price: 175000, quantity: 2 },
   ];
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -30,9 +30,9 @@ const Cart = () => {
                 <div>
                   <h2 className="font-semibold text-xl">{item.name}</h2>
                   <p className="text-muted-foreground">Quantity: {item.quantity}</p>
-                  <p className="font-medium">${item.price.toFixed(2)} each</p>
+                  <p className="font-medium">₦{item.price.toFixed(2)} each</p>
                 </div>
-                <p className="font-bold text-2xl">${(item.quantity * item.price).toFixed(2)}</p>
+                <p className="font-bold text-2xl">₦{(item.quantity * item.price).toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -40,11 +40,11 @@ const Cart = () => {
             <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
             <div className="flex justify-between text-lg mb-2">
               <span>Subtotal:</span>
-              <span>${total.toFixed(2)}</span>
+              <span>₦{total.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold mb-6">
               <span>Total:</span>
-              <span>${total.toFixed(2)}</span>
+              <span>₦{total.toFixed(2)}</span>
             </div>
             <Button className="w-full text-lg">Proceed to Checkout</Button>
           </div>
