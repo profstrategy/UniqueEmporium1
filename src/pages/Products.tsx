@@ -4,14 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi } from "lucide-react"; // Import icons for specs
-import ProductCard, { Product } from "@/components/products/ProductCard.tsx"; // Import ProductCard and Product interface
+import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon } from "lucide-react"; // Import icons for specs and categories
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
+import { motion, Easing } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Placeholder product data for the Products page
+// Placeholder product data (keeping it here for now as it's already in the file)
 const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
   id: `prod-${index + 1}`,
   name: `ElectroPro Laptop ${index + 1}`,
-  category: "Laptops",
+  category: ["Laptops", "Tablets", "Audio", "Monitors", "Accessories", "Smart Home"][index % 6], // Assign categories
   images: ["/placeholder.svg", "/placeholder.svg"],
   price: 450000 + index * 25000, // Adjusted to Naira values
   originalPrice: (450000 + index * 25000) * 1.1, // 10% higher original price
@@ -25,62 +27,235 @@ const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
     { icon: Cpu, label: "CPU", value: `i${7 + (index % 3)}` },
     { icon: MemoryStick, label: "RAM", value: `${8 * (1 + (index % 2))}GB` },
     { icon: HardDrive, label: "Storage", value: `${256 * (1 + (index % 2))}GB SSD` },
-    { icon: Monitor, label: "Display", value: `1${4 + (index % 3)}"` }, // Added
-    { icon: BatteryCharging, label: "Battery", value: `${10 + (index % 5)} Hrs` }, // Added
-    { icon: Wifi, label: "Wireless", value: `Wi-Fi 6` }, // Added
+    { icon: Monitor, label: "Display", value: `1${4 + (index % 3)}"` },
+    { icon: BatteryCharging, label: "Battery", value: `${10 + (index % 5)} Hrs` },
+    { icon: Wifi, label: "Wireless", value: `Wi-Fi 6` },
   ],
 }));
 
+const categories = [
+  { name: "All Categories", value: "all" },
+  { name: "Laptops", value: "Laptops", icon: Laptop },
+  { name: "Tablets", value: "Tablets", icon: Tablet },
+  { name: "Audio", value: "Audio", icon: Headphones },
+  { name: "Monitors", value: "Monitors", icon: LayoutGrid },
+  { name: "Accessories", value: "Accessories", icon: LayoutGrid },
+  { name: "Smart Home", value: "Smart Home", icon: HomeIcon },
+];
+
+const sortOptions = [
+  { name: "Default", value: "default" },
+  { name: "Name (A-Z)", value: "name-asc" },
+  { name: "Name (Z-A)", value: "name-desc" },
+  { name: "Price (Low to High)", value: "price-asc" },
+  { name: "Price (High to Low)", value: "price-desc" },
+  { name: "Rating (High to Low)", value: "rating-desc" },
+];
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
+};
+
 const Products = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("query") || "";
-  const initialCategory = searchParams.get("category") || "";
+  const initialCategory = searchParams.get("category") || "all";
+
   const [currentQuery, setCurrentQuery] = useState(initialQuery);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [sortBy, setSortBy] = useState("default");
 
   useEffect(() => {
     setCurrentQuery(initialQuery);
-  }, [initialQuery]);
+    setSelectedCategory(initialCategory);
+  }, [initialQuery, initialCategory]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuery(e.target.value);
   };
 
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    if (value === "all") {
+      searchParams.delete("category");
+    } else {
+      searchParams.set("category", value);
+    }
+    setSearchParams(searchParams);
+  };
+
+  const handleSortByChange = (value: string) => {
+    setSortBy(value);
+  };
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would trigger a product search API call
-    console.log("Searching for:", currentQuery);
-    console.log("Category filter:", initialCategory);
-    // For now, just update the URL if needed or perform a client-side filter
+    if (currentQuery.trim()) {
+      searchParams.set("query", currentQuery.trim());
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
+
+  const filterAndSortProducts = () => {
+    let filtered = allProducts.filter((product) => {
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      const matchesQuery = product.name.toLowerCase().includes(currentQuery.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
+
+    switch (sortBy) {
+      case "name-asc":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "price-asc":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "rating-desc":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        // No specific sort, maintain original order or a default one
+        break;
+    }
+    return filtered;
+  };
+
+  const displayedProducts = filterAndSortProducts();
+
+  const handleClearFilters = () => {
+    setCurrentQuery("");
+    setSelectedCategory("all");
+    setSortBy("default");
+    setSearchParams({}); // Clear all search params
   };
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-4 text-center">
-        {initialCategory ? `${initialCategory} Products` : "All Products"}
-      </h1>
-      <p className="text-lg text-muted-foreground mb-8 text-center">
-        Explore our wide range of electronics.
-      </p>
+    <div className="max-w-7xl mx-auto py-12 pt-8 px-4 sm:px-6 lg:px-8">
+      {/* Header Section */}
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="text-center mb-8"
+      >
+        <motion.h1
+          className="font-poppins text-4xl font-bold text-foreground mb-2"
+          variants={fadeInUp}
+        >
+          All Electronics
+        </motion.h1>
+        <motion.p
+          className="text-lg text-muted-foreground max-w-2xl mx-auto"
+          variants={fadeInUp}
+        >
+          Explore our extensive collection of cutting-edge electronics, from powerful laptops to smart home devices.
+        </motion.p>
+      </motion.div>
 
-      <form onSubmit={handleSearchSubmit} className="flex max-w-md mx-auto mb-8 space-x-2">
-        <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search products..."
-            className="w-full pl-9"
-            value={currentQuery}
-            onChange={handleSearchChange}
-          />
+      {/* Filters and Search Section */}
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-8"
+      >
+        <form onSubmit={handleSearchSubmit} className="flex flex-1 max-w-md w-full space-x-2">
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search products..."
+              className="w-full pl-9"
+              value={currentQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
+          <Button type="submit">Search</Button>
+        </form>
+
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          {/* Category Select */}
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Sort By Select */}
+          <Select value={sortBy} onValueChange={handleSortByChange}>
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Sort By" />
+            </SelectTrigger>
+            <SelectContent>
+              {sortOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <Button type="submit">Search</Button>
-      </form>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {allProducts.map((product) => (
-          <ProductCard key={product.id} product={product} disableEntryAnimation={true} />
-        ))}
-      </div>
+      {/* Results Count */}
+      <motion.p
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="text-muted-foreground text-center mb-8"
+      >
+        Showing {displayedProducts.length} of {allProducts.length} electronics
+      </motion.p>
+
+      {/* Product Grid Display */}
+      {displayedProducts.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {displayedProducts.map((product) => (
+            <ProductCard key={product.id} product={product} disableEntryAnimation={true} />
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="text-center py-16"
+        >
+          <p className="text-lg text-muted-foreground mb-4">No products found matching your criteria.</p>
+          <Button onClick={handleClearFilters}>Clear Filters</Button>
+        </motion.div>
+      )}
     </div>
   );
 };
