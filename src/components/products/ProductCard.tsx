@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, Easing } from "framer-motion";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Cpu, MemoryStick, HardDrive } from "lucide-react";
@@ -10,6 +10,7 @@ import FloatingTag from "@/components/common/FloatingTag.tsx";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile"; // Import useIsMobile
 
 export interface Product {
   id: string;
@@ -41,6 +42,8 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const specsScrollRef = useRef<HTMLDivElement>(null); // Ref for the specs row
+  const isMobile = useIsMobile(); // Determine if on mobile
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -59,6 +62,45 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Auto-scrolling logic for specs row on desktop hover
+  useEffect(() => {
+    let animationFrameId: number;
+    let lastTimestamp: DOMHighResTimeStamp;
+    const scrollSpeed = 0.5; // Adjust scroll speed as needed
+
+    const scroll = (timestamp: DOMHighResTimeStamp) => {
+      if (!specsScrollRef.current || !hovered || isMobile) {
+        return;
+      }
+
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const elapsed = timestamp - lastTimestamp;
+
+      if (elapsed > 16) { // Roughly 60fps
+        specsScrollRef.current.scrollLeft += scrollSpeed;
+
+        // Loop back to start if reached end
+        if (specsScrollRef.current.scrollLeft >= specsScrollRef.current.scrollWidth - specsScrollRef.current.clientWidth) {
+          specsScrollRef.current.scrollLeft = 0;
+        }
+        lastTimestamp = timestamp;
+      }
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    if (hovered && !isMobile) {
+      animationFrameId = requestAnimationFrame(scroll);
+    } else if (specsScrollRef.current) {
+      // Stop scrolling and reset position when not hovered or on mobile
+      cancelAnimationFrame(animationFrameId);
+      specsScrollRef.current.scrollLeft = 0;
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [hovered, isMobile, product.specs]); // Re-run effect if specs change
 
   const discount = product.originalPrice && product.price < product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -228,7 +270,10 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
         {/* Horizontal Scrolling Specifications Section */}
         {product.specs && product.specs.length > 0 && (
-          <div className="flex overflow-x-auto md:overflow-x-hidden no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0">
+          <div
+            ref={specsScrollRef} // Attach ref here
+            className="flex overflow-x-auto md:overflow-x-hidden no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0"
+          >
             {product.specs.map((spec, index) => (
               <div key={index} className="flex-shrink-0 min-w-[100px] py-1 px-2 flex items-center">
                 <spec.icon className="w-4 h-4 text-primary mr-1" />
