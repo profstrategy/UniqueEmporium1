@@ -46,7 +46,7 @@ const AboutStats = () => {
       >
         {stats.map((stat, index) => (
           <motion.div key={index} variants={fadeInUp}>
-            <Card className="p-6 h-full flex flex-col justify-center items-center">
+            <Card className="p-6 h-full flex flex-col justify-center items-center rounded-2xl">
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{

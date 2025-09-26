@@ -82,8 +82,8 @@ const AboutTeam = () => {
       >
         {teamMembers.map((member, index) => (
           <motion.div key={index} variants={fadeInUp}>
-            <Card className="h-full flex flex-col">
-              <div className="relative h-52 w-full overflow-hidden rounded-t-lg">
+            <Card className="h-full flex flex-col rounded-2xl">
+              <div className="relative h-52 w-full overflow-hidden rounded-t-2xl">
                 <img
                   src={member.image}
                   alt={member.name}

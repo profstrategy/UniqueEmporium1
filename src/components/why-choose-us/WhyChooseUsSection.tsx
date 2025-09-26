@@ -122,7 +122,7 @@ const WhyChooseUsSection = () => {
             {reasons.map((reason, index) => (
               <motion.div
                 key={index}
-                className="flex flex-col items-center text-center p-4 sm:p-4 lg:p-3 border rounded-lg shadow-sm bg-card h-full"
+                className="flex flex-col items-center text-center p-4 sm:p-4 lg:p-3 border rounded-2xl shadow-sm bg-card h-full"
                 variants={fadeInUp}
               >
                 <motion.div

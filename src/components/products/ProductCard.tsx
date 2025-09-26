@@ -130,7 +130,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
         transition: { duration: 0.3, ease: "easeOut" as Easing },
       }}
     >
-      <Card className="relative flex h-full flex-col overflow-hidden rounded-lg shadow-lg">
+      <Card className="relative flex h-full flex-col overflow-hidden rounded-2xl shadow-lg">
         {product.tag && (
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 left-2 md:right-2 md:left-auto z-50" />
         )}
@@ -308,7 +308,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
         {product.specs && product.specs.length > 0 && (
           <div
             ref={specsScrollRef} // Attach ref here
-            className="flex overflow-x-auto no-scrollbar rounded-b-lg border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0 space-x-2" // Added space-x-2 for gap between spec cards
+            className="flex overflow-x-auto no-scrollbar rounded-b-2xl border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0 space-x-2" // Added hover animations
           >
             {product.specs.map((spec, index) => (
               <div
