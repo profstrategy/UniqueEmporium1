@@ -71,6 +71,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
     const scroll = (timestamp: DOMHighResTimeStamp) => {
       if (!specsScrollRef.current || !hovered || isMobile) {
+        cancelAnimationFrame(animationFrameId); // Ensure animation stops if conditions change mid-scroll
         return;
       }
 
@@ -78,18 +79,26 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       const elapsed = timestamp - lastTimestamp;
 
       if (elapsed > 16) { // Roughly 60fps
-        specsScrollRef.current.scrollLeft += scrollSpeed;
+        const currentScrollLeft = specsScrollRef.current.scrollLeft;
+        const maxScrollLeft = specsScrollRef.current.scrollWidth - specsScrollRef.current.clientWidth;
 
-        // Loop back to start if reached end
-        if (specsScrollRef.current.scrollLeft >= specsScrollRef.current.scrollWidth - specsScrollRef.current.clientWidth) {
-          specsScrollRef.current.scrollLeft = 0;
+        if (maxScrollLeft <= 0 || currentScrollLeft >= maxScrollLeft) {
+          // Reached the end or no scroll needed, stop scrolling
+          cancelAnimationFrame(animationFrameId);
+          return;
         }
+
+        specsScrollRef.current.scrollLeft += scrollSpeed;
         lastTimestamp = timestamp;
       }
       animationFrameId = requestAnimationFrame(scroll);
     };
 
     if (hovered && !isMobile) {
+      // Start scrolling from the beginning when hover starts
+      if (specsScrollRef.current) {
+        specsScrollRef.current.scrollLeft = 0;
+      }
       animationFrameId = requestAnimationFrame(scroll);
     } else if (specsScrollRef.current) {
       // Stop scrolling and reset position when not hovered or on mobile
@@ -277,7 +286,8 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             {product.specs.map((spec, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 min-w-[100px] border rounded-md bg-background p-2 flex items-center" // Added card-like styling
+                className="flex-shrink-0 min-w-[100px] border rounded-md bg-background p-2 flex items-center
+                           transition-all duration-200 hover:-translate-y-1 hover:shadow-md" // Added hover animations
               >
                 <spec.icon className="w-4 h-4 text-primary mr-1" />
                 <div>
