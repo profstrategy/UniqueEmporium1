@@ -124,8 +124,13 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       className="relative h-[420px] flex flex-col"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      whileHover={{
+        y: -8,
+        boxShadow: "0 20px 30px rgba(0, 0, 0, 0.25)",
+        transition: { duration: 0.3, ease: "easeOut" as Easing },
+      }}
     >
-      <Card className="relative flex h-full flex-col overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
+      <Card className="relative flex h-full flex-col overflow-hidden rounded-lg shadow-lg">
         {product.tag && (
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 left-2 md:right-2 md:left-auto z-50" />
         )}
