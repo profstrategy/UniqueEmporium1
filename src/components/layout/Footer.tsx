@@ -80,7 +80,7 @@ const Footer = () => {
     } else {
       setShowScrollToTop(false);
     }
-  }, []);
+  }, []); // Empty dependency array as handleScroll doesn't depend on any external state that changes
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

@@ -17,7 +17,8 @@ import FAQ from "./pages/FAQ.tsx";
 import Shipping from "./pages/Shipping.tsx";
 import Returns from "./pages/Returns.tsx";
 import Warranty from "./pages/Warranty.tsx";
-import Privacy from "./pages/Privacy.tsx"; // Import the new Privacy page
+import Privacy from "./pages/Privacy.tsx";
+import Terms from "./pages/Terms.tsx"; // Import the new Terms page
 
 
 const queryClient = new QueryClient();
@@ -41,7 +42,8 @@ const App = () => (
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/returns" element={<Returns />} />
           <Route path="/warranty" element={<Warranty />} />
-          <Route path="/privacy" element={<Privacy />} /> {/* Add the new Privacy route */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} /> {/* Add the new Terms route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
