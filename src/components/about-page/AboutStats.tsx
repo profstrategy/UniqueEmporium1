@@ -38,7 +38,7 @@ const AboutStats = () => {
   return (
     <section className="py-16 px-4 max-w-6xl mx-auto text-center">
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+        className="grid grid-cols-2 md:grid-cols-4 gap-8"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"

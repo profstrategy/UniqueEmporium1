@@ -19,7 +19,7 @@ const AboutHero = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <Badge variant="outline" className="mb-4 text-sm">Our Journey</Badge>
-        <h1 className="font-poppins text-4xl md:text-6xl font-bold mb-6 text-foreground">
+        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
           Empowering Your Digital Life
         </h1>
         <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">

@@ -38,7 +38,7 @@ const AboutStory = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-xl">
+          <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
             <img
               src="/public/placeholder.svg" // Placeholder image
               alt="Our Story"
