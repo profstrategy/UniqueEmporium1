@@ -4,7 +4,29 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Cpu, MemoryStick, HardDrive } from "lucide-react"; // Import icons for specs
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx"; // Import ProductCard and Product interface
+
+// Placeholder product data for the Products page
+const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
+  id: `prod-${index + 1}`,
+  name: `ElectroPro Laptop ${index + 1}`,
+  category: "Laptops",
+  images: ["/placeholder.svg", "/placeholder.svg"],
+  price: 899.99 + index * 50,
+  originalPrice: (899.99 + index * 50) * 1.1, // 10% higher original price
+  discountPercentage: 10,
+  rating: Math.min(5, 3.5 + index * 0.1),
+  reviews: 50 + index * 10,
+  tag: index % 3 === 0 ? "New" : index % 5 === 0 ? "Sale" : undefined,
+  tagVariant: index % 3 === 0 ? "default" : index % 5 === 0 ? "destructive" : undefined,
+  limitedStock: index % 4 === 0,
+  specs: [
+    { icon: Cpu, label: "CPU", value: `i${7 + (index % 3)}` },
+    { icon: MemoryStick, label: "RAM", value: `${8 * (1 + (index % 2))}GB` },
+    { icon: HardDrive, label: "Storage", value: `${256 * (1 + (index % 2))}GB SSD` },
+  ],
+}));
 
 const Products = () => {
   const [searchParams] = useSearchParams();
@@ -52,15 +74,8 @@ const Products = () => {
       </form>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {/* Placeholder Product Cards - now rendering 20 */}
-        {Array.from({ length: 20 }).map((_, index) => (
-          <div key={index} className="border rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
-            <img src="/placeholder.svg" alt={`Product ${index + 1}`} className="w-32 h-32 object-cover mb-4" />
-            <h3 className="font-semibold text-lg mb-1">Product Name {index + 1}</h3>
-            <p className="text-muted-foreground text-sm mb-2">Category</p>
-            <p className="font-bold text-xl">${(100 + index * 50).toFixed(2)}</p>
-            <Button className="mt-4 w-full">Add to Cart</Button>
-          </div>
+        {allProducts.map((product) => (
+          <ProductCard key={product.id} product={product} disableEntryAnimation={true} />
         ))}
       </div>
     </div>
