@@ -11,7 +11,7 @@ const fadeInUp = {
 
 const ContactHero = () => {
   return (
-    <section className="py-20 px-4 max-w-6xl mx-auto text-center">
+    <section className="py-12 md:py-20 px-4 max-w-6xl mx-auto text-center">
       <motion.div
         variants={fadeInUp}
         initial="hidden"
@@ -19,7 +19,7 @@ const ContactHero = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <Badge variant="outline" className="mb-4 text-sm">Get in Touch</Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
+        <h1 className="font-poppins text-xl md:text-6xl font-bold mb-4 md:mb-6 text-foreground">
           We're Here to Help
         </h1>
         <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">

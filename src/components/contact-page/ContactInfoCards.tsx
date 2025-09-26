@@ -52,9 +52,9 @@ const fadeInUp = {
 
 const ContactInfoCards = () => {
   return (
-    <section className="py-16 px-4 max-w-6xl mx-auto">
+    <section className="py-12 md:py-16 px-4 max-w-6xl mx-auto">
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12 md:mb-16"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
@@ -62,9 +62,9 @@ const ContactInfoCards = () => {
       >
         {contactInfos.map((info, index) => (
           <motion.div key={index} variants={fadeInUp}>
-            <Card className="p-6 h-full rounded-xl text-center">
+            <Card className="p-4 md:p-6 h-full rounded-xl text-center">
               <motion.div
-                className="h-8 w-8 mx-auto mb-3 text-primary"
+                className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-3 text-primary"
                 animate={{
                   y: [0, -5, 0], // Vertical float
                   rotateX: [0, 5, 0], // Subtle X-axis rotation
@@ -80,8 +80,8 @@ const ContactInfoCards = () => {
               >
                 <info.icon className="h-full w-full" />
               </motion.div>
-              <h3 className="text-lg font-semibold mb-3 text-foreground">{info.title}</h3>
-              <div className="space-y-1 text-sm text-muted-foreground">
+              <h3 className="text-sm md:text-lg font-semibold mb-2 md:mb-3 text-foreground">{info.title}</h3>
+              <div className="space-y-1 text-[0.65rem] md:text-sm text-muted-foreground">
                 {info.details.map((detail, i) => (
                   <p key={i}>{detail}</p>
                 ))}

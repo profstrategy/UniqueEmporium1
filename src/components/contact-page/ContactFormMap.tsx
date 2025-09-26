@@ -55,20 +55,20 @@ const ContactFormMap = () => {
   };
 
   return (
-    <section className="py-20 px-4 max-w-6xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <section className="py-12 md:py-20 px-4 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         {/* Contact Form */}
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
           <Card className="rounded-xl">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-foreground">Send Us a Message</CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">
+              <CardTitle className="text-lg md:text-2xl font-bold text-foreground">Send Us a Message</CardTitle>
+              <p className="text-xs md:text-sm text-muted-foreground mt-2">
                 Fill out the form below, and we'll get back to you shortly.
               </p>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
@@ -95,7 +95,7 @@ const ContactFormMap = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -164,8 +164,8 @@ const ContactFormMap = () => {
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
           <Card className="h-full rounded-xl flex flex-col">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-foreground">Visit Our Showroom</CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">
+              <CardTitle className="text-lg md:text-2xl font-bold text-foreground">Visit Our Showroom</CardTitle>
+              <p className="text-xs md:text-sm text-muted-foreground mt-2">
                 Experience our products firsthand at our state-of-the-art showroom.
               </p>
             </CardHeader>
@@ -174,7 +174,7 @@ const ContactFormMap = () => {
                 {/* Placeholder for an actual map (e.g., Google Maps iframe) */}
                 <img src="/public/placeholder.svg" alt="Map Placeholder" className="w-full h-full object-cover opacity-50" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-muted-foreground">
-                  <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <MapPin className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                   <p className="text-lg font-semibold">Map Coming Soon!</p>
                   <p className="text-sm">Interactive map integration will be available here.</p>
                 </div>
@@ -190,8 +190,8 @@ const ContactFormMap = () => {
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-lg font-semibold mb-4 text-foreground">Showroom Features:</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">Showroom Features:</h3>
+                <ul className="space-y-3 text-xs md:text-sm text-muted-foreground">
                   <li className="flex items-center">
                     <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Live product demonstrations
                   </li>
