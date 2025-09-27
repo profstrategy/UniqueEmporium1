@@ -8,7 +8,9 @@ import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, La
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import mockProducts and ProductDetails
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import mockProducts, ProductDetails, getProductsByIds
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Import RecommendedProductsSection
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
 
 // Placeholder product data - now directly using mockProducts
 const allProducts: ProductDetails[] = mockProducts;
@@ -48,6 +50,8 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
 };
 
+const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
+
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("query") || "";
@@ -57,11 +61,17 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false); // State for mobile filter panel
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
 
   useEffect(() => {
     setCurrentQuery(initialQuery);
     setSelectedCategory(initialCategory);
   }, [initialQuery, initialCategory]);
+
+  useEffect(() => {
+    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+    setRecentlyViewedProductIds(storedViewed);
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuery(e.target.value);
@@ -122,6 +132,7 @@ const Products = () => {
   };
 
   const displayedProducts = filterAndSortProducts();
+  const productForRecommendationsId = displayedProducts[0]?.id || mockProducts[0]?.id; // Use first displayed product or fallback
 
   const handleClearFilters = () => {
     setCurrentQuery("");
@@ -130,6 +141,8 @@ const Products = () => {
     setSearchParams({}); // Clear all search params
     setIsMobileFilterPanelOpen(false); // Close panel on clear
   };
+
+  const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
 
   return (
     <div className="max-w-7xl mx-auto py-12 pt-8 px-4 sm:px-6 lg:px-8">
@@ -290,6 +303,30 @@ const Products = () => {
           <Button onClick={handleClearFilters}>Clear Filters</Button>
         </motion.div>
       )}
+
+      {/* Recommended Products Section (on Products Page) */}
+      {productForRecommendationsId && (
+        <motion.div
+          className="mt-16"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <RecommendedProductsSection currentProductId={productForRecommendationsId} />
+        </motion.div>
+      )}
+
+      {/* Recently Viewed Products Section (on Products Page) */}
+      <motion.div
+        className="mt-16 mb-20"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
+      </motion.div>
     </div>
   );
 };

@@ -5,21 +5,22 @@ import HeroIntroBanner from "@/components/hero-intro-banner/HeroIntroBanner.tsx"
 import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
-import RecommendedProductsSection from "../components/recommended-products/RecommendedProductsSection.tsx";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
-import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import ProductDetails
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import getProductsByIds
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
+import React, { useEffect, useState } from "react"; // Import useEffect and useState
 
 // Select specific products from mockProducts to be featured
-const featuredProducts: ProductDetails[] = [ // Changed type from Product[] to ProductDetails[]
+const featuredProducts: ProductDetails[] = [
   mockProducts.find(p => p.id === "zenbook-pro-14-oled"),
   mockProducts.find(p => p.id === "soundwave-noise-cancelling-headphones"),
   mockProducts.find(p => p.id === "ultrafast-1tb-external-ssd"),
   mockProducts.find(p => p.id === "ergofit-wireless-keyboard"),
   mockProducts.find(p => p.id === "smarthome-hub-pro"),
   mockProducts.find(p => p.id === "powercharge-100w-gan-charger"),
-].filter((product): product is ProductDetails => product !== undefined); // Filter out any undefined if an ID isn't found
+].filter((product): product is ProductDetails => product !== undefined);
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -37,7 +38,18 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
 };
 
+const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
+
 const Index = () => {
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+    setRecentlyViewedProductIds(storedViewed);
+  }, []);
+
+  const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
+
   return (
     <div className="relative min-h-screen w-full">
       <HeroCarousel />
@@ -82,6 +94,17 @@ const Index = () => {
 
       {/* Why Choose Us Section */}
       <WhyChooseUsSection />
+
+      {/* Recently Viewed Products Section (on Home Page) */}
+      <motion.div
+        className="mt-16 mb-20"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
+      </motion.div>
     </div>
   );
 };
