@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useCart } from "@/context/CartContext.tsx"; // Fixed import path
-import { Plus, Minus, Trash2, CreditCard, Loader2, ShoppingBag } from "lucide-react"; // Added ShoppingBag import
+import { useCart } from "@/context/CartContext.tsx";
+import { Plus, Minus, Trash2, CreditCard, Loader2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 
 const fadeInUp = {
@@ -118,8 +118,8 @@ const Cart = () => {
               <span>Total:</span>
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
-            <Button asChild className="w-full text-lg" onClick={handleCheckout} disabled={cartItems.length === 0 || isCheckingOut}>
-              <Link to="/checkout">
+            <Button asChild className="w-full text-lg" disabled={cartItems.length === 0 || isCheckingOut}>
+              <Link to="/checkout"> {/* Navigate to checkout page */}
                 {isCheckingOut ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...

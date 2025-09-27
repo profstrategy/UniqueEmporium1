@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Plus, Minus, Trash2, CreditCard, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useCart } from "@/context/CartContext.tsx"; // Fixed import path
+import { useCart } from "@/context/CartContext.tsx";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -92,8 +92,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <span>Total:</span>
             <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
           </div>
-          <Button asChild className="w-full mb-2" onClick={handleCheckout} disabled={cartItems.length === 0 || isCheckingOut}>
-            <Link to="/checkout">
+          <Button asChild className="w-full mb-2" disabled={cartItems.length === 0 || isCheckingOut}>
+            <Link to="/checkout"> {/* Navigate to checkout page */}
               {isCheckingOut ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
