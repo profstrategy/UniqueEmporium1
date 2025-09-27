@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2 } from "lucide-react";
-import { Label } from "@/components/ui/label"; // Import Label
+import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset } from "lucide-react"; // Added Truck, ShieldCheck, Headset
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
 import { useCart } from "@/context/CartContext.tsx";
@@ -16,6 +16,12 @@ import { cn } from "@/lib/utils";
 interface ProductInfoSectionProps {
   product: ProductDetailsType;
 }
+
+const keyFeatures = [
+  { icon: Truck, title: "Fast Delivery", description: "Get it in 2-5 business days" },
+  { icon: ShieldCheck, title: "1 Year Warranty", description: "Manufacturer's guarantee" },
+  { icon: Headset, title: "24/7 Support", description: "Dedicated customer service" },
+];
 
 const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const [quantity, setQuantity] = useState(1);
@@ -96,7 +102,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
           ))}
         </div>
         <span className="text-sm text-muted-foreground">
-          {product.rating.toFixed(1)} ({product.reviewCount} reviews) {/* Use product.reviewCount */}
+          {product.rating.toFixed(1)} ({product.reviewCount} reviews)
         </span>
       </div>
 
@@ -121,7 +127,18 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
 
       {/* Stock Status */}
       {product.limitedStock && (
-        <p className="text-sm text-red-500 font-medium">Limited Stock Available!</p>
+        <motion.p
+          className="text-sm text-red-500 font-medium flex items-center"
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" as Easing }}
+        >
+          <span className="relative flex h-2 w-2 mr-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+          </span>
+          Only a few left in stock!
+        </motion.p>
       )}
 
       {/* Quantity Selector */}
@@ -191,6 +208,25 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         >
           <Share2 className="h-5 w-5" />
         </Button>
+      </div>
+
+      {/* Key Features Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-border">
+        {keyFeatures.map((feature, index) => (
+          <motion.div
+            key={index}
+            className="flex items-start gap-3 p-3 rounded-lg bg-muted/30"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" as Easing }}
+          >
+            <feature.icon className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-semibold text-sm text-foreground">{feature.title}</h3>
+              <p className="text-xs text-muted-foreground">{feature.description}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

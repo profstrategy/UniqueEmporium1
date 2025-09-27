@@ -103,7 +103,12 @@ const ProductDetails = () => {
             animate="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            <ProductImageGallery images={product.images} />
+            <ProductImageGallery
+              images={product.images}
+              has3DModel={product.has3DModel}
+              productName={product.name}
+              modelPath={product.modelPath}
+            />
           </motion.div>
 
           {/* Product Info & Actions */}

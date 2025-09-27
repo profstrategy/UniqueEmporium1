@@ -315,7 +315,14 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
           {/* Limited Stock Message */}
           {product.limitedStock && (
-            <p className="text-xs text-red-500 font-medium mb-2 hidden md:block">Limited Stock!</p>
+            <motion.p
+              className="text-xs text-red-500 font-medium mb-2 hidden md:block"
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" as Easing }}
+            >
+              Limited Stock!
+            </motion.p>
           )}
 
           {/* Footer Actions */}
