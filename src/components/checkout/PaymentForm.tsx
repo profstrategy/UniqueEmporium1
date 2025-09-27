@@ -18,7 +18,7 @@ const paymentFormSchema = z.object({
   cvv: z.string().min(1, "CVV is required").regex(/^\d{3,4}$/, "Invalid CVV (3 or 4 digits)"),
 });
 
-type PaymentFormValues = z.infer<typeof paymentFormSchema>;
+export type PaymentFormValues = z.infer<typeof paymentFormSchema>; // Exported type
 
 interface PaymentFormProps {
   onNext: (data: PaymentFormValues) => void;

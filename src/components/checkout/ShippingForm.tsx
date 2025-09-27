@@ -24,7 +24,7 @@ const shippingFormSchema = z.object({
   zipCode: z.string().min(1, "Zip Code is required").regex(/^\d{5}(-\d{4})?$/, "Invalid zip code format"),
 });
 
-type ShippingFormValues = z.infer<typeof shippingFormSchema>;
+export type ShippingFormValues = z.infer<typeof shippingFormSchema>; // Exported type
 
 interface ShippingFormProps {
   onNext: (data: ShippingFormValues) => void;
