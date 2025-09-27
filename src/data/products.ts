@@ -105,7 +105,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["soundwave-noise-cancelling-headphones", "ultrawide-monitor-32"],
     has3DModel: true,
-    modelPath: "/models/zenbook_pro_14_oled.glb", // Placeholder GLB path
+    modelPath: "/models/zenbook_pro_14_oled.glb",
   },
   {
     id: "surface-pro-9",
@@ -155,7 +155,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ergogrip-wireless-mouse"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/surface_pro_9.glb",
   },
   {
     id: "echo-dot-5th-gen",
@@ -199,7 +199,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["smarthome-hub-pro"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/echo_dot_5th_gen.glb",
   },
   {
     id: "ergofit-wireless-keyboard",
@@ -244,7 +244,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ergogrip-wireless-mouse"],
     has3DModel: true,
-    modelPath: "/models/ergofit_wireless_keyboard.glb", // Placeholder GLB path
+    modelPath: "/models/ergofit_wireless_keyboard.glb",
   },
   {
     id: "prodisplay-xdr",
@@ -290,7 +290,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/prodisplay_xdr.glb",
   },
   {
     id: "gaming-beast-desktop-pc",
@@ -338,7 +338,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["prodisplay-xdr", "gaming-pro-wireless-mouse"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/gaming_beast_desktop_pc.glb",
   },
   {
     id: "soundwave-noise-cancelling-headphones",
@@ -400,7 +400,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["zenbook-pro-14-oled", "ergofit-wireless-keyboard"],
     has3DModel: true,
-    modelPath: "/models/soundwave_headphones.glb", // Placeholder GLB path
+    modelPath: "/models/soundwave_headphones.glb",
   },
   {
     id: "ultrafast-1tb-external-ssd",
@@ -463,7 +463,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/ultrafast_1tb_external_ssd.glb",
   },
   {
     id: "smarthome-hub-pro",
@@ -524,7 +524,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["echo-dot-5th-gen"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/smarthome_hub_pro.glb",
   },
   {
     id: "powercharge-100w-gan-charger",
@@ -587,7 +587,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ergofit-wireless-keyboard"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/powercharge_100w_gan_charger.glb",
   },
   {
     id: "visionpro-4k-webcam",
@@ -633,7 +633,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["gaming-beast-desktop-pc"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/visionpro_4k_webcam.glb",
   },
   {
     id: "swiftbook-air-13",
@@ -681,7 +681,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ultrafast-1tb-external-ssd"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/swiftbook_air_13.glb",
   },
   {
     id: "galaxy-tab-s9-ultra",
@@ -728,7 +728,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["surface-pro-9"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/galaxy_tab_s9_ultra.glb",
   },
   {
     id: "officemaster-all-in-one-pc",
@@ -776,7 +776,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["prodisplay-xdr"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/officemaster_all_in_one_pc.glb",
   },
   {
     id: "gaming-pro-wireless-mouse",
@@ -823,7 +823,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["gaming-beast-desktop-pc"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/gaming_pro_wireless_mouse.glb",
   },
   {
     id: "smartwatch-xtreme",
@@ -871,7 +871,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["soundwave-noise-cancelling-headphones"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/smartwatch_xtreme.glb",
   },
   {
     id: "portable-projector-mini",
@@ -917,7 +917,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["smarthome-hub-pro"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/portable_projector_mini.glb",
   },
   {
     id: "cyberbook-pro-16",
@@ -967,7 +967,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/cyberbook_pro_16.glb",
   },
   {
     id: "homeserver-nas-4-bay",
@@ -1014,7 +1014,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ultrafast-1tb-external-ssd"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/homeserver_nas_4_bay.glb",
   },
   {
     id: "smartdesk-standing-desk",
@@ -1062,7 +1062,7 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["ergofit-wireless-keyboard"],
     has3DModel: true,
-    modelPath: "/models/placeholder.glb",
+    modelPath: "/models/smartdesk_standing_desk.glb",
   },
 ];
 
