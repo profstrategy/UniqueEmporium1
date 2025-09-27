@@ -20,11 +20,10 @@ import Returns from "./pages/Returns.tsx";
 import Warranty from "./pages/Warranty.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
-import Checkout from "./pages/Checkout.tsx"; // Import Checkout page
 import { CartProvider } from "./context/CartContext.tsx";
 import { FavoritesProvider } from "./context/FavoritesContext.tsx";
-import { CompareProvider } from "./context/CompareContext.tsx";
-import CompareBar from "./components/common/CompareBar.tsx";
+import { CompareProvider } from "./context/CompareContext.tsx"; // Import CompareProvider
+import CompareBar from "./components/common/CompareBar.tsx"; // Import CompareBar
 
 const queryClient = new QueryClient();
 
@@ -39,7 +38,7 @@ const App = () => {
         <BrowserRouter>
           <CartProvider onOpenCartDrawer={() => setIsCartDrawerOpen(true)}>
             <FavoritesProvider>
-              <CompareProvider>
+              <CompareProvider> {/* Wrap with CompareProvider */}
                 <Header
                   isCartDrawerOpen={isCartDrawerOpen}
                   setIsCartDrawerOpen={setIsCartDrawerOpen}
@@ -58,12 +57,11 @@ const App = () => {
                   <Route path="/warranty" element={<Warranty />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
-                  <Route path="/checkout" element={<Checkout />} /> {/* Add Checkout route */}
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Footer />
-                <CompareBar />
+                <CompareBar /> {/* Render CompareBar */}
               </CompareProvider>
             </FavoritesProvider>
           </CartProvider>
