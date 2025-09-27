@@ -7,33 +7,20 @@ import CheckoutProgress from "@/components/checkout/CheckoutProgress.tsx";
 import OrderSummaryCard from "@/components/checkout/OrderSummaryCard.tsx";
 import EmptyCartState from "@/components/checkout/EmptyCartState.tsx";
 import OrderPlacedState from "@/components/checkout/OrderPlacedState.tsx";
+import ShippingForm from "@/components/checkout/ShippingForm.tsx"; // Import ShippingForm
+import PaymentForm from "@/components/checkout/PaymentForm.tsx"; // Import PaymentForm
+import OrderReview from "@/components/checkout/OrderReview.tsx"; // Import OrderReview
 import { useCart } from "@/context/CartContext.tsx";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button"; // Added Button import
+import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
+import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
 
-// Placeholder for form data types
-interface ShippingInfo {
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  phone: string;
-  email: string;
-}
-
-interface PaymentInfo {
-  cardName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-}
-
+// Use imported types for consistency
 interface OrderData {
-  shipping: ShippingInfo | null;
-  payment: PaymentInfo | null;
+  shipping: ShippingFormData | null;
+  payment: PaymentFormData | null;
 }
 
 const formTransitionVariants = {
@@ -59,6 +46,7 @@ const Checkout = () => {
   const [orderData, setOrderData] = useState<OrderData>({ shipping: null, payment: null });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [direction, setDirection] = useState(0); // 1 for next, -1 for back
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false); // State for OrderReview button
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -68,13 +56,13 @@ const Checkout = () => {
     }
   }, [cartItems, isOrderPlaced]);
 
-  const handleNextStep = (data: any) => {
+  const handleNextStep = (data: ShippingFormData | PaymentFormData) => { // Use imported types here
     setDirection(1);
     if (currentStep === 1) {
-      setOrderData((prev) => ({ ...prev, shipping: data }));
+      setOrderData((prev) => ({ ...prev, shipping: data as ShippingFormData }));
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      setOrderData((prev) => ({ ...prev, payment: data }));
+      setOrderData((prev) => ({ ...prev, payment: data as PaymentFormData }));
       setCurrentStep(3);
     }
   };
@@ -85,11 +73,12 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = async () => {
+    setIsPlacingOrder(true);
     // Simulate API call for placing order
     toast.loading("Placing your order...", { id: "place-order-toast" });
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // In a real app, send orderData to backend
+    // In a real app, send orderData and cartItems to backend
     console.log("Order Data:", orderData, "Cart Items:", cartItems);
 
     toast.dismiss("place-order-toast");
@@ -99,6 +88,7 @@ const Checkout = () => {
 
     clearCart(); // Clear cart after successful order
     setIsOrderPlaced(true);
+    setIsPlacingOrder(false);
   };
 
   if (cartItems.length === 0 && !isOrderPlaced) {
@@ -109,63 +99,31 @@ const Checkout = () => {
     return <OrderPlacedState />;
   }
 
-  // Placeholder components for now
-  const ShippingForm = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-foreground">Shipping Information</h2>
-      <p className="text-muted-foreground">Please provide your delivery details.</p>
-      <div className="bg-muted/20 p-4 rounded-md">
-        <p>Shipping form fields will go here.</p>
-        <p>First Name, Last Name, Address, City, State, Zip Code, Phone, Email</p>
-      </div>
-      <div className="flex justify-end">
-        <Button onClick={() => handleNextStep({ /* dummy data */ })}>Continue to Payment</Button>
-      </div>
-    </div>
-  );
-
-  const PaymentForm = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-foreground">Payment Information</h2>
-      <p className="text-muted-foreground">Enter your payment details.</p>
-      <div className="bg-muted/20 p-4 rounded-md">
-        <p>Payment form fields will go here.</p>
-        <p>Card Name, Card Number, Expiry Date, CVV</p>
-      </div>
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={handlePreviousStep}>Back to Shipping</Button>
-        <Button onClick={() => handleNextStep({ /* dummy data */ })}>Review Order</Button>
-      </div>
-    </div>
-  );
-
-  const OrderReview = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-foreground">Review Your Order</h2>
-      <p className="text-muted-foreground">Please confirm all details before placing your order.</p>
-      <div className="bg-muted/20 p-4 rounded-md">
-        <h3 className="font-semibold mb-2">Shipping Details:</h3>
-        <p>{orderData.shipping ? `${orderData.shipping.firstName} ${orderData.shipping.lastName}` : 'N/A'}</p>
-        <p>{orderData.shipping ? orderData.shipping.address : 'N/A'}</p>
-        <p>{orderData.shipping ? `${orderData.shipping.city}, ${orderData.shipping.state} ${orderData.shipping.zipCode}` : 'N/A'}</p>
-        <h3 className="font-semibold mt-4 mb-2">Payment Details:</h3>
-        <p>{orderData.payment ? `Card ending in ${orderData.payment.cardNumber.slice(-4)}` : 'N/A'}</p>
-      </div>
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={handlePreviousStep}>Back to Payment</Button>
-        <Button onClick={handlePlaceOrder}>Place Order</Button>
-      </div>
-    </div>
-  );
-
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <ShippingForm />;
+        return <ShippingForm onNext={handleNextStep} initialData={orderData.shipping} />;
       case 2:
-        return <PaymentForm />;
+        return <PaymentForm onNext={handleNextStep} onPrevious={handlePreviousStep} initialData={orderData.payment} />;
       case 3:
-        return <OrderReview />;
+        if (!orderData.shipping || !orderData.payment) {
+          // Fallback if somehow review step is reached without data
+          return (
+            <div className="text-center py-10">
+              <p className="text-destructive">Error: Missing shipping or payment information.</p>
+              <Button onClick={() => setCurrentStep(1)} className="mt-4">Start Over</Button>
+            </div>
+          );
+        }
+        return (
+          <OrderReview
+            shippingInfo={orderData.shipping}
+            paymentInfo={orderData.payment}
+            onPrevious={handlePreviousStep}
+            onPlaceOrder={handlePlaceOrder}
+            isPlacingOrder={isPlacingOrder}
+          />
+        );
       default:
         return null;
     }
