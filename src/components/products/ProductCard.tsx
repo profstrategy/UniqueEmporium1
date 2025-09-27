@@ -168,22 +168,26 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 left-2 md:right-2 md:left-auto z-50" />
         )}
 
-        <Link to={`/products/${product.id}`} className="block h-[200px] w-full overflow-hidden bg-gray-100 relative"> {/* Link wrapper */}
-          <div className="embla h-full" ref={emblaRef}>
-            <div className="embla__container flex h-full">
-              {product.images.map((image, index) => (
-                <div className="embla__slide relative flex-none w-full" key={index}>
-                  <img
-                    src={image}
-                    alt={`${product.name} - Image ${index + 1}`}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              ))}
+        {/* Product Image Area - now a clickable div, with the Link inside covering the image */}
+        <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
+          {/* This Link covers the entire image area for navigation to product details */}
+          <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
+            <div className="embla h-full" ref={emblaRef}>
+              <div className="embla__container flex h-full">
+                {product.images.map((image, index) => (
+                  <div className="embla__slide relative flex-none w-full" key={index}>
+                    <img
+                      src={image}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </Link>
 
-          {/* Rating Overlay */}
+          {/* Rating Overlay (positioned above the Link) */}
           <div className="absolute top-3 right-3 z-10 md:bottom-3 md:top-auto">
             <Badge variant="secondary" className="flex items-center gap-1 text-xs md:text-sm font-medium">
               <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -191,6 +195,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             </Badge>
           </div>
 
+          {/* Navigation Arrows (positioned above the Link) */}
           {product.images.length > 1 && (
             <AnimatePresence>
               {hovered && (
@@ -236,7 +241,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             </div>
           )}
 
-          {/* Desktop Hover Overlay with Action Buttons */}
+          {/* Desktop Hover Overlay with Action Buttons - Now siblings to the Link, positioned over it */}
           <AnimatePresence>
             {hovered && (
               <motion.div
@@ -261,7 +266,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             )}
           </AnimatePresence>
 
-          {/* Mobile "Add to Cart" and "Compare" Buttons */}
+          {/* Mobile "Add to Cart" and "Compare" Buttons - Now siblings to the Link, positioned over it */}
           <div className="md:hidden absolute bottom-2 left-2 z-10">
             <Button variant="secondary" size="icon" className="h-7 w-7 sm:h-8 sm:w-8" onClick={handleAddToCart} disabled={isAddingToCart}>
               {isAddingToCart ? (
@@ -276,7 +281,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               <Scale className={cn("h-4 w-4", inComparison && "fill-primary text-primary")} />
             </Button>
           </div>
-        </Link> {/* End Link wrapper */}
+        </div> {/* End of image area div */}
 
         <CardContent className="p-4 flex flex-col flex-grow text-left">
           {/* Category Text */}
@@ -285,7 +290,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </span>
 
           {/* Product Name */}
-          <Link to={`/products/${product.id}`}> {/* Link for product name */}
+          <Link to={`/products/${product.id}`}> {/* This Link is fine here */}
             <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
