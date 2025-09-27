@@ -20,11 +20,12 @@ import Returns from "./pages/Returns.tsx";
 import Warranty from "./pages/Warranty.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
-import Checkout from "./pages/Checkout.tsx"; // Import Checkout page
+import Checkout from "./pages/Checkout.tsx";
 import { CartProvider } from "./context/CartContext.tsx";
 import { FavoritesProvider } from "./context/FavoritesContext.tsx";
 import { CompareProvider } from "./context/CompareContext.tsx";
 import CompareBar from "./components/common/CompareBar.tsx";
+import ScrollToTop from "./components/common/ScrollToTop.tsx"; // Import ScrollToTop
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop /> {/* Add ScrollToTop here */}
           <CartProvider onOpenCartDrawer={() => setIsCartDrawerOpen(true)}>
             <FavoritesProvider>
               <CompareProvider>
@@ -58,7 +60,7 @@ const App = () => {
                   <Route path="/warranty" element={<Warranty />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
-                  <Route path="/checkout" element={<Checkout />} /> {/* Add Checkout route */}
+                  <Route path="/checkout" element={<Checkout />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

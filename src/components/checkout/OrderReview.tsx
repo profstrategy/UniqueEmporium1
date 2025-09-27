@@ -7,29 +7,12 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext.tsx";
 import { Product } from "@/components/products/ProductCard.tsx"; // Import Product interface
-
-interface ShippingInfo {
-  firstName: string;
-  lastName: string;
-  address: string;
-  address2?: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  phone: string;
-  email: string;
-}
-
-interface PaymentInfo {
-  cardName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-}
+import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
+import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
 
 interface OrderReviewProps {
-  shippingInfo: ShippingInfo;
-  paymentInfo: PaymentInfo;
+  shippingInfo: ShippingFormData; // Use imported type
+  paymentInfo: PaymentFormData;   // Use imported type
   onPrevious: () => void;
   onPlaceOrder: () => void;
   isPlacingOrder: boolean;
