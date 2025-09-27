@@ -9,17 +9,41 @@ import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Placeholder product data (keeping it here for now as it's already in the file)
-const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
+// List of new product names
+const newProductNames = [
+  "ZenBook Pro 14 OLED",
+  "Surface Pro 9",
+  "Echo Dot (5th Gen)",
+  "ErgoFit Wireless Keyboard",
+  "ProDisplay XDR",
+  "Gaming Beast Desktop PC",
+  "SoundWave Noise-Cancelling Headphones",
+  "UltraFast 1TB External SSD",
+  "SmartHome Hub Pro",
+  "PowerCharge 100W GaN Charger",
+  "VisionPro 4K Webcam",
+  "SwiftBook Air 13",
+  "Galaxy Tab S9 Ultra",
+  "OfficeMaster All-in-One PC",
+  "Gaming Pro Wireless Mouse",
+  "SmartWatch Xtreme",
+  "Portable Projector Mini",
+  "CyberBook Pro 16",
+  "HomeServer NAS 4-Bay",
+  "SmartDesk Standing Desk"
+];
+
+// Placeholder product data
+const allProducts: Product[] = newProductNames.map((name, index) => ({
   id: `prod-${index + 1}`,
-  name: `ElectroPro Laptop ${index + 1}`,
+  name: name,
   category: ["Laptops", "Tablets", "Audio", "Monitors", "Accessories", "Smart Home"][index % 6], // Assign categories
   images: ["/placeholder.svg", "/placeholder.svg"],
   price: 450000 + index * 25000, // Adjusted to Naira values
   originalPrice: (450000 + index * 25000) * 1.1, // 10% higher original price
   discountPercentage: 10,
   rating: Math.min(5, 3.5 + index * 0.1),
-  reviewCount: 50 + index * 10, // Changed from 'reviews'
+  reviewCount: 50 + index * 10,
   tag: index % 3 === 0 ? "New" : index % 5 === 0 ? "Sale" : undefined,
   tagVariant: index % 3 === 0 ? "default" : index % 5 === 0 ? "destructive" : undefined,
   limitedStock: index % 4 === 0,
