@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Stage, PresentationControls, Html } from "@react-three/drei"; // Ensure Html is imported here
+import { OrbitControls, useGLTF, Stage, PresentationControls, Html } from "@react-three/drei";
 import { Loader2, Box } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -11,12 +11,11 @@ interface Product3DViewerProps {
   productName: string;
 }
 
-const Model = ({ modelPath }: { modelPath: string }) => {
-  // useGLTF can return null or an object where scene is null if loading fails
+// This component will only be rendered if modelPath is provided
+const LoadedModel = ({ modelPath }: { modelPath: string }) => {
   const { scene } = useGLTF(modelPath);
 
   if (!scene) {
-    // Fallback if the model scene is not available
     console.warn(`Failed to load 3D model from: ${modelPath}. Rendering fallback box.`);
     return (
       <mesh>
@@ -35,7 +34,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         <color attach="background" args={["#f0f0f0"]} />
         <Suspense
           fallback={
-            <Html center> {/* Use Html from drei */}
+            <Html center>
               <div className="flex flex-col items-center text-muted-foreground">
                 <Loader2 className="h-8 w-8 animate-spin mb-2" />
                 <p>Loading 3D model...</p>
@@ -51,9 +50,9 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
           >
             <Stage environment="city" intensity={0.6} shadows={false}>
               {modelPath ? (
-                <Model modelPath={modelPath} />
+                <LoadedModel modelPath={modelPath} /> // Only call LoadedModel if modelPath exists
               ) : (
-                <mesh>
+                <mesh> {/* Fallback if no modelPath is provided at all */}
                   <boxGeometry args={[1, 1, 1]} />
                   <meshStandardMaterial color="hotpink" />
                 </mesh>
