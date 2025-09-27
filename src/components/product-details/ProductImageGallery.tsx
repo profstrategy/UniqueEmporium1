@@ -113,12 +113,12 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
 
       {/* Thumbnail Gallery */}
       {images.length > 1 && (
-        <div className="flex p-4 space-x-3 overflow-x-auto no-scrollbar bg-card border-t"> {/* Removed 'hidden md:flex' */}
+        <div className="flex p-4 space-x-3 overflow-x-auto no-scrollbar bg-card border-t">
           {images.map((image, index) => (
             <motion.button
               key={index}
               className={cn(
-                "flex-shrink-0 h-20 w-20 rounded-md overflow-hidden border-2 transition-all duration-200",
+                "flex-shrink-0 h-10 w-10 md:h-20 md:w-20 rounded-md overflow-hidden border-2 transition-all duration-200", // Adjusted size for mobile
                 index === selectedIndex ? "border-primary shadow-md" : "border-transparent hover:border-muted-foreground",
               )}
               onClick={() => emblaApi && emblaApi.scrollTo(index)}
