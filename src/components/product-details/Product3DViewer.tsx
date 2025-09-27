@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Stage, PresentationControls } from "@react-three/drei";
+import { OrbitControls, useGLTF, Stage, PresentationControls, Html } from "@react-three/drei"; // Ensure Html is imported here
 import { Loader2, Box } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -12,7 +12,19 @@ interface Product3DViewerProps {
 }
 
 const Model = ({ modelPath }: { modelPath: string }) => {
+  // useGLTF can return null or an object where scene is null if loading fails
   const { scene } = useGLTF(modelPath);
+
+  if (!scene) {
+    // Fallback if the model scene is not available
+    console.warn(`Failed to load 3D model from: ${modelPath}. Rendering fallback box.`);
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="gray" />
+      </mesh>
+    );
+  }
   return <primitive object={scene} scale={1} />;
 };
 
@@ -20,10 +32,10 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
   return (
     <div className="relative h-full w-full bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden">
       <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }}>
-        <color attach="background" args={["#f0f0f0"]} /> {/* Light background for the canvas */}
+        <color attach="background" args={["#f0f0f0"]} />
         <Suspense
           fallback={
-            <Html center>
+            <Html center> {/* Use Html from drei */}
               <div className="flex flex-col items-center text-muted-foreground">
                 <Loader2 className="h-8 w-8 animate-spin mb-2" />
                 <p>Loading 3D model...</p>
@@ -37,7 +49,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
             polar={[-Math.PI / 3, Math.PI / 3]}
             azimuth={[-Math.PI / 1.4, Math.PI / 2]}
           >
-            <Stage environment="city" intensity={0.6} shadows={false}> {/* Changed contactShadow to shadows */}
+            <Stage environment="city" intensity={0.6} shadows={false}>
               {modelPath ? (
                 <Model modelPath={modelPath} />
               ) : (
@@ -62,20 +74,5 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
     </div>
   );
 };
-
-// Helper component for HTML content in 3D scene
-const Html = ({ children, center }: { children: React.ReactNode; center?: boolean }) => (
-  <div
-    style={{
-      position: 'absolute',
-      top: center ? '50%' : 'auto',
-      left: center ? '50%' : 'auto',
-      transform: center ? 'translate(-50%, -50%)' : 'none',
-      pointerEvents: 'none', // Allow clicks to pass through to canvas
-    }}
-  >
-    {children}
-  </div>
-);
 
 export default Product3DViewer;
