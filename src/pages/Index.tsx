@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
 import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import getProductsByIds
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
+import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx"; // Reverted to alias path
 import React, { useEffect, useState } from "react"; // Import useEffect and useState
 
 // Select specific products from mockProducts to be featured
@@ -91,6 +92,17 @@ const Index = () => {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* Top Selling Products Section (on Home Page) */}
+      <motion.div
+        className="mt-16"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <TopSellingProductsSection />
+      </motion.div>
 
       {/* Why Choose Us Section */}
       <WhyChooseUsSection />
