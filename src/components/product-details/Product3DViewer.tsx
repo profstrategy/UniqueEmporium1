@@ -37,7 +37,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
             polar={[-Math.PI / 3, Math.PI / 3]}
             azimuth={[-Math.PI / 1.4, Math.PI / 2]}
           >
-            <Stage environment="city" intensity={0.6} contactShadow={false}>
+            <Stage environment="city" intensity={0.6} shadows={false}> {/* Changed contactShadow to shadows */}
               {modelPath ? (
                 <Model modelPath={modelPath} />
               ) : (

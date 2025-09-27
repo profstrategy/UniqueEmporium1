@@ -138,7 +138,7 @@ const CompareProductCard = ({ product, onRemove, disableEntryAnimation = false }
             <div className="space-y-2">
               {displaySpecs.map((spec, index) => (
                 <div key={index} className="flex items-center text-xs text-muted-foreground">
-                  <spec.icon className="w-4 h-4 text-primary mr-2 flex-shrink-0" />
+                  {spec.icon && React.createElement(spec.icon, { className: "w-4 h-4 text-primary mr-2 flex-shrink-0" })}
                   <span className="font-medium text-foreground mr-1">{spec.label}:</span>
                   <span className="truncate">{spec.value}</span>
                 </div>

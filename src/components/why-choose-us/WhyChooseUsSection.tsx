@@ -140,7 +140,7 @@ const WhyChooseUsSection = () => {
                     delay: index * 0.1, // Stagger the icon animation
                   }}
                 >
-                  <reason.icon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-5 lg:w-5 text-primary mx-auto" />
+                  {React.createElement(reason.icon, { className: "h-6 w-6 sm:h-8 sm:w-8 lg:h-5 lg:w-5 text-primary mx-auto" })}
                 </motion.div>
                 <h3 className="text-sm sm:text-lg lg:text-sm font-semibold mb-1 sm:mb-2 lg:mb-1 text-card-foreground">{reason.title}</h3>
                 <p className="text-[10px] sm:text-sm lg:text-xs text-muted-foreground">{reason.description}</p>

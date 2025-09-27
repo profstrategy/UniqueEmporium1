@@ -91,7 +91,7 @@ const AboutValues = () => {
                   delay: index * 0.1, // Stagger the icon animation
                 }}
               >
-                <value.icon className="h-full w-full" />
+                {React.createElement(value.icon, { className: "h-full w-full" })}
               </motion.div>
               <h3 className="text-base font-semibold mb-1 text-foreground">{value.title}</h3>
               <p className="text-xs text-muted-foreground">{value.description}</p>

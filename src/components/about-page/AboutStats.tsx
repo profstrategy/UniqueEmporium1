@@ -62,7 +62,7 @@ const AboutStats = () => {
                   delay: index * 0.1, // Stagger the icon animation
                 }}
               >
-                <stat.icon className="h-full w-full" />
+                {React.createElement(stat.icon, { className: "h-full w-full" })}
               </motion.div>
               <h3 className="text-2xl font-bold mb-2 text-foreground">{stat.value}</h3>
               <p className="text-xs text-muted-foreground">{stat.label}</p>

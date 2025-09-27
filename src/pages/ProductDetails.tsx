@@ -19,12 +19,16 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
 };
 
+const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
+const MAX_RECENTLY_VIEWED = 8;
+
 const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const [product, setProduct] = useState<ProductDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentlyViewedProducts, setRecentlyViewedProducts] = useState<string[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -33,6 +37,15 @@ const ProductDetails = () => {
       const fetchedProduct = getProductById(productId);
       if (fetchedProduct) {
         setProduct(fetchedProduct);
+
+        // Update recently viewed products in localStorage
+        setRecentlyViewedProducts((prev) => {
+          const currentViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+          const updatedViewed = [productId, ...currentViewed.filter(id => id !== productId)].slice(0, MAX_RECENTLY_VIEWED);
+          localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updatedViewed));
+          return updatedViewed;
+        });
+
       } else {
         setError("Product not found.");
         toast.error("Product not found.", { description: `No product found with ID: ${productId}` });
@@ -43,6 +56,13 @@ const ProductDetails = () => {
     }
     setLoading(false);
   }, [productId]);
+
+  // Load recently viewed products from localStorage on initial mount
+  useEffect(() => {
+    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+    setRecentlyViewedProducts(storedViewed);
+  }, []);
+
 
   if (loading) {
     return (
@@ -85,9 +105,9 @@ const ProductDetails = () => {
     );
   }
 
-  // Mock data for related/recently viewed sections
-  const relatedProducts = getRandomProducts(4, product.id); // Using existing RecommendedProductsSection
-  const recentlyViewed = getRecentlyViewedProducts(4, product.id);
+  // Filter out the current product from the recently viewed list
+  const filteredRecentlyViewedIds = recentlyViewedProducts.filter(id => id !== product.id);
+  const actualRecentlyViewedProducts = getRecentlyViewedProducts(MAX_RECENTLY_VIEWED, product.id); // Using helper to get Product[]
 
   return (
     <div className="min-h-screen w-full bg-background">
@@ -154,7 +174,7 @@ const ProductDetails = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          <RecentlyViewedProductsSection products={recentlyViewed} />
+          <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
         </motion.div>
       </div>
     </div>

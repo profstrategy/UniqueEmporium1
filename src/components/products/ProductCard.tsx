@@ -372,7 +372,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
                 className="flex-shrink-0 min-w-[100px] border rounded-md bg-background p-2 flex items-center
                            transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               >
-                <spec.icon className="w-4 h-4 text-primary mr-1" />
+                {spec.icon && React.createElement(spec.icon, { className: "w-4 h-4 text-primary mr-1" })}
                 <div>
                   <p className="text-xs text-muted-foreground leading-none">{spec.label}</p>
                   <p className="text-xs font-medium text-foreground leading-none">{spec.value}</p>

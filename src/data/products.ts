@@ -3,6 +3,8 @@ import { Product } from "@/components/products/ProductCard.tsx"; // Assuming Pro
 
 export interface ProductDetails extends Product {
   fullDescription: string;
+  keyFeatures: string[]; // New field
+  applications: string; // New field
   detailedSpecs: {
     group: string;
     items: { label: string; value: string; icon?: React.ElementType }[];
@@ -14,6 +16,7 @@ export interface ProductDetails extends Product {
     date: string;
     title: string;
     comment: string;
+    isVerifiedBuyer: boolean; // New field
   }[];
   relatedProducts: string[]; // Array of product IDs
   has3DModel?: boolean; // New property for 3D viewer
@@ -35,6 +38,14 @@ export const mockProducts: ProductDetails[] = [
     tagVariant: "destructive",
     limitedStock: true,
     fullDescription: `The ZenBook Pro 14 OLED is a powerhouse designed for creative professionals. Featuring a stunning 14-inch 4K OLED display, it delivers vibrant colors and deep blacks, perfect for graphic design, video editing, and immersive entertainment. Powered by the latest Intel Core i7 processor and 16GB of RAM, it handles demanding tasks with ease. Its sleek, lightweight design makes it highly portable, while the long-lasting battery ensures you stay productive on the go. Experience unparalleled performance and visual brilliance.`,
+    keyFeatures: [
+      "Stunning 4K OLED display for vibrant visuals",
+      "Powerful Intel Core i7 processor for demanding tasks",
+      "Lightweight and portable design",
+      "Long-lasting battery for on-the-go productivity",
+      "NVIDIA GeForce RTX 3050 graphics for creative work and light gaming",
+    ],
+    applications: `Ideal for graphic designers, video editors, photographers, and anyone requiring high-performance computing with exceptional visual fidelity. Also suitable for students and professionals who need a powerful yet portable workstation.`,
     detailedSpecs: [
       {
         group: "Performance",
@@ -80,6 +91,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-26",
         title: "Absolutely stunning!",
         comment: "The OLED screen is breathtaking. Perfect for my design work. Performance is top-notch.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev2",
@@ -88,6 +100,16 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-20",
         title: "Great laptop, minor quibbles",
         comment: "Fast and powerful. Battery life is good, but could be better under heavy load. Still highly recommend.",
+        isVerifiedBuyer: true,
+      },
+      {
+        id: "rev25",
+        author: "Carol S.",
+        rating: 5,
+        date: "2023-11-01",
+        title: "Best laptop for creatives!",
+        comment: "I've been using this for a month now, and it handles all my video editing projects without a hitch. The screen is a dream.",
+        isVerifiedBuyer: true,
       },
     ],
     relatedProducts: ["soundwave-max-headphones", "ultrawide-monitor-32"],
@@ -104,7 +126,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 230,
     tag: "New Arrival",
     tagVariant: "default",
+    limitedStock: false,
     fullDescription: `Immerse yourself in pure audio bliss with the SoundWave Max Headphones. Featuring advanced active noise cancellation, these headphones block out distractions, allowing you to focus on your music, podcasts, or calls. The ergonomic design ensures supreme comfort for extended listening sessions, while the powerful drivers deliver rich, detailed sound with deep bass. With up to 30 hours of battery life and quick charging, your soundtrack never has to stop.`,
+    keyFeatures: [
+      "Advanced Hybrid Active Noise Cancellation",
+      "Ergonomic design for supreme comfort",
+      "Rich, detailed sound with deep bass",
+      "Up to 30 hours of battery life",
+      "Quick charging capabilities",
+    ],
+    applications: `Perfect for audiophiles, commuters, students, and anyone seeking an immersive listening experience without distractions. Great for travel, work, or simply relaxing with your favorite tunes.`,
     detailedSpecs: [
       {
         group: "Audio",
@@ -147,6 +178,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-01",
         title: "Best headphones I've owned!",
         comment: "The ANC is incredible, and the sound quality is fantastic. Very comfortable too.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev4",
@@ -155,6 +187,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-28",
         title: "Great value for money",
         comment: "Solid performance, good battery. A bit bulky for my taste, but overall excellent.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["zenbook-pro-14-oled", "mechanical-rgb-keyboard"],
@@ -171,7 +204,18 @@ export const mockProducts: ProductDetails[] = [
     discountPercentage: 6,
     rating: 4.7,
     reviewCount: 95,
+    tag: undefined,
+    tagVariant: undefined,
+    limitedStock: false,
     fullDescription: `Elevate your workspace and gaming experience with the UltraView 32-inch Monitor. This stunning 4K UHD display offers incredible clarity and vibrant colors, bringing your content to life. With a fast 144Hz refresh rate and IPS panel, it ensures smooth, tear-free visuals for both productivity and high-action gaming. Its ergonomic stand allows for versatile adjustments, and multiple connectivity options make it a central hub for all your devices.`,
+    keyFeatures: [
+      "Stunning 4K UHD resolution for incredible clarity",
+      "Fast 144Hz refresh rate for smooth visuals",
+      "IPS panel for vibrant colors and wide viewing angles",
+      "Ergonomic stand with versatile adjustments",
+      "Multiple connectivity options including HDMI 2.1 and DisplayPort 1.4",
+    ],
+    applications: `Perfect for professional content creators, graphic designers, competitive gamers, and anyone needing a high-resolution, high-refresh-rate display for immersive work or entertainment.`,
     detailedSpecs: [
       {
         group: "Display",
@@ -210,6 +254,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-05",
         title: "Amazing 4K monitor!",
         comment: "The clarity and colors are phenomenal. Gaming is super smooth. Highly recommend for both work and play.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev6",
@@ -218,6 +263,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-02",
         title: "Great, but pricey",
         comment: "Excellent monitor, but it's a significant investment. Worth it if you need the best.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["zenbook-pro-14-oled", "ergogrip-wireless-mouse"],
@@ -232,7 +278,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 310,
     tag: "Top Rated",
     tagVariant: "secondary",
+    limitedStock: false,
     fullDescription: `Experience ultimate comfort and precision with the ErgoGrip Wireless Mouse. Designed for extended use, its ergonomic shape fits perfectly in your hand, reducing strain. With a high-precision optical sensor and adjustable DPI up to 16000, you get pixel-perfect tracking for both work and gaming. Eight programmable buttons allow for customization, and its long-lasting battery ensures uninterrupted productivity.`,
+    keyFeatures: [
+      "Ergonomic design for ultimate comfort",
+      "High-precision optical sensor with up to 16000 DPI",
+      "Eight programmable buttons for customization",
+      "Long-lasting wireless battery life",
+      "Reduced strain during extended use",
+    ],
+    applications: `Ideal for office professionals, gamers, and anyone who spends long hours on the computer and requires a comfortable, precise, and customizable mouse.`,
     detailedSpecs: [
       {
         group: "Performance",
@@ -268,6 +323,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-15",
         title: "Comfortable and precise!",
         comment: "My hand pain is gone! This mouse is a game-changer for long work sessions.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev8",
@@ -276,6 +332,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-10",
         title: "Good, but software could be better",
         comment: "Hardware is solid, but the customization software is a bit clunky. Still a great mouse.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["ultrawide-monitor-32", "mechanical-rgb-keyboard"],
@@ -290,8 +347,18 @@ export const mockProducts: ProductDetails[] = [
     price: 65000.00,
     rating: 4.2,
     reviewCount: 80,
+    tag: undefined,
+    tagVariant: undefined,
     limitedStock: true,
     fullDescription: `The SmartHome Hub Pro is the central brain for your connected home. Seamlessly integrate and control all your smart devices, from lighting and thermostats to security cameras and door locks, all from one intuitive app. Compatible with multiple protocols like Zigbee, Z-Wave, and Wi-Fi, it offers unparalleled flexibility. Enjoy advanced automation, voice assistant integration (Alexa, Google Assistant), and robust security features to keep your home safe and smart.`,
+    keyFeatures: [
+      "Centralized control for all smart devices",
+      "Multi-protocol compatibility (Zigbee, Z-Wave, Wi-Fi)",
+      "Advanced automation and customizable routines",
+      "Voice assistant integration (Alexa, Google Assistant)",
+      "Robust security features with AES-128 encryption",
+    ],
+    applications: `Essential for building a comprehensive smart home ecosystem. Ideal for homeowners looking to automate lighting, climate, security, and entertainment systems, enhancing convenience, energy efficiency, and peace of mind.`,
     detailedSpecs: [
       {
         group: "Connectivity",
@@ -324,6 +391,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-09-28",
         title: "Solid hub, easy setup",
         comment: "Works well with all my devices. Setup was surprisingly simple. A few minor bugs, but updates are frequent.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev10",
@@ -332,6 +400,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-09-20",
         title: "Good potential, needs refinement",
         comment: "It's powerful, but the app can be a bit slow sometimes. Hoping for performance improvements.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["smart-doorbell-camera"],
@@ -348,7 +417,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 450,
     tag: "Limited Stock",
     tagVariant: "destructive",
+    limitedStock: true,
     fullDescription: `Revolutionize your charging experience with the PowerCharge 100W GaN Charger. Utilizing advanced Gallium Nitride (GaN) technology, this compact charger delivers a massive 100W of power, capable of fast-charging laptops, tablets, and smartphones simultaneously. With two USB-C ports and one USB-A port, it's the only charger you'll need for all your devices. Its intelligent power distribution ensures optimal charging speeds for each connected device.`,
+    keyFeatures: [
+      "Advanced Gallium Nitride (GaN) technology for compact size",
+      "Massive 100W power output for fast charging",
+      "Simultaneous charging for laptops, tablets, and smartphones",
+      "Two USB-C ports and one USB-A port for versatile compatibility",
+      "Intelligent power distribution for optimal charging speeds",
+    ],
+    applications: `An essential accessory for travelers, remote workers, and anyone with multiple devices needing fast and efficient charging. Perfect for decluttering your charging setup and ensuring all your gadgets are powered up quickly.`,
     detailedSpecs: [
       {
         group: "Power Output",
@@ -388,6 +466,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-10",
         title: "Incredible charger!",
         comment: "Charges my laptop and phone super fast. So compact for travel. A must-have!",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev12",
@@ -396,6 +475,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-08",
         title: "Replaced all my other chargers",
         comment: "Finally, one charger for everything. No more bulky power bricks. Works perfectly.",
+        isVerifiedBuyer: true,
       },
     ],
     relatedProducts: ["ergogrip-wireless-mouse"],
@@ -414,6 +494,14 @@ export const mockProducts: ProductDetails[] = [
     tagVariant: "destructive",
     limitedStock: false,
     fullDescription: `Unleash the ultimate gaming experience with the Gaming Beast Laptop. Equipped with a powerful Intel i9 processor and NVIDIA GeForce RTX 4080 graphics, it delivers unparalleled performance for the most demanding games and creative applications. The 17-inch QHD 165Hz display ensures buttery-smooth visuals, while advanced cooling keeps temperatures in check during intense sessions. Dominate the competition with this portable powerhouse.`,
+    keyFeatures: [
+      "Powerful Intel i9 processor and NVIDIA GeForce RTX 4080 graphics",
+      "17-inch QHD 165Hz display for smooth, immersive visuals",
+      "Advanced cooling system for sustained performance",
+      "Unparalleled performance for demanding games and creative applications",
+      "Portable design for gaming on the go",
+    ],
+    applications: `Designed for hardcore gamers, esports enthusiasts, and professionals who require top-tier performance for gaming, streaming, 3D rendering, and other resource-intensive tasks.`,
     detailedSpecs: [
       {
         group: "Performance",
@@ -457,6 +545,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-15",
         title: "Absolute monster!",
         comment: "This laptop handles everything I throw at it. Games run flawlessly at max settings. Best gaming laptop I've ever owned.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev14",
@@ -465,6 +554,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-12",
         title: "Worth every penny",
         comment: "Incredible performance, stunning display, and surprisingly good thermals. Highly recommended for serious gamers.",
+        isVerifiedBuyer: true,
       },
     ],
     relatedProducts: ["ultrawide-monitor-32", "mechanical-rgb-keyboard"],
@@ -479,7 +569,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 180,
     tag: "New",
     tagVariant: "default",
+    limitedStock: false,
     fullDescription: `Experience crystal-clear audio and serene silence with our Noise Cancelling Earbuds. Perfect for commutes, workouts, or just finding your focus, these earbuds feature advanced hybrid active noise cancellation. Enjoy rich, balanced sound with deep bass and crisp highs. With a comfortable, secure fit and up to 24 hours of combined battery life (with charging case), they're your perfect audio companion.`,
+    keyFeatures: [
+      "Crystal-clear audio with advanced hybrid active noise cancellation",
+      "Comfortable, secure fit for extended wear",
+      "Rich, balanced sound with deep bass and crisp highs",
+      "Up to 24 hours of combined battery life with charging case",
+      "Perfect for commutes, workouts, or focused listening",
+    ],
+    applications: `Ideal for daily commuters, fitness enthusiasts, students, and anyone who wants to enjoy high-quality audio and block out ambient noise in various environments.`,
     detailedSpecs: [
       {
         group: "Audio",
@@ -521,6 +620,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-01",
         title: "Great sound, good ANC",
         comment: "For the price, these are fantastic. ANC works well, and the sound is clear. Comfortable for long periods.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev16",
@@ -529,6 +629,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-29",
         title: "Perfect for my daily commute",
         comment: "Blocks out all the train noise. Battery lasts all day. Very happy with this purchase.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["soundwave-max-headphones"],
@@ -543,7 +644,18 @@ export const mockProducts: ProductDetails[] = [
     discountPercentage: 9,
     rating: 4.8,
     reviewCount: 110,
+    tag: undefined,
+    tagVariant: undefined,
+    limitedStock: false,
     fullDescription: `Dive into an expansive visual experience with the Curved Ultrawide Monitor. Its immersive 1800R curvature and UWQHD resolution provide a panoramic view, perfect for multitasking, content creation, and cinematic gaming. The 120Hz refresh rate ensures smooth motion, while the vibrant display brings every detail to life. Enhance your productivity and entertainment with this stunning ultrawide display.`,
+    keyFeatures: [
+      "Immersive 1800R curvature for a panoramic view",
+      "UWQHD resolution for sharp, detailed visuals",
+      "120Hz refresh rate for smooth motion",
+      "Perfect for multitasking, content creation, and cinematic gaming",
+      "Vibrant display that brings every detail to life",
+    ],
+    applications: `An excellent choice for professionals who need ample screen real estate for productivity (e.g., coding, data analysis, video editing) and gamers seeking an immersive, wide field-of-view experience.`,
     detailedSpecs: [
       {
         group: "Display",
@@ -580,6 +692,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-07",
         title: "Incredible immersion!",
         comment: "The ultrawide aspect ratio and curve are amazing for gaming and productivity. No going back!",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev18",
@@ -588,6 +701,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-04",
         title: "Great for work, decent for gaming",
         comment: "Perfect for my coding setup. Gaming is good, but not as fast as a dedicated gaming monitor.",
+        isVerifiedBuyer: true,
       },
     ],
     relatedProducts: ["gaming-beast-laptop", "ergogrip-wireless-mouse"],
@@ -602,7 +716,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 250,
     tag: "Popular",
     tagVariant: "secondary",
+    limitedStock: false,
     fullDescription: `Elevate your typing and gaming with the Mechanical RGB Keyboard. Featuring tactile brown switches, it provides a satisfying keystroke with excellent responsiveness. The per-key RGB backlighting is fully customizable, allowing you to create stunning light shows or highlight important keys. Its durable aluminum frame and full-size layout make it a robust and versatile choice for any setup.`,
+    keyFeatures: [
+      "Tactile brown mechanical switches for satisfying keystrokes",
+      "Per-key RGB backlighting, fully customizable",
+      "Durable aluminum frame for robust build quality",
+      "Full-size layout for comprehensive functionality",
+      "Excellent responsiveness for typing and gaming",
+    ],
+    applications: `A versatile keyboard for gamers, programmers, writers, and anyone who appreciates the tactile feedback and durability of mechanical switches, along with customizable aesthetics.`,
     detailedSpecs: [
       {
         group: "Keys",
@@ -636,6 +759,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-25",
         title: "Fantastic keyboard!",
         comment: "The brown switches feel great, and the RGB is vibrant. Very sturdy build quality.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev20",
@@ -644,6 +768,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-20",
         title: "A bit loud, but excellent performance",
         comment: "Love the feel and responsiveness, but it's definitely clicky. My colleagues can hear me type!",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["ergogrip-wireless-mouse", "gaming-beast-laptop"],
@@ -656,8 +781,18 @@ export const mockProducts: ProductDetails[] = [
     price: 110000.00,
     rating: 4.5,
     reviewCount: 90,
+    tag: undefined,
+    tagVariant: undefined,
     limitedStock: true,
     fullDescription: `Enhance your home security with the Smart Doorbell Camera. See, hear, and speak to visitors from anywhere using your smartphone. Featuring 1080p HD video, a wide 160° field of view, and advanced motion detection, you'll never miss a moment. Two-way audio allows for clear communication, and cloud/local storage options keep your recordings safe. Easy to install and integrate with existing smart home systems.`,
+    keyFeatures: [
+      "1080p HD video with wide 160° field of view",
+      "Advanced motion detection with customizable zones",
+      "Two-way audio for clear communication with visitors",
+      "Cloud and local storage options for recordings",
+      "Easy installation and smart home system integration",
+    ],
+    applications: `A crucial component for home security, allowing homeowners to monitor their front door, receive alerts, and interact with visitors remotely. Ideal for package delivery monitoring and deterring unwanted guests.`,
     detailedSpecs: [
       {
         group: "Camera",
@@ -698,6 +833,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-03",
         title: "Excellent security addition!",
         comment: "Clear video, reliable motion alerts, and easy to talk to visitors. Feel much safer.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev22",
@@ -706,6 +842,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-10-30",
         title: "Good, but battery drains fast with high activity",
         comment: "Works as advertised. Battery life is shorter than expected in a busy area, but still good.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["smarthome-hub-pro"],
@@ -722,7 +859,16 @@ export const mockProducts: ProductDetails[] = [
     reviewCount: 130,
     tag: "Sale",
     tagVariant: "destructive",
+    limitedStock: false,
     fullDescription: `Carry your data with confidence and speed using the Portable SSD 2TB. This ultra-fast external solid-state drive offers massive storage capacity in a pocket-sized design. With USB 3.2 Gen2 connectivity, achieve blazing-fast read/write speeds of up to 1000MB/s, perfect for large files, 4K videos, and gaming libraries. Its durable, shock-resistant build ensures your data is safe on the go.`,
+    keyFeatures: [
+      "Ultra-fast external solid-state drive",
+      "Massive 2TB storage capacity in a pocket-sized design",
+      "USB 3.2 Gen2 connectivity for blazing-fast read/write speeds",
+      "Perfect for large files, 4K videos, and gaming libraries",
+      "Durable, shock-resistant build for data safety on the go",
+    ],
+    applications: `Essential for professionals, content creators, and gamers who need to quickly transfer and store large amounts of data. Ideal for expanding laptop storage, backing up important files, or running games directly from the drive.`,
     detailedSpecs: [
       {
         group: "Storage",
@@ -763,6 +909,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-09",
         title: "Blazing fast and tiny!",
         comment: "Transfers huge files in seconds. Fits in my pocket. Essential for my work.",
+        isVerifiedBuyer: true,
       },
       {
         id: "rev24",
@@ -771,6 +918,7 @@ export const mockProducts: ProductDetails[] = [
         date: "2023-11-06",
         title: "Great, but runs warm",
         comment: "Performance is excellent, but it gets noticeably warm during sustained transfers. Not a dealbreaker.",
+        isVerifiedBuyer: false,
       },
     ],
     relatedProducts: ["zenbook-pro-14-oled"],

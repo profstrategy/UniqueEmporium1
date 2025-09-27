@@ -37,7 +37,11 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
               exit="hidden" // Add exit animation
               key="description-tab"
             >
-              <ProductDescriptionTab description={product.fullDescription} />
+              <ProductDescriptionTab
+                description={product.fullDescription}
+                keyFeatures={product.keyFeatures} // Pass keyFeatures
+                applications={product.applications} // Pass applications
+              />
             </motion.div>
           </TabsContent>
         )}
@@ -63,7 +67,7 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
               exit="hidden" // Add exit animation
               key="reviews-tab"
             >
-              <ProductReviewsTab reviews={product.reviews} />
+              <ProductReviewsTab reviews={product.reviews} productId={product.id} /> {/* Pass productId */}
             </motion.div>
           </TabsContent>
         )}

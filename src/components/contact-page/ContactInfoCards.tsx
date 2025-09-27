@@ -78,7 +78,7 @@ const ContactInfoCards = () => {
                   delay: index * 0.1, // Stagger the icon animation
                 }}
               >
-                <info.icon className="h-full w-full" />
+                {React.createElement(info.icon, { className: "h-full w-full" })}
               </motion.div>
               <h3 className="text-sm md:text-lg font-semibold mb-2 md:mb-3 text-foreground">{info.title}</h3>
               <div className="space-y-1 text-[0.65rem] md:text-sm text-muted-foreground">

@@ -88,7 +88,7 @@ const ReturnsPolicyCards = () => {
                   delay: index * 0.1, // Stagger the icon animation
                 }}
               >
-                <info.icon className="h-full w-full" />
+                {React.createElement(info.icon, { className: "h-full w-full" })}
               </motion.div>
               <h3 className="text-base font-semibold mb-2 text-foreground">{info.title}</h3>
               <p className="text-xs text-muted-foreground">{info.description}</p>

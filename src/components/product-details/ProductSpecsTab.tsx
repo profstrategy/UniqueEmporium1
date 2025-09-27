@@ -35,7 +35,7 @@ const ProductSpecsTab = ({ detailedSpecs }: ProductSpecsTabProps) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
                 {group.items.map((item, itemIndex) => (
                   <motion.div key={item.label} variants={itemVariants} className="flex items-center">
-                    {item.icon && <item.icon className="h-4 w-4 text-primary mr-2 flex-shrink-0" />}
+                    {item.icon && React.createElement(item.icon, { className: "h-4 w-4 text-primary mr-2 flex-shrink-0" })}
                     <span className="font-medium text-foreground mr-2">{item.label}:</span>
                     <span className="text-muted-foreground">{item.value}</span>
                   </motion.div>

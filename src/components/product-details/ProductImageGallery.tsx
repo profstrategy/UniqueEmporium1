@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Box, ZoomIn } from "lucide-react"; // Changed Cube to Box, added ZoomIn
 import { cn } from "@/lib/utils";
 import Product3DViewer from "./Product3DViewer.tsx"; // Import the new 3D viewer
+import { toast } from "sonner"; // Import toast from sonner
 
 interface ProductImageGalleryProps {
   images: string[];
