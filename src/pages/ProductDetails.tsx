@@ -117,7 +117,7 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-8">
           {/* Product Media & Purchase Options */}
           <motion.div
-            className="h-fit" // Removed lg:sticky lg:top-24
+            className="lg:sticky lg:top-24 h-fit" // Make it sticky on desktop
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
