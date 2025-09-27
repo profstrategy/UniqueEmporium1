@@ -12,7 +12,12 @@ import MobileMenu from "./MobileMenu.tsx";
 import CartDrawer from "./CartDrawer.tsx";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
-import { useCart } from "@/context/CartContext.tsx"; // Fixed import path
+import { useCart } from "@/context/CartContext.tsx";
+
+interface HeaderProps {
+  isCartDrawerOpen: boolean;
+  setIsCartDrawerOpen: (isOpen: boolean) => void;
+}
 
 const categories = [
   { name: "Laptops", icon: Laptop, link: "/products?category=laptops" },
@@ -23,13 +28,12 @@ const categories = [
   { name: "Smart Home", icon: Home, link: "/products?category=smart-home" },
 ];
 
-const Header = () => {
+const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
-  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { totalItems } = useCart(); // Get totalItems from CartContext
+  const { totalItems } = useCart();
 
   // Placeholder counts for badges (will be replaced by context later)
   const favoriteCount = 3;
@@ -136,7 +140,7 @@ const Header = () => {
               <Badge count={compareCount} variant="secondary" />
             </Link>
 
-            <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} /> {/* Pass onOpenCartDrawer */}
+            <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
 
             {/* Mobile Menu Button */}
             <Button
@@ -160,7 +164,7 @@ const Header = () => {
         onClose={() => setIsMobileMenuOpen(false)}
         favoriteCount={favoriteCount}
         compareCount={compareCount}
-        itemCount={totalItems} // Pass totalItems to MobileMenu
+        itemCount={totalItems}
       />
 
       {/* Cart Drawer (Desktop Only) */}

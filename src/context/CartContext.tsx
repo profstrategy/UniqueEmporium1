@@ -3,7 +3,7 @@
 import React, { createContext, useState, useContext, ReactNode, useCallback } from "react";
 import { Product } from "@/components/products/ProductCard.tsx";
 import { toast } from "sonner";
-import { useIsMobile } from "@/hooks/use-mobile"; // Import useIsMobile
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface CartItem extends Product {
   quantity: number;
@@ -21,7 +21,12 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+interface CartProviderProps {
+  children: ReactNode;
+  onOpenCartDrawer?: () => void; // New prop to open the cart drawer
+}
+
+export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const isMobile = useIsMobile();
 
@@ -41,7 +46,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         return [...prevItems, { ...product, quantity: quantityToAdd }];
       }
     });
-  }, []);
+
+    // Automatically open cart drawer on desktop after adding an item
+    if (!isMobile && onOpenCartDrawer) {
+      onOpenCartDrawer();
+    }
+  }, [isMobile, onOpenCartDrawer]); // Add onOpenCartDrawer to dependencies
 
   const removeFromCart = useCallback((productId: string) => {
     setCartItems((prevItems) => {
