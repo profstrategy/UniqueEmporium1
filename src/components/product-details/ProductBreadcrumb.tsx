@@ -11,6 +11,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
+  BreadcrumbList, // Import BreadcrumbList
 } from "@/components/ui/breadcrumb"; // Assuming shadcn breadcrumb
 
 interface ProductBreadcrumbProps {
@@ -31,37 +32,39 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       viewport={{ once: true, amount: 0.1 }}
     >
       <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/">
-              <Home className="h-4 w-4 mr-1" /> Home
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <ChevronRight className="h-4 w-4" />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/products">Electronics</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <ChevronRight className="h-4 w-4" />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to={`/products?category=${product.category.toLowerCase().replace(/\s/g, '-')}`}>
-              {product.category}
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>
-          <ChevronRight className="h-4 w-4" />
-        </BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbPage>{product.name}</BreadcrumbPage>
-        </BreadcrumbItem>
+        <BreadcrumbList> {/* Added BreadcrumbList here */}
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">
+                <Home className="h-4 w-4 mr-1" /> Home
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRight className="h-4 w-4" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/products">Electronics</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRight className="h-4 w-4" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to={`/products?category=${product.category.toLowerCase().replace(/\s/g, '-')}`}>
+                {product.category}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRight className="h-4 w-4" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{product.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList> {/* Closed BreadcrumbList here */}
       </Breadcrumb>
     </motion.div>
   );
