@@ -8,11 +8,12 @@ import ProductBreadcrumb from "@/components/product-details/ProductBreadcrumb.ts
 import ProductImageGallery from "@/components/product-details/ProductImageGallery.tsx";
 import ProductInfoSection from "@/components/product-details/ProductInfoSection.tsx";
 import ProductTabs from "@/components/product-details/ProductTabs.tsx";
-import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Existing component
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // New component
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
+import Product3DModelViewer from "@/components/product-details/Product3DModelViewer.tsx"; // Import the new 3D viewer
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Image, Box } from "lucide-react"; // Fixed: Changed Cube to Box icon
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
@@ -28,7 +29,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<ProductDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]); // Renamed state to clarify it holds IDs
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
+  const [show3DView, setShow3DView] = useState(false); // State to toggle between image gallery and 3D viewer
 
   useEffect(() => {
     setLoading(true);
@@ -37,6 +39,8 @@ const ProductDetails = () => {
       const fetchedProduct = getProductById(productId);
       if (fetchedProduct) {
         setProduct(fetchedProduct);
+        // Set initial view based on whether a 3D model exists
+        setShow3DView(!!fetchedProduct.has3DModel);
 
         // Update recently viewed product IDs in localStorage
         setRecentlyViewedProductIds((prevIds) => {
@@ -116,16 +120,39 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-8">
           {/* Product Media & Purchase Options */}
           <motion.div
-            className="lg:sticky lg:top-24 h-fit" // Make it sticky on desktop
+            className="lg:sticky lg:top-24 h-fit"
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            <ProductImageGallery
-              images={product.images}
-              productName={product.name}
-            />
+            {product.has3DModel && (
+              <div className="flex justify-end gap-2 mb-4">
+                <Button
+                  variant={!show3DView ? "default" : "outline"}
+                  onClick={() => setShow3DView(false)}
+                  size="sm"
+                >
+                  <Image className="h-4 w-4 mr-2" /> View Images
+                </Button>
+                <Button
+                  variant={show3DView ? "default" : "outline"}
+                  onClick={() => setShow3DView(true)}
+                  size="sm"
+                >
+                  <Box className="h-4 w-4 mr-2" /> View 3D
+                </Button>
+              </div>
+            )}
+
+            {show3DView && product.has3DModel && product.modelPath ? (
+              <Product3DModelViewer modelPath={product.modelPath} />
+            ) : (
+              <ProductImageGallery
+                images={product.images}
+                productName={product.name}
+              />
+            )}
           </motion.div>
 
           {/* Product Info & Actions */}
@@ -160,7 +187,7 @@ const ProductDetails = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          <RecommendedProductsSection currentProductId={product.id} /> {/* Pass currentProductId */}
+          <RecommendedProductsSection currentProductId={product.id} />
         </motion.div>
 
         {/* Recently Viewed Products Section */}

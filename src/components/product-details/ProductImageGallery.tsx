@@ -4,10 +4,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import Dialog components
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -17,7 +15,6 @@ interface ProductImageGalleryProps {
 const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false); // State to control the zoom dialog
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -43,10 +40,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     exit: { opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeIn" as Easing } },
   };
 
-  const handleImageClick = () => {
-    setIsZoomed(true); // Open the dialog for zoom
-  };
-
   return (
     <div className="relative w-full rounded-xl overflow-hidden shadow-lg bg-muted">
       {/* Main Image Area */}
@@ -54,12 +47,11 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={selectedIndex}
-            className="embla h-full w-full relative cursor-pointer group"
+            className="embla h-full w-full relative group"
             variants={imageVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            onClick={handleImageClick} // This will now open the dialog
           >
             <div className="embla__container flex h-full">
               {images.map((image, index) => (
@@ -71,10 +63,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
                   />
                 </div>
               ))}
-            </div>
-            {/* Zoom Indicator */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-              <ZoomIn className="h-10 w-10 text-white" />
             </div>
           </motion.div>
         </AnimatePresence>
@@ -132,17 +120,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
           ))}
         </div>
       )}
-
-      {/* Zoom Dialog */}
-      <Dialog open={isZoomed} onOpenChange={setIsZoomed}>
-        <DialogContent className="max-w-4xl p-0 border-none bg-transparent">
-          <img
-            src={images[selectedIndex]}
-            alt={`Zoomed view of ${productName}`}
-            className="w-full h-full object-contain max-h-[90vh]"
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
