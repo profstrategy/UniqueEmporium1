@@ -22,7 +22,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     originalPrice: 1000000.00,
     discountPercentage: 5, // Added discountPercentage
     rating: 4.8,
-    reviews: 150,
+    reviewCount: 150, // Changed from 'reviews'
     tag: "Best Seller",
     tagVariant: "destructive",
     limitedStock: true,
@@ -41,7 +41,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 175000.00,
     rating: 4.5,
-    reviews: 230,
+    reviewCount: 230, // Changed from 'reviews'
     tag: "New Arrival",
     tagVariant: "default",
     specs: [
@@ -59,7 +59,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     originalPrice: 425000.00,
     discountPercentage: 6, // Added discountPercentage
     rating: 4.7,
-    reviews: 95,
+    reviewCount: 95, // Changed from 'reviews'
     specs: [
       { icon: Cpu, label: "Resolution", value: "4K UHD" },
       { icon: MemoryStick, label: "Refresh Rate", value: "144Hz" }, // Changed Memory to MemoryStick
@@ -73,7 +73,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 30000.00,
     rating: 4.6,
-    reviews: 310,
+    reviewCount: 310, // Changed from 'reviews'
     tag: "Top Rated",
     tagVariant: "secondary",
     specs: [
@@ -89,7 +89,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 65000.00,
     rating: 4.2,
-    reviews: 80,
+    reviewCount: 80, // Changed from 'reviews'
     limitedStock: true,
     specs: [
       { icon: Cpu, label: "Compatibility", value: "Multi-protocol" },
@@ -106,7 +106,7 @@ const featuredProducts: Product[] = [ // Explicitly typed as Product[]
     originalPrice: 30000.00,
     discountPercentage: 17, // Added discountPercentage
     rating: 4.9,
-    reviews: 450,
+    reviewCount: 450, // Changed from 'reviews'
     tag: "Limited Stock",
     tagVariant: "destructive",
     specs: [

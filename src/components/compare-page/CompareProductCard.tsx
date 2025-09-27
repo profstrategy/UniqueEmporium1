@@ -110,7 +110,7 @@ const CompareProductCard = ({ product, onRemove, disableEntryAnimation = false }
           {/* Rating */}
           <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span>{product.rating.toFixed(1)} ({product.reviews} reviews)</span>
+            <span>{product.rating.toFixed(1)} ({product.reviewCount} reviews)</span>
           </div>
 
           {/* Price */}

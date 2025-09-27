@@ -24,7 +24,7 @@ export interface Product {
   originalPrice?: number;
   discountPercentage?: number;
   rating: number;
-  reviews: number;
+  reviewCount: number; // Renamed from 'reviews'
   tag?: string;
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
@@ -168,7 +168,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 left-2 md:right-2 md:left-auto z-50" />
         )}
 
-        <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
+        <Link to={`/products/${product.id}`} className="block h-[200px] w-full overflow-hidden bg-gray-100 relative"> {/* Link wrapper */}
           <div className="embla h-full" ref={emblaRef}>
             <div className="embla__container flex h-full">
               {product.images.map((image, index) => (
@@ -276,7 +276,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               <Scale className={cn("h-4 w-4", inComparison && "fill-primary text-primary")} />
             </Button>
           </div>
-        </div>
+        </Link> {/* End Link wrapper */}
 
         <CardContent className="p-4 flex flex-col flex-grow text-left">
           {/* Category Text */}
@@ -285,9 +285,11 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </span>
 
           {/* Product Name */}
-          <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2">
-            {product.name}
-          </h3>
+          <Link to={`/products/${product.id}`}> {/* Link for product name */}
+            <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
+              {product.name}
+            </h3>
+          </Link>
 
           {/* Price Display (Main Price always visible, Original Price/Discount hidden on mobile) */}
           <div className="flex items-center gap-2 mb-2">

@@ -1,0 +1,199 @@
+"use client";
+
+import React, { useState } from "react";
+import { motion, Easing } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label"; // Import Label
+import { Badge } from "@/components/ui/badge";
+import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
+import { useCart } from "@/context/CartContext.tsx";
+import { useFavorites } from "@/context/FavoritesContext.tsx";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+interface ProductInfoSectionProps {
+  product: ProductDetailsType;
+}
+
+const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
+  const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { addToCart } = useCart();
+  const { addFavorite, removeFavorite, isFavorited } = useFavorites();
+
+  const handleQuantityChange = (amount: number) => {
+    setQuantity((prev) => Math.max(1, prev + amount));
+  };
+
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    addToCart(product, quantity);
+    setIsAddingToCart(false);
+  };
+
+  const handleToggleFavorite = () => {
+    if (isFavorited(product.id)) {
+      removeFavorite(product.id);
+    } else {
+      addFavorite(product);
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: `Check out this amazing product: ${product.name} at ElectroPro!`,
+        url: window.location.href,
+      })
+      .then(() => toast.success("Product link shared!"))
+      .catch((error) => toast.error(`Failed to share: ${error.message}`));
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => toast.success("Product link copied to clipboard!"))
+        .catch(() => toast.error("Failed to copy link."));
+    }
+  };
+
+  const favorited = isFavorited(product.id);
+  const discount = product.originalPrice && product.price < product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
+  const formatCurrency = (amount: number) => {
+    return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
+  };
+
+  return (
+    <div className="space-y-6">
+      {product.tag && (
+        <Badge variant={product.tagVariant} className="text-sm px-3 py-1">
+          {product.tag}
+        </Badge>
+      )}
+
+      <h1 className="font-poppins text-3xl md:text-4xl font-bold text-foreground">
+        {product.name}
+      </h1>
+
+      <p className="text-lg text-muted-foreground">{product.fullDescription.split('.')[0]}.</p> {/* Short description */}
+
+      {/* Rating & Reviews */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              className={cn(
+                "h-5 w-5",
+                i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground",
+              )}
+            />
+          ))}
+        </div>
+        <span className="text-sm text-muted-foreground">
+          {product.rating.toFixed(1)} ({product.reviewCount} reviews) {/* Use product.reviewCount */}
+        </span>
+      </div>
+
+      {/* Price */}
+      <div className="flex items-baseline gap-3">
+        <p className="font-poppins text-4xl font-bold text-primary">
+          {formatCurrency(product.price)}
+        </p>
+        {product.originalPrice && product.price < product.originalPrice && (
+          <>
+            <p className="text-xl text-gray-400 line-through">
+              {formatCurrency(product.originalPrice)}
+            </p>
+            {discount > 0 && (
+              <Badge variant="destructive" className="text-base font-medium px-2 py-1">
+                -{discount}%
+              </Badge>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Stock Status */}
+      {product.limitedStock && (
+        <p className="text-sm text-red-500 font-medium">Limited Stock Available!</p>
+      )}
+
+      {/* Quantity Selector */}
+      <div className="flex items-center gap-4">
+        <Label htmlFor="quantity" className="text-base">Quantity:</Label>
+        <div className="flex items-center border rounded-md">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 rounded-r-none"
+            onClick={() => handleQuantityChange(-1)}
+            disabled={quantity <= 1}
+          >
+            <Minus className="h-4 w-4" />
+          </Button>
+          <Input
+            id="quantity"
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            className="w-16 text-center border-y-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+            min={1}
+          />
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 rounded-l-none"
+            onClick={() => handleQuantityChange(1)}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 mt-6">
+        <Button
+          className="flex-1 py-3 text-lg"
+          onClick={handleAddToCart}
+          disabled={isAddingToCart}
+        >
+          {isAddingToCart ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Adding...
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+            </>
+          )}
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full sm:w-auto"
+          onClick={handleToggleFavorite}
+        >
+          <Heart className={cn("mr-2 h-5 w-5", favorited && "fill-red-500 text-red-500")} />
+          {favorited ? "Remove from Favorites" : "Add to Favorites"}
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-full sm:w-auto h-12 sm:h-auto sm:aspect-square"
+          onClick={handleShare}
+          aria-label="Share Product"
+        >
+          <Share2 className="h-5 w-5" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ProductInfoSection;

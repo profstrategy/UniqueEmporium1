@@ -19,7 +19,7 @@ const allProducts: Product[] = Array.from({ length: 20 }).map((_, index) => ({
   originalPrice: (450000 + index * 25000) * 1.1, // 10% higher original price
   discountPercentage: 10,
   rating: Math.min(5, 3.5 + index * 0.1),
-  reviews: 50 + index * 10,
+  reviewCount: 50 + index * 10, // Changed from 'reviews'
   tag: index % 3 === 0 ? "New" : index % 5 === 0 ? "Sale" : undefined,
   tagVariant: index % 3 === 0 ? "default" : index % 5 === 0 ? "destructive" : undefined,
   limitedStock: index % 4 === 0,

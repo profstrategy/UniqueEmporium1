@@ -21,6 +21,7 @@ import Warranty from "./pages/Warranty.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
 import Checkout from "./pages/Checkout.tsx";
+import ProductDetails from "./pages/ProductDetails.tsx"; // Import ProductDetails
 import { CartProvider } from "./context/CartContext.tsx";
 import { FavoritesProvider } from "./context/FavoritesContext.tsx";
 import { CompareProvider } from "./context/CompareContext.tsx";
@@ -38,7 +39,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <ScrollToTop /> {/* Add ScrollToTop here */}
+          <ScrollToTop />
           <CartProvider onOpenCartDrawer={() => setIsCartDrawerOpen(true)}>
             <FavoritesProvider>
               <CompareProvider>
@@ -52,6 +53,7 @@ const App = () => {
                   <Route path="/compare" element={<Compare />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/products" element={<Products />} />
+                  <Route path="/products/:productId" element={<ProductDetails />} /> {/* New Product Details Route */}
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/faq" element={<FAQ />} />

@@ -17,7 +17,7 @@ const recommendedProducts: Product[] = [
     originalPrice: 1300000.00,
     discountPercentage: 8,
     rating: 4.9,
-    reviews: 200,
+    reviewCount: 200, // Changed from 'reviews'
     tag: "Gaming",
     tagVariant: "destructive",
     limitedStock: false,
@@ -36,7 +36,7 @@ const recommendedProducts: Product[] = [
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 85000.00,
     rating: 4.7,
-    reviews: 180,
+    reviewCount: 180, // Changed from 'reviews'
     tag: "New",
     tagVariant: "default",
     specs: [
@@ -54,7 +54,7 @@ const recommendedProducts: Product[] = [
     originalPrice: 600000.00,
     discountPercentage: 9,
     rating: 4.8,
-    reviews: 110,
+    reviewCount: 110, // Changed from 'reviews'
     specs: [
       { icon: Cpu, label: "Resolution", value: "UWQHD" },
       { icon: MemoryStick, label: "Refresh Rate", value: "120Hz" },
@@ -68,7 +68,7 @@ const recommendedProducts: Product[] = [
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 70000.00,
     rating: 4.6,
-    reviews: 250,
+    reviewCount: 250, // Changed from 'reviews'
     tag: "Popular",
     tagVariant: "secondary",
     specs: [
@@ -84,7 +84,7 @@ const recommendedProducts: Product[] = [
     images: ["/placeholder.svg", "/placeholder.svg"],
     price: 110000.00,
     rating: 4.5,
-    reviews: 90,
+    reviewCount: 90, // Changed from 'reviews'
     limitedStock: true,
     specs: [
       { icon: Cpu, label: "Resolution", value: "1080p" },
@@ -101,7 +101,7 @@ const recommendedProducts: Product[] = [
     originalPrice: 165000.00,
     discountPercentage: 9,
     rating: 4.7,
-    reviews: 130,
+    reviewCount: 130, // Changed from 'reviews'
     tag: "Sale",
     tagVariant: "destructive",
     specs: [
