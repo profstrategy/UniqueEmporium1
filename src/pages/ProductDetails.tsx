@@ -10,6 +10,7 @@ import ProductInfoSection from "@/components/product-details/ProductInfoSection.
 import ProductTabs from "@/components/product-details/ProductTabs.tsx";
 import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Existing component
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // New component
+import Product3DViewer from "@/components/Product3DViewer.tsx"; // Import Product3DViewer
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -116,7 +117,7 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-8">
           {/* Product Media & Purchase Options */}
           <motion.div
-            className="lg:sticky lg:top-24 h-fit" // Make it sticky on desktop
+            className="lg:sticky lg:top-24 h-fit space-y-8" // Added space-y-8 for spacing between gallery and 3D viewer
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
@@ -126,6 +127,16 @@ const ProductDetails = () => {
               images={product.images}
               productName={product.name}
             />
+            {product.modelPath && ( // Conditionally render 3D viewer if modelPath exists
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" as Easing }} // Slight delay for staggered animation
+              >
+                <Product3DViewer modelPath={product.modelPath} />
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Product Info & Actions */}
