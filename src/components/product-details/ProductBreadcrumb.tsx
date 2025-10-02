@@ -4,15 +4,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
 import { motion, Easing } from "framer-motion";
-import { ProductDetails as ProductDetailsType } from "@/data/types"; // Updated import
+import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
+  BreadcrumbList, // Import BreadcrumbList
+} from "@/components/ui/breadcrumb"; // Assuming shadcn breadcrumb
 
 interface ProductBreadcrumbProps {
   product: ProductDetailsType;
@@ -32,7 +32,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       viewport={{ once: true, amount: 0.1 }}
     >
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList> {/* Added BreadcrumbList here */}
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link to="/">
@@ -64,7 +64,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           <BreadcrumbItem>
             <BreadcrumbPage>{product.name}</BreadcrumbPage>
           </BreadcrumbItem>
-        </BreadcrumbList>
+        </BreadcrumbList> {/* Closed BreadcrumbList here */}
       </Breadcrumb>
     </motion.div>
   );

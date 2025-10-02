@@ -3,17 +3,15 @@
 import HeroCarousel from "@/components/hero-carousel/HeroCarousel.tsx";
 import HeroIntroBanner from "@/components/hero-intro-banner/HeroIntroBanner.tsx";
 import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
-import ProductCard from "@/components/products/ProductCard.tsx";
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
-import { mockProducts } from "@/data/products-data"; // Updated import
-import { getProductsByIds } from "@/data/products-utils"; // Updated import
-import { ProductDetails } from "@/data/types"; // Updated import
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
-import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx";
-import React, { useEffect, useState } from "react";
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import getProductsByIds
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
+import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx"; // Reverted to alias path
+import React, { useEffect, useState } from "react"; // Import useEffect and useState
 
 // Select specific products from mockProducts to be featured
 const featuredProducts: ProductDetails[] = [

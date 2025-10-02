@@ -3,16 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, Easing } from "framer-motion";
-import { getProductById, getRecentlyViewedProducts } from "@/data/products-utils";
-import { mockProducts } from "@/data/products-data";
-import { ProductDetails as ProductDetailsType } from "@/data/types";
+import { getProductById, ProductDetails as ProductDetailsType, getRandomProducts, getRecentlyViewedProducts } from "@/data/products.ts";
 import ProductBreadcrumb from "@/components/product-details/ProductBreadcrumb.tsx";
 import ProductImageGallery from "@/components/product-details/ProductImageGallery.tsx";
 import ProductInfoSection from "@/components/product-details/ProductInfoSection.tsx";
 import ProductTabs from "@/components/product-details/ProductTabs.tsx";
-import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
-import Product3DViewer from "@/components/Product3DViewer.tsx"; // Import Product3DViewer
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Existing component
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // New component
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -31,7 +28,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<ProductDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]); // Renamed state to clarify it holds IDs
 
   useEffect(() => {
     setLoading(true);
@@ -119,7 +116,7 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-8">
           {/* Product Media & Purchase Options */}
           <motion.div
-            className="lg:sticky lg:top-24 h-fit"
+            className="lg:sticky lg:top-24 h-fit" // Make it sticky on desktop
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
@@ -129,17 +126,6 @@ const ProductDetails = () => {
               images={product.images}
               productName={product.name}
             />
-            {/* Insert Product3DViewer here */}
-            <motion.div
-              className="mt-8"
-              variants={fadeInUp}
-              initial="hidden"
-              animate="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" as Easing }}
-            >
-              <Product3DViewer />
-            </motion.div>
           </motion.div>
 
           {/* Product Info & Actions */}
@@ -174,7 +160,7 @@ const ProductDetails = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          <RecommendedProductsSection currentProductId={product.id} />
+          <RecommendedProductsSection currentProductId={product.id} /> {/* Pass currentProductId */}
         </motion.div>
 
         {/* Recently Viewed Products Section */}

@@ -4,15 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon, SlidersHorizontal } from "lucide-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
+import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon, SlidersHorizontal } from "lucide-react"; // Import icons for specs and categories
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts } from "@/data/products-data"; // Updated import
-import { getProductsByIds, getRecentlyViewedProducts } from "@/data/products-utils"; // Updated imports
-import { ProductDetails } from "@/data/types"; // Updated import
-import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import mockProducts, ProductDetails, getProductsByIds
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Import RecommendedProductsSection
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
 
 // Placeholder product data - now directly using mockProducts
 const allProducts: ProductDetails[] = mockProducts;
@@ -62,7 +60,7 @@ const Products = () => {
   const [currentQuery, setCurrentQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState("default");
-  const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false);
+  const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false); // State for mobile filter panel
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -134,14 +132,14 @@ const Products = () => {
   };
 
   const displayedProducts = filterAndSortProducts();
-  const productForRecommendationsId = displayedProducts[0]?.id || mockProducts[0]?.id;
+  const productForRecommendationsId = displayedProducts[0]?.id || mockProducts[0]?.id; // Use first displayed product or fallback
 
   const handleClearFilters = () => {
     setCurrentQuery("");
     setSelectedCategory("all");
     setSortBy("default");
-    setSearchParams({});
-    setIsMobileFilterPanelOpen(false);
+    setSearchParams({}); // Clear all search params
+    setIsMobileFilterPanelOpen(false); // Close panel on clear
   };
 
   const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
@@ -216,7 +214,7 @@ const Products = () => {
             <SelectContent>
               {sortOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
-                    {option.name}
+                  {option.name}
                 </SelectItem>
               ))}
             </SelectContent>

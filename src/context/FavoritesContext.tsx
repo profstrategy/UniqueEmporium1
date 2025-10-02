@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode, useCallback } from "react";
-import { Product } from "@/data/types"; // Updated import
+import { Product } from "@/components/products/ProductCard.tsx";
 import { toast } from "sonner";
 
 interface FavoritesContextType {

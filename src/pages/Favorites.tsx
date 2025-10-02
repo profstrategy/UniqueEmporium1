@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Heart, ArrowLeft, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging } from "lucide-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
-import { useFavorites } from "@/context/FavoritesContext.tsx";
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
+import { useFavorites } from "@/context/FavoritesContext.tsx"; // Import useFavorites
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -25,7 +25,7 @@ const fadeInUp = {
 };
 
 const Favorites = () => {
-  const { favoriteItems, removeFavorite } = useFavorites();
+  const { favoriteItems, removeFavorite } = useFavorites(); // Use FavoritesContext
   const hasFavorites = favoriteItems.length > 0;
 
   return (
@@ -59,6 +59,8 @@ const Favorites = () => {
             >
               {favoriteItems.map((product) => (
                 <motion.div key={product.id} variants={fadeInUp}>
+                  {/* Pass a prop to ProductCard to indicate it's in favorites context, 
+                      or handle removal directly if ProductCard is not meant to remove */}
                   <ProductCard product={product} />
                 </motion.div>
               ))}

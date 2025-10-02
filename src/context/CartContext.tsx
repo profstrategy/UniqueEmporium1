@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode, useCallback } from "react";
-import { Product } from "@/data/types"; // Updated import
+import { Product } from "@/components/products/ProductCard.tsx";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -23,7 +23,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 interface CartProviderProps {
   children: ReactNode;
-  onOpenCartDrawer?: () => void;
+  onOpenCartDrawer?: () => void; // New prop to open the cart drawer
 }
 
 export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) => {
@@ -51,7 +51,7 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
     if (!isMobile && onOpenCartDrawer) {
       onOpenCartDrawer();
     }
-  }, [isMobile, onOpenCartDrawer]);
+  }, [isMobile, onOpenCartDrawer]); // Add onOpenCartDrawer to dependencies
 
   const removeFromCart = useCallback((productId: string) => {
     setCartItems((prevItems) => {

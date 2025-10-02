@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext.tsx";
-import { Product } from "@/data/types"; // Corrected import path for Product
+import { Product } from "@/components/products/ProductCard.tsx"; // Import Product interface
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
 import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
 

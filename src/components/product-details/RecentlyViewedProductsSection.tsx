@@ -5,8 +5,7 @@ import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, History } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
-import { Product } from "@/data/types"; // Corrected import path for Product
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 
 interface RecentlyViewedProductsSectionProps {
   products: Product[];

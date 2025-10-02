@@ -5,9 +5,8 @@ import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ElectroProLogo3D from "./ElectroProLogo3D.tsx";
-import { mockProducts } from "@/data/products-data"; // Updated import
-import { ProductDetails } from "@/data/types"; // Updated import
-import { Link } from "react-router-dom";
+import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import mockProducts and ProductDetails
+import { Link } from "react-router-dom"; // Import Link for CTA button
 
 interface CarouselItem {
   id: string;
@@ -171,7 +170,7 @@ const HeroCarousel = () => {
           >
             <Button
               className="px-6 py-2 text-base md:px-8 md:py-3 md:text-lg"
-              asChild
+              asChild // Use asChild to render Link inside Button
             >
               <Link to={currentItem.ctaLink}>
                 {currentItem.ctaText}

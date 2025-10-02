@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Cpu, MemoryStick, HardDrive, Loader2, LucideIcon } from "lucide-react"; // Import LucideIcon
+import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Cpu, MemoryStick, HardDrive, Loader2 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import FloatingTag from "@/components/common/FloatingTag.tsx";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,23 @@ import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { useCompare } from "@/context/CompareContext.tsx";
-import { Product } from "@/data/types"; // Updated import
+import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
+
+export interface Product {
+  id: string;
+  name: string;
+  category: string;
+  images: string[];
+  price: number;
+  originalPrice?: number;
+  discountPercentage?: number;
+  rating: number;
+  reviewCount: number; // Renamed from 'reviews'
+  tag?: string;
+  tagVariant?: "default" | "secondary" | "destructive" | "outline";
+  limitedStock?: boolean;
+  specs?: { icon: React.ElementType; label: string; value: string }[];
+}
 
 interface ProductCardProps {
   product: Product;
@@ -34,7 +49,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
-  const { addToCompare, removeFromCompare, isInComparison } = useCompare();
+  const { addToCompare, removeFromCompare, isInComparison } = useCompare(); // Use CompareContext
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -275,7 +290,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </span>
 
           {/* Product Name */}
-          <Link to={`/products/${product.id}`}>
+          <Link to={`/products/${product.id}`}> {/* This Link is fine here */}
             <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
