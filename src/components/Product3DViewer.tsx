@@ -10,7 +10,7 @@ const Product3DViewer = () => {
       alt="3D view of product"
       auto-rotate
       camera-controls
-      style={{ width: "100%", height: "500px", backgroundColor: "#f9f9f9", borderRadius: "12px" }}
+      className="w-full h-[300px] md:h-[500px] bg-[#f9f9f9] rounded-xl" // Using Tailwind classes for responsive height
     ></model-viewer>
   );
 };
