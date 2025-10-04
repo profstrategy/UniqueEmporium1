@@ -4,15 +4,15 @@ import React, { useState } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset } from "lucide-react";
+import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset, RotateCcw } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
+import { ProductDetails as ProductDetailsType } from "@/data/products.ts"; // Corrected import
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Using sonner directly
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card"; // Import Card and CardContent
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductInfoSectionProps {
   product: ProductDetailsType;
@@ -83,16 +83,11 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         </Badge>
       )}
 
-      {/* Added Category Span */}
-      <span className="text-xs text-muted-foreground uppercase tracking-wide block">
-        {product.category}
-      </span>
-
-      <h1 className="font-poppins text-xl md:text-4xl font-bold text-foreground"> {/* Adjusted font size */}
+      <h1 className="font-poppins text-4xl font-bold text-foreground">
         {product.name}
       </h1>
 
-      <p className="text-sm md:text-lg text-muted-foreground">{product.fullDescription.split('.')[0]}.</p> {/* Adjusted font size */}
+      <p className="text-lg text-muted-foreground">{product.fullDescription.split('.')[0]}.</p>
 
       {/* Rating & Reviews */}
       <div className="flex items-center gap-3">
@@ -114,16 +109,16 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
 
       {/* Price */}
       <div className="flex items-baseline gap-3">
-        <p className="font-poppins text-xl md:text-4xl font-bold text-primary"> {/* Adjusted font size */}
+        <p className="font-poppins text-4xl font-bold text-primary">
           {formatCurrency(product.price)}
         </p>
         {product.originalPrice && product.price < product.originalPrice && (
           <>
-            <p className="text-base md:text-xl text-gray-400 line-through"> {/* Adjusted font size */}
+            <p className="text-xl text-gray-400 line-through">
               {formatCurrency(product.originalPrice)}
             </p>
             {discount > 0 && (
-              <Badge variant="destructive" className="text-xs font-medium px-3 py-1"> {/* Adjusted font size and padding */}
+              <Badge variant="destructive" className="text-sm font-medium px-3 py-1">
                 -{discount}%
               </Badge>
             )}
@@ -131,7 +126,6 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         )}
       </div>
 
-      {/* Stock Status */}
       {product.limitedStock && (
         <motion.p
           className="text-sm text-red-500 font-medium flex items-center"
@@ -148,8 +142,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
       )}
 
       {/* Purchase Options Card */}
-      <Card className="rounded-2xl p-6 space-y-6 shadow-sm border"> {/* Added Card wrapper */}
-        <CardContent className="p-0 space-y-6"> {/* Removed default CardContent padding */}
+      <Card className="rounded-xl p-6 space-y-6 shadow-sm border">
+        <CardContent className="p-0 space-y-6">
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">
             <Label htmlFor="quantity" className="text-base">Quantity:</Label>
@@ -157,7 +151,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 rounded-r-none" // Adjusted size
+                className="h-10 w-10 rounded-r-none"
                 onClick={() => handleQuantityChange(-1)}
                 disabled={quantity <= 1}
               >
@@ -174,7 +168,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 rounded-l-none" // Adjusted size
+                className="h-10 w-10 rounded-l-none"
                 onClick={() => handleQuantityChange(1)}
               >
                 <Plus className="h-4 w-4" />
@@ -183,9 +177,9 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button
-              className="flex-1 w-full h-[52px]" // Adjusted height
+              className="flex-1 w-full h-[52px] bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={handleAddToCart}
               disabled={isAddingToCart}
             >
@@ -199,39 +193,57 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 </>
               )}
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto" // Ensure full width on mobile
-              onClick={handleToggleFavorite}
-            >
-              <Heart className={cn("mr-2 h-5 w-5", favorited && "fill-red-500 text-red-500")} />
-              {favorited ? "Remove from Favorites" : "Add to Favorites"}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-full sm:w-auto h-12 sm:h-auto sm:aspect-square"
-              onClick={handleShare}
-              aria-label="Share Product"
-            >
-              <Share2 className="h-5 w-5" />
-            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1"
+                onClick={handleToggleFavorite}
+              >
+                <Heart className={cn("mr-2 h-5 w-5", favorited && "fill-red-500 text-red-500")} />
+                {favorited ? "Remove from Favorites" : "Add to Favorites"}
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1"
+                onClick={handleShare}
+                aria-label="Share Product"
+              >
+                <Share2 className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Shipping/Policy Info */}
+          <div className="text-sm text-muted-foreground space-y-2">
+            <p className="flex items-center gap-2">
+              <Truck className="h-4 w-4" />
+              Free shipping on orders over ₦500,000
+            </p>
+            <p className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              Professional setup assistance available
+            </p>
+            <p className="flex items-center gap-2">
+              <RotateCcw className="h-4 w-4" />
+              1-year manufacturer warranty included
+            </p>
           </div>
         </CardContent>
       </Card>
 
       {/* Key Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-border"> {/* Adjusted grid-cols */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-border">
         {keyFeatures.map((feature, index) => (
           <motion.div
             key={index}
-            className="flex items-start gap-3 p-4 rounded-lg bg-muted/30" // Adjusted padding
+            className="flex items-start gap-3 p-4 rounded-lg bg-muted/30"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" as Easing }}
           >
-            <feature.icon className="h-6 w-6 text-primary flex-shrink-0 mt-1" /> {/* Adjusted icon size */}
+            <feature.icon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
             <div>
               <h3 className="font-semibold text-sm text-foreground">{feature.title}</h3>
               <p className="text-xs text-muted-foreground">{feature.description}</p>
