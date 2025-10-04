@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Star, Heart, ShoppingCart, Scale, X, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, HardHat } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Product } from "@/data/products"; // Re-using the Product interface
+import { Product } from "@/components/products/ProductCard.tsx"; // Re-using the Product interface
 import { useFavorites } from "@/context/FavoritesContext.tsx"; // Import useFavorites
 import { useCart } from "@/context/CartContext.tsx"; // Import useCart
 import { useState } from "react"; // Import useState for loading state

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useCart, CartItem } from "@/context/CartContext.tsx"; // Import CartItem
+import { useCart } from "@/context/CartContext.tsx";
 import { Plus, Minus, Trash2, CreditCard, Loader2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 
@@ -55,7 +55,7 @@ const Cart = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
             <AnimatePresence>
-              {cartItems.map((item: CartItem) => (
+              {cartItems.map((item) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 20 }}

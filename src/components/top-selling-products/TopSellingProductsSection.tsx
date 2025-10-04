@@ -5,8 +5,8 @@ import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
-import { mockProducts, ProductDetails, Product } from "@/data/products.ts"; // Import mockProducts and ProductDetails, Product
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
+import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import mockProducts
 
 // Hand-pick some products to represent "Top Selling"
 const topSellingProductIds = [

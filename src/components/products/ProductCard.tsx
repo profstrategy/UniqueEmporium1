@@ -4,37 +4,47 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Heart } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Product } from '@/data/products'; // IMPORTED FROM DATA FILE
-import { Link } from 'react-router-dom'; // Import Link for navigation
 
-interface ProductCardProps {
-  product: Product; // Using the imported Product interface
-  className?: string;
-  disableEntryAnimation?: boolean; // Added this prop as it's used in Index.tsx and Products.tsx
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  imageUrl: string;
+  isLimitedStock?: boolean;
+  rating?: number;
+  reviews?: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className, disableEntryAnimation = false }) => {
+interface ProductCardProps {
+  product: Product;
+  className?: string;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
   return (
     <Card className={cn("w-[150px] md:w-[200px] lg:w-[250px] flex flex-col", className)}>
-      <Link to={`/products/${product.id}`} className="block">
-        <div className="relative w-full h-[150px] md:h-[200px] lg:h-[250px] overflow-hidden rounded-t-lg">
-          <img // Changed from Image to img
-            src={product.images[0]} // Use images array
-            alt={product.name}
-            className="w-full h-full object-cover rounded-t-lg" // Adjusted classes for img
-          />
-          {product.limitedStock && ( // Changed isLimitedStock to limitedStock
-            <Badge variant="destructive" className="absolute top-2 left-2 text-[0.6rem] px-1 py-0.5">
-              Limited Stock!
-            </Badge>
-          )}
-        </div>
-      </Link>
+      <div className="relative w-full h-[150px] md:h-[200px] lg:h-[250px] overflow-hidden rounded-t-lg">
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-t-lg"
+        />
+        {product.isLimitedStock && (
+          <Badge variant="destructive" className="absolute top-2 left-2 text-[0.6rem] px-1 py-0.5">
+            Limited Stock!
+          </Badge>
+        )}
+      </div>
       <CardContent className="p-4 flex flex-col flex-grow text-left">
         {/* Category Text */}
         <span className="text-[0.55rem] text-muted-foreground uppercase tracking-wide truncate mb-0.5 md:mb-1">
@@ -42,19 +52,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, disableEn
         </span>
 
         {/* Product Name */}
-        <Link to={`/products/${product.id}`}>
-          <h3 className="text-sm font-medium truncate mb-0.5 md:mb-1 hover:text-primary transition-colors">
-            {product.name}
-          </h3>
-        </Link>
+        <h3 className="text-sm font-medium truncate mb-0.5 md:mb-1">
+          {product.name}
+        </h3>
 
         {/* Current Price */}
         <p className="text-base font-semibold mb-1 md:mb-2">
-          ₦{product.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+          ${product.price.toFixed(2)}
         </p>
 
         {/* "Limited Stock!" message for desktop */}
-        {product.limitedStock && ( // Changed isLimitedStock to limitedStock
+        {product.isLimitedStock && (
           <div className="hidden md:block text-[0.65rem] text-red-500 font-medium mb-2">
             Limited Stock!
           </div>
@@ -66,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, disableEn
           {product.originalPrice && product.price < product.originalPrice && (
             <div className="flex items-center gap-2">
               <p className="text-xs text-gray-400 line-through">
-                ₦{product.originalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                ${product.originalPrice.toFixed(2)}
               </p>
               {discount > 0 && (
                 <span className="text-xs font-medium text-green-600">
@@ -83,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, disableEn
           {product.originalPrice && product.price < product.originalPrice ? (
             <div className="flex items-center gap-2">
               <p className="text-sm text-gray-400 line-through">
-                ₦{product.originalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+                ${product.originalPrice.toFixed(2)}
               </p>
               {discount > 0 && (
                 <span className="text-sm font-medium text-green-600">

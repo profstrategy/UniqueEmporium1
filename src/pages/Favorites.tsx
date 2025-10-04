@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Heart, ArrowLeft, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging } from "lucide-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx"; // Import useFavorites
-import { Product } from "@/data/products"; // Import Product from data file
 
 const staggerContainer = {
   hidden: { opacity: 0 },

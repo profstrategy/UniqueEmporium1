@@ -1,26 +1,10 @@
 import { Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Camera, Weight, Ruler, Palette, Speaker, Mic, ShieldCheck, Star, Heart } from "lucide-react";
-
-// Define the base Product interface
-export interface Product {
-  id: string;
-  name: string;
-  category: string;
-  images: string[]; // Array of image URLs
-  price: number;
-  originalPrice?: number;
-  discountPercentage?: number;
-  rating: number;
-  reviewCount: number;
-  tag?: string;
-  tagVariant?: "default" | "secondary" | "destructive" | "outline";
-  limitedStock?: boolean;
-  specs?: { icon: React.ElementType; label: string; value: string }[];
-}
+import { Product } from "@/components/products/ProductCard.tsx"; // Assuming Product interface is exported
 
 export interface ProductDetails extends Product {
   fullDescription: string;
-  keyFeatures: string[];
-  applications: string;
+  keyFeatures: string[]; // New field
+  applications: string; // New field
   detailedSpecs: {
     group: string;
     items: { label: string; value: string; icon?: React.ElementType }[];
@@ -32,10 +16,10 @@ export interface ProductDetails extends Product {
     date: string;
     title: string;
     comment: string;
-    isVerifiedBuyer: boolean;
+    isVerifiedBuyer: boolean; // New field
   }[];
-  relatedProducts: string[];
-  modelPath?: string;
+  relatedProducts: string[]; // Array of product IDs
+  modelPath?: string; // Re-added modelPath
 }
 
 export const mockProducts: ProductDetails[] = [

@@ -5,8 +5,8 @@ import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react"; // Changed icon to Lightbulb for recommendations
 import useEmblaCarousel from "embla-carousel-react";
-import ProductCard from "@/components/products/ProductCard.tsx";
-import { mockProducts, getProductById, ProductDetails as ProductDetailsType, Product } from "@/data/products.ts"; // Import mockProducts and getProductById, Product
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
+import { mockProducts, getProductById, ProductDetails as ProductDetailsType } from "@/data/products.ts"; // Import mockProducts and getProductById
 
 interface RecommendedProductsSectionProps {
   currentProductId: string; // New prop to receive the ID of the currently viewed product

@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Plus, Minus, Trash2, CreditCard, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useCart, CartItem } from "@/context/CartContext.tsx"; // Import CartItem
+import { useCart } from "@/context/CartContext.tsx";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <p className="text-center text-muted-foreground">Your cart is empty.</p>
           ) : (
             <div className="space-y-4">
-              {cartItems.map((item: CartItem) => (
+              {cartItems.map((item) => (
                 <div key={item.id} className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-3">
                     <img src={item.images[0]} alt={item.name} className="h-12 w-12 object-contain rounded-md border" />

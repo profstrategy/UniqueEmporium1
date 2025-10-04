@@ -5,10 +5,10 @@ import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon, SlidersHorizontal } from "lucide-react"; // Import icons for specs and categories
-import ProductCard from "@/components/products/ProductCard.tsx";
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts, ProductDetails, getProductsByIds, Product } from "@/data/products.ts"; // Import mockProducts, ProductDetails, getProductsByIds, Product
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import mockProducts, ProductDetails, getProductsByIds
 import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Import RecommendedProductsSection
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
 
@@ -288,7 +288,7 @@ const Products = () => {
       {displayedProducts.length > 0 ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5">
           {displayedProducts.map((product) => (
-            <ProductCard key={product.id} product={product as Product} disableEntryAnimation={true} />
+            <ProductCard key={product.id} product={product} disableEntryAnimation={true} />
           ))}
         </div>
       ) : (

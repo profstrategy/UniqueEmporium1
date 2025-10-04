@@ -5,8 +5,8 @@ import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, ShoppingBag } from "lucide-react";
-import { useCart, CartItem } from "@/context/CartContext.tsx"; // Import CartItem
-import { Product } from "@/data/products"; // Import Product interface
+import { useCart } from "@/context/CartContext.tsx";
+import { Product } from "@/components/products/ProductCard.tsx"; // Import Product interface
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
 import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
 
@@ -71,7 +71,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
             <ShoppingBag className="h-5 w-5" /> Items in Order ({totalItems})
           </h3>
           <div className="space-y-4">
-            {cartItems.map((item: CartItem) => (
+            {cartItems.map((item) => (
               <div key={item.id} className="flex items-center gap-4 border-b pb-3 last:border-b-0 last:pb-0">
                 <img src={item.images[0]} alt={item.name} className="h-16 w-16 object-contain rounded-md border" />
                 <div className="flex-grow">

@@ -6,7 +6,7 @@ import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Scale, ArrowLeft, X, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, HardHat } from "lucide-react";
 import CompareProductCard from "../components/compare-page/CompareProductCard.tsx";
-import { Product } from "@/data/products"; // Import Product from data file
+import { Product } from "@/components/products/ProductCard.tsx";
 import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
 
 const staggerContainer = {
