@@ -134,7 +134,7 @@ const ProductDetails = () => {
               animate="visible"
               transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" as Easing }} // Slight delay for staggered animation
             >
-              <Product3DViewer />
+              {product.modelPath && <Product3DViewer modelPath={product.modelPath} />}
             </motion.div>
           </motion.div>
 

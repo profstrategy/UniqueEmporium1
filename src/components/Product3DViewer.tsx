@@ -3,14 +3,18 @@
 import React from "react";
 import "@google/model-viewer";
 
-const Product3DViewer = () => {
+interface Product3DViewerProps {
+  modelPath: string;
+}
+
+const Product3DViewer = ({ modelPath }: Product3DViewerProps) => {
   return (
     <model-viewer
-      src="/models/sample-product.glb" // Hardcoded model path as requested
+      src={modelPath} // Use the dynamic modelPath prop
       alt="3D view of product"
       auto-rotate
       camera-controls
-      className="w-full h-[500px] bg-[#f9f9f9] rounded-xl" // Fixed height to 500px
+      className="w-full h-[500px] bg-[#f9f9f9] rounded-xl"
     ></model-viewer>
   );
 };
