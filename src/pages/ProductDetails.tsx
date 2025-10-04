@@ -128,14 +128,7 @@ const ProductDetails = () => {
               productName={product.name}
             />
             {/* Product3DViewer is now always rendered with a hardcoded model path */}
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" as Easing }} // Slight delay for staggered animation
-            >
-              {product.modelPath && <Product3DViewer modelPath={product.modelPath} />}
-            </motion.div>
+            {product.modelPath && <Product3DViewer modelPath={product.modelPath} productName={product.name} />}
           </motion.div>
 
           {/* Product Info & Actions */}
