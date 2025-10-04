@@ -301,7 +301,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             <p className="font-bold text-base text-primary">
               {product.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
             </p>
-            {/* Original price and discount for desktop */}
+            {/* Original price and discount for desktop - remains here, hidden on mobile */}
             <span className="hidden md:flex items-center gap-2">
               {product.originalPrice && product.price < product.originalPrice && (
                 <>
@@ -330,38 +330,44 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             </motion.p>
           )}
 
-          {/* Footer Actions */}
-          <div className="mt-auto flex items-center justify-between pt-2">
-            {/* Mobile-only original price and discount */}
-            <div className="flex items-center gap-2 md:hidden">
+          {/* Footer Actions - This div has mt-auto and will always be at the bottom */}
+          <div className="mt-auto pt-2">
+            {/* Mobile-specific layout: original price, discount, and favorite icon */}
+            <div className="flex items-center justify-between md:hidden">
               {product.originalPrice && product.price < product.originalPrice && (
-                <>
+                <div className="flex items-center gap-2">
                   <p className="text-xs text-gray-400 line-through">
                     {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                   </p>
                   {discount > 0 && (
-                    <Badge variant="destructive" className="text-xs md:text-sm font-medium px-1.5 py-0.5">
+                    <Badge variant="destructive" className="text-xs font-medium px-1.5 py-0.5">
                       -{discount}%
                     </Badge>
                   )}
-                </>
+                </div>
               )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleToggleFavorite}
+              >
+                <Heart className={cn("h-4 w-4", favorited && "fill-red-500 text-red-500")} />
+              </Button>
             </div>
 
-            {/* View Details Link (Desktop Only) */}
-            <Link to={`/products/${product.id}`} className="hidden md:inline-flex">
-              <span className="text-xs text-muted-foreground hover:underline">View Details</span>
-            </Link>
-
-            {/* Favorite Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="ml-auto"
-              onClick={handleToggleFavorite}
-            >
-              <Heart className={cn("h-4 w-4", favorited && "fill-red-500 text-red-500")} />
-            </Button>
+            {/* Desktop-specific layout: View Details link and favorite icon */}
+            <div className="hidden md:flex items-center justify-between">
+              <Link to={`/products/${product.id}`} className="inline-flex">
+                <span className="text-xs text-muted-foreground hover:underline">View Details</span>
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleToggleFavorite}
+              >
+                <Heart className={cn("h-4 w-4", favorited && "fill-red-500 text-red-500")} />
+              </Button>
+            </div>
           </div>
         </CardContent>
 
