@@ -40,7 +40,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <CartProvider onOpenCartDrawer={() => setIsCartDrawerOpen(true)}>
+          <CartProvider>
             <FavoritesProvider>
               <CompareProvider>
                 <Header

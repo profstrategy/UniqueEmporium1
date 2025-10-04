@@ -7,12 +7,15 @@ import { useToast } from "@/hooks/use-toast";
 
 interface CartContextType {
   cart: CartItem[];
+  cartItems: CartItem[]; // Add this for backward compatibility
   addToCart: (product: Product | CartItem) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   getTotalItems: () => number;
+  totalItems: number; // Add this property
   getTotalPrice: () => number;
+  totalPrice: number; // Add this property
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -39,7 +42,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         // If item exists, update quantity
         return prevCart.map(item =>
           item.id === product.id 
-            ? { ...item, quantity: item.quantity + (product as CartItem).quantity } 
+            ? { ...item, quantity: item.quantity + (("quantity" in product ? product.quantity : 1)) } 
             : item
         );
       } else {
@@ -84,16 +87,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
+  // Calculate derived values
+  const totalItems = getTotalItems();
+  const totalPrice = getTotalPrice();
+
   return (
     <CartContext.Provider
       value={{
         cart,
+        cartItems: cart, // For backward compatibility
         addToCart,
         removeFromCart,
         updateQuantity,
         clearCart,
         getTotalItems,
+        totalItems, // Expose totalItems
         getTotalPrice,
+        totalPrice, // Expose totalPrice
       }}
     >
       {children}

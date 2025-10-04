@@ -16,6 +16,10 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
   const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
+  // Ensure cartItems is always an array
+  const items = cartItems || [];
+  const hasItems = items.length > 0;
+
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     // Simulate checkout process
@@ -40,11 +44,11 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           </SheetDescription>
         </SheetHeader>
         <div className="flex-grow overflow-y-auto py-4">
-          {cartItems.length === 0 ? (
+          {items.length === 0 ? (
             <p className="text-center text-muted-foreground">Your cart is empty.</p>
           ) : (
             <div className="space-y-4">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div key={item.id} className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-3">
                     <img src={item.images[0]} alt={item.name} className="h-12 w-12 object-contain rounded-md border" />
@@ -92,7 +96,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <span>Total:</span>
             <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
           </div>
-          <Button asChild className="w-full mb-2" disabled={cartItems.length === 0 || isCheckingOut}>
+          <Button asChild className="w-full mb-2" disabled={!hasItems || isCheckingOut}>
             <Link to="/checkout"> {/* Link to checkout page */}
               {isCheckingOut ? (
                 <>
@@ -105,7 +109,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
               )}
             </Link>
           </Button>
-          <Button variant="outline" className="w-full" onClick={clearCart} disabled={cartItems.length === 0}>
+          <Button variant="outline" className="w-full" onClick={clearCart} disabled={!hasItems}>
             Clear Cart
           </Button>
         </div>
