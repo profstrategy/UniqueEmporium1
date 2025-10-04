@@ -169,8 +169,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
       <Separator />
 
       {/* Purchase Options Card */}
-      <Card className="bg-card border border-border rounded-xl p-6 space-y-6 shadow-sm">
-        <CardContent className="p-0 space-y-6">
+      <div className="bg-card border border-border rounded-xl p-6 space-y-6 shadow-sm">
+        <div className="space-y-6">
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium">Quantity:</span>
@@ -237,8 +237,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               1-year manufacturer warranty included
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 };
