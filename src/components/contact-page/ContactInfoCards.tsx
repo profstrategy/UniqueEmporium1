@@ -62,7 +62,7 @@ const ContactInfoCards = () => {
       >
         {contactInfos.map((info, index) => (
           <motion.div key={index} variants={fadeInUp}>
-            <Card className="p-4 md:p-6 h-full rounded-xl text-center">
+            <Card className="p-4 md:p-6 h-full rounded-2xl text-center">
               <motion.div
                 className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-3 text-primary"
                 animate={{

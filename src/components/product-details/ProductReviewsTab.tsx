@@ -92,7 +92,7 @@ const ProductReviewsTab = ({ reviews, productId }: ProductReviewsTabProps) => {
     : "N/A";
 
   return (
-    <Card className="rounded-xl shadow-sm">
+    <Card className="rounded-2xl shadow-sm">
       <CardContent className="p-6">
         {/* Average Rating Summary */}
         {allReviews.length > 0 && (
@@ -116,7 +116,7 @@ const ProductReviewsTab = ({ reviews, productId }: ProductReviewsTabProps) => {
 
         {/* Review Form */}
         <motion.div variants={reviewVariants} initial="hidden" animate="visible" className="mb-12">
-          <Card className="p-6 rounded-xl border shadow-sm"> {/* Added Card wrapper */}
+          <Card className="p-6 rounded-2xl border shadow-sm"> {/* Added Card wrapper */}
             <CardContent className="p-0"> {/* Removed default CardContent padding */}
               <h3 className="font-poppins font-semibold text-xl text-foreground mb-4">Write a Review</h3> {/* Added font-poppins */}
               <form onSubmit={handleSubmitReview} className="space-y-5">

@@ -25,7 +25,7 @@ const ProductDescriptionTab = ({ description, keyFeatures, applications }: Produ
   const paragraphs = description.split('\n').filter(p => p.trim() !== '');
 
   return (
-    <Card className="rounded-xl shadow-sm">
+    <Card className="rounded-2xl shadow-sm">
       <CardContent className="p-6">
         <motion.div
           variants={textVariants}

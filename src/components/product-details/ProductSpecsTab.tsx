@@ -26,7 +26,7 @@ const itemVariants = {
 
 const ProductSpecsTab = ({ detailedSpecs }: ProductSpecsTabProps) => {
   return (
-    <Card className="rounded-xl shadow-sm">
+    <Card className="rounded-2xl shadow-sm">
       <CardContent className="p-6">
         <div className="space-y-8">
           {detailedSpecs.map((group, groupIndex) => (

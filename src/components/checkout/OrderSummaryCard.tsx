@@ -35,7 +35,7 @@ const OrderSummaryCard = ({
 
   return (
     <motion.div variants={fadeInUp} initial="hidden" animate="visible">
-      <Card className="rounded-xl shadow-lg h-full">
+      <Card className="rounded-2xl shadow-lg h-full">
         <CardHeader className="border-b pb-4">
           <CardTitle className="text-xl font-bold flex items-center gap-2">
             <ShoppingBag className="h-5 w-5" /> Order Summary

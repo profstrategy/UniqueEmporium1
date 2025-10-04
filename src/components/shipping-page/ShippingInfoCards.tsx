@@ -72,7 +72,7 @@ const ShippingInfoCards = () => {
       >
         {shippingInfos.map((info, index) => (
           <motion.div key={index} variants={fadeInUp}>
-            <Card className="h-full p-4 text-center rounded-xl">
+            <Card className="h-full p-4 text-center rounded-2xl">
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{

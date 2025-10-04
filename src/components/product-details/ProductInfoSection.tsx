@@ -148,7 +148,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
       )}
 
       {/* Purchase Options Card */}
-      <Card className="rounded-xl p-6 space-y-6 shadow-sm border"> {/* Added Card wrapper */}
+      <Card className="rounded-2xl p-6 space-y-6 shadow-sm border"> {/* Added Card wrapper */}
         <CardContent className="p-0 space-y-6"> {/* Removed default CardContent padding */}
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">

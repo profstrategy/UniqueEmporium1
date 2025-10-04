@@ -35,7 +35,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
   };
 
   return (
-    <Card className="rounded-xl shadow-lg h-full flex flex-col">
+    <Card className="rounded-2xl shadow-lg h-full flex flex-col">
       <CardHeader>
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
           <CheckCircle2 className="h-6 w-6 text-primary" /> Review Your Order

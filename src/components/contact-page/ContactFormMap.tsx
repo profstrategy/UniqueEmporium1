@@ -59,7 +59,7 @@ const ContactFormMap = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         {/* Contact Form */}
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
-          <Card className="rounded-xl">
+          <Card className="rounded-2xl">
             <CardHeader>
               <CardTitle className="text-lg md:text-2xl font-bold text-foreground">Send Us a Message</CardTitle>
               <p className="text-xs md:text-sm text-muted-foreground mt-2">
@@ -162,7 +162,7 @@ const ContactFormMap = () => {
 
         {/* Map Placeholder & Showroom Info */}
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
-          <Card className="h-full rounded-xl flex flex-col">
+          <Card className="h-full rounded-2xl flex flex-col">
             <CardHeader>
               <CardTitle className="text-lg md:text-2xl font-bold text-foreground">Visit Our Showroom</CardTitle>
               <p className="text-xs md:text-sm text-muted-foreground mt-2">
