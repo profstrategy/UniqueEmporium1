@@ -1,111 +1,399 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Heart } from 'lucide-react';
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Cpu, MemoryStick, HardDrive, Loader2 } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import FloatingTag from "@/components/common/FloatingTag.tsx";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useCart } from "@/context/CartContext.tsx";
+import { useFavorites } from "@/context/FavoritesContext.tsx";
+import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   category: string;
+  images: string[];
   price: number;
   originalPrice?: number;
-  imageUrl: string;
-  isLimitedStock?: boolean;
-  rating?: number;
-  reviews?: number;
+  discountPercentage?: number;
+  rating: number;
+  reviewCount: number; // Renamed from 'reviews'
+  tag?: string;
+  tagVariant?: "default" | "secondary" | "destructive" | "outline";
+  limitedStock?: boolean;
+  specs?: { icon: React.ElementType; label: string; value: string }[];
 }
 
 interface ProductCardProps {
   product: Product;
-  className?: string;
+  disableEntryAnimation?: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
-  const discount = product.originalPrice
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
+};
+
+const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProps) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const specsScrollRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const { addToCart } = useCart();
+  const { addFavorite, removeFavorite, isFavorited } = useFavorites();
+  const { addToCompare, removeFromCompare, isInComparison } = useCompare(); // Use CompareContext
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi, setSelectedIndex]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  // Auto-scrolling logic for specs row on desktop hover
+  useEffect(() => {
+    let animationFrameId: number;
+    let lastTimestamp: DOMHighResTimeStamp;
+    const scrollSpeed = 0.5;
+
+    const scroll = (timestamp: DOMHighResTimeStamp) => {
+      if (!specsScrollRef.current || !hovered || isMobile) {
+        cancelAnimationFrame(animationFrameId);
+        return;
+      }
+
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const elapsed = timestamp - lastTimestamp;
+
+      if (elapsed > 16) {
+        const currentScrollLeft = specsScrollRef.current.scrollLeft;
+        const maxScrollLeft = specsScrollRef.current.scrollWidth - specsScrollRef.current.clientWidth;
+
+        if (maxScrollLeft <= 0 || currentScrollLeft >= maxScrollLeft) {
+          cancelAnimationFrame(animationFrameId);
+          return;
+        }
+
+        specsScrollRef.current.scrollLeft += scrollSpeed;
+        lastTimestamp = timestamp;
+      }
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    if (hovered && !isMobile) {
+      if (specsScrollRef.current) {
+        specsScrollRef.current.scrollLeft = 0;
+      }
+      animationFrameId = requestAnimationFrame(scroll);
+    } else if (specsScrollRef.current) {
+      cancelAnimationFrame(animationFrameId);
+      specsScrollRef.current.scrollLeft = 0;
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [hovered, isMobile, product.specs]);
+
+  const discount = product.originalPrice && product.price < product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click if it has one
+    setIsAddingToCart(true);
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    addToCart(product);
+    setIsAddingToCart(false);
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click if it has one
+    if (isFavorited(product.id)) {
+      removeFavorite(product.id);
+    } else {
+      addFavorite(product);
+    }
+  };
+
+  const handleToggleCompare = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click if it has one
+    if (isInComparison(product.id)) {
+      removeFromCompare(product.id);
+    } else {
+      addToCompare(product);
+    }
+  };
+
+  const favorited = isFavorited(product.id);
+  const inComparison = isInComparison(product.id);
+
   return (
-    <Card className={cn("w-[150px] md:w-[200px] lg:w-[250px] flex flex-col", className)}>
-      <div className="relative w-full h-[150px] md:h-[200px] lg:h-[250px] overflow-hidden rounded-t-lg">
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-t-lg"
-        />
-        {product.isLimitedStock && (
-          <Badge variant="destructive" className="absolute top-2 left-2 text-[0.6rem] px-1 py-0.5">
-            Limited Stock!
-          </Badge>
+    <motion.div
+      variants={disableEntryAnimation ? {} : fadeInUp}
+      initial={disableEntryAnimation ? null : "hidden"}
+      whileInView={disableEntryAnimation ? null : "visible"}
+      viewport={{ once: true, amount: 0.2 }}
+      className="relative h-[420px] flex flex-col"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      whileHover={{
+        y: -8,
+        boxShadow: "0 20px 30px rgba(0, 0, 0, 0.25)",
+        transition: { duration: 0.3, ease: "easeOut" as Easing },
+      }}
+    >
+      <Card className="relative flex h-full flex-col overflow-hidden rounded-2xl shadow-lg">
+        {product.tag && (
+          <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 right-2 z-50" />
         )}
-      </div>
-      <CardContent className="p-4 flex flex-col flex-grow text-left">
-        {/* Category Text */}
-        <span className="text-[0.55rem] text-muted-foreground uppercase tracking-wide truncate mb-0.5 md:mb-1">
-          {product.category}
-        </span>
 
-        {/* Product Name */}
-        <h3 className="text-sm font-medium truncate mb-0.5 md:mb-1">
-          {product.name}
-        </h3>
+        {/* Product Image Area - now a clickable div, with the Link inside covering the image */}
+        <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
+          {/* This Link covers the entire image area for navigation to product details */}
+          <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
+            <div className="embla h-full" ref={emblaRef}>
+              <div className="embla__container flex h-full">
+                {product.images.map((image, index) => (
+                  <div className="embla__slide relative flex-none w-full" key={index}>
+                    <img
+                      src={image}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Link>
 
-        {/* Current Price */}
-        <p className="text-base font-semibold mb-1 md:mb-2">
-          ${product.price.toFixed(2)}
-        </p>
+          {/* Rating Overlay (positioned above the Link) */}
+          <div className="absolute top-3 left-3 z-10 md:bottom-3 md:top-auto md:left-auto md:right-3">
+            <Badge variant="secondary" className="flex items-center gap-1 text-xs md:text-sm font-medium">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              {product.rating.toFixed(1)}
+            </Badge>
+          </div>
 
-        {/* "Limited Stock!" message for desktop */}
-        {product.isLimitedStock && (
-          <div className="hidden md:block text-[0.65rem] text-red-500 font-medium mb-2">
-            Limited Stock!
+          {/* Navigation Arrows (positioned above the Link) */}
+          {product.images.length > 1 && (
+            <AnimatePresence>
+              {hovered && (
+                <>
+                  <motion.button
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 z-10"
+                    onClick={(e) => { e.stopPropagation(); scrollPrev(); }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </motion.button>
+                  <motion.button
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 z-10"
+                    onClick={(e) => { e.stopPropagation(); scrollNext(); }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </motion.button>
+                </>
+              )}
+            </AnimatePresence>
+          )}
+
+          {product.images.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 space-x-1">
+              {product.images.map((_, index) => (
+                <button
+                  key={index}
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full bg-white/50 transition-colors duration-200",
+                    index === selectedIndex && "bg-white",
+                  )}
+                  onClick={(e) => { e.stopPropagation(); emblaApi && emblaApi.scrollTo(index); }}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Desktop Hover Overlay with Action Buttons - Now siblings to the Link, positioned over it */}
+          <AnimatePresence>
+            {hovered && (
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 hidden md:flex items-center justify-center space-x-4 bg-black/60 z-20"
+              >
+                <Button variant="secondary" size="icon" className="text-sm font-medium" onClick={handleToggleCompare}>
+                  <Scale className={cn("h-4 w-4", inComparison && "fill-primary text-primary")} />
+                </Button>
+                <Button className="text-sm font-medium" onClick={handleAddToCart} disabled={isAddingToCart}>
+                  {isAddingToCart ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                  )}
+                  {isAddingToCart ? "Adding..." : "Add to Cart"}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Mobile "Add to Cart" and "Compare" Buttons - Now siblings to the Link, positioned over it */}
+          <div className="md:hidden absolute bottom-2 left-2 z-10">
+            <Button variant="secondary" size="icon" className="h-7 w-7 sm:h-8 sm:w-8" onClick={handleAddToCart} disabled={isAddingToCart}>
+              {isAddingToCart ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ShoppingCart className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+          <div className="md:hidden absolute bottom-2 right-2 z-10">
+            <Button variant="secondary" size="icon" className="h-7 w-7 sm:h-8 sm:w-8" onClick={handleToggleCompare}>
+              <Scale className={cn("h-4 w-4", inComparison && "fill-primary text-primary")} />
+            </Button>
+          </div>
+        </div> {/* End of image area div */}
+
+        <CardContent className="p-4 flex flex-col flex-grow text-left">
+          {/* Category Text */}
+          <span className="text-[0.55rem] text-muted-foreground uppercase tracking-wide truncate mb-1">
+            {product.category}
+          </span>
+
+          {/* Product Name */}
+          <Link to={`/products/${product.id}`}> {/* This Link is fine here */}
+            <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
+              {product.name}
+            </h3>
+          </Link>
+
+          {/* Price Display (Main Price always visible, Original Price/Discount hidden on mobile) */}
+          <div className="flex items-center gap-2 mb-2">
+            <p className="font-bold text-base text-primary">
+              {product.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+            </p>
+            {/* Original price and discount for desktop - remains here, hidden on mobile */}
+            <span className="hidden md:flex items-center gap-2">
+              {product.originalPrice && product.price < product.originalPrice && (
+                <>
+                  <p className="text-xs text-gray-400 line-through">
+                    {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                  </p>
+                  {discount > 0 && (
+                    <Badge variant="destructive" className="text-xs md:text-sm font-medium px-1.5 py-0.5">
+                      -{discount}%
+                    </Badge>
+                  )}
+                </>
+              )}
+            </span>
+          </div>
+
+          {/* Limited Stock Message */}
+          {product.limitedStock && (
+            <motion.p
+              className="text-xs text-red-500 font-medium mb-2 hidden md:block"
+              initial={{ opacity: 0.5 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" as Easing }}
+            >
+              Limited Stock!
+            </motion.p>
+          )}
+
+          {/* Footer Actions - This div has mt-auto and will always be at the bottom */}
+          <div className="mt-auto pt-2">
+            {/* Mobile-specific layout: original price, discount, and favorite icon */}
+            <div className="flex items-center justify-between md:hidden">
+              {product.originalPrice && product.price < product.originalPrice && (
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-gray-400 line-through">
+                    {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                  </p>
+                  {discount > 0 && (
+                    <Badge variant="destructive" className="text-xs font-medium px-1.5 py-0.5">
+                      -{discount}%
+                    </Badge>
+                  )}
+                </div>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleToggleFavorite}
+              >
+                <Heart className={cn("h-4 w-4", favorited && "fill-red-500 text-red-500")} />
+              </Button>
+            </div>
+
+            {/* Desktop-specific layout: View Details link and favorite icon */}
+            <div className="hidden md:flex items-center justify-between">
+              <Link to={`/products/${product.id}`} className="inline-flex">
+                <span className="text-xs text-muted-foreground hover:underline">View Details</span>
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleToggleFavorite}
+              >
+                <Heart className={cn("h-4 w-4", favorited && "fill-red-500 text-red-500")} />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+
+        {/* Horizontal Scrolling Specifications Section */}
+        {product.specs && product.specs.length > 0 && (
+          <div
+            ref={specsScrollRef}
+            className="flex overflow-x-auto no-scrollbar rounded-b-2xl border-t border-border bg-muted/50 py-3 px-2 flex-shrink-0 space-x-2"
+          >
+            {product.specs.map((spec, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 min-w-[100px] border rounded-md bg-background py-1 px-2 flex items-center
+                           transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+              >
+                {spec.icon && React.createElement(spec.icon, { className: "w-4 h-4 text-primary mr-1" })}
+                <div>
+                  <p className="text-xs text-muted-foreground leading-none">{spec.label}</p>
+                  <p className="text-xs font-medium text-foreground leading-none">{spec.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
-
-        {/* Footer Actions (Original Price, Discount, Favorite Icon) */}
-        {/* Mobile-specific layout: original price, discount, and favorite icon */}
-        <div className="flex items-center justify-between md:hidden">
-          {product.originalPrice && product.price < product.originalPrice && (
-            <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-400 line-through">
-                ${product.originalPrice.toFixed(2)}
-              </p>
-              {discount > 0 && (
-                <span className="text-xs font-medium text-green-600">
-                  -{discount}%
-                </span>
-              )}
-            </div>
-          )}
-          <Heart size={16} className="text-gray-400 hover:text-red-500 cursor-pointer" />
-        </div>
-
-        {/* Desktop-specific layout: original price, discount, and favorite icon */}
-        <div className="hidden md:flex items-center justify-between mt-auto">
-          {product.originalPrice && product.price < product.originalPrice ? (
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-400 line-through">
-                ${product.originalPrice.toFixed(2)}
-              </p>
-              {discount > 0 && (
-                <span className="text-sm font-medium text-green-600">
-                  -{discount}%
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="flex-grow"></div> // Placeholder to push heart to right
-          )}
-          <Heart size={18} className="text-gray-400 hover:text-red-500 cursor-pointer" />
-        </div>
-      </CardContent>
-    </Card>
+      </Card>
+    </motion.div>
   );
 };
 
