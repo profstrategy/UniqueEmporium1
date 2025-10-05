@@ -19,6 +19,7 @@ export interface ProductDetails extends Product {
     isVerifiedBuyer: boolean; // New field
   }[];
   relatedProducts: string[]; // Array of product IDs
+  modelPath?: string; // Added modelPath
 }
 
 export const mockProducts: ProductDetails[] = [
@@ -112,6 +113,7 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["soundwave-noise-cancelling-headphones", "ultrawide-monitor-32"],
+    modelPath: "/models/sample-product.glb", // Added modelPath
   },
   {
     id: "surface-pro-9",
