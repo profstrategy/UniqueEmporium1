@@ -31,11 +31,11 @@ const selectedProductsForCarousel: ProductDetails[] = [
 const carouselItems: CarouselItem[] = selectedProductsForCarousel.map(product => ({
   id: product.id,
   image: product.images[0], // Use the first image for the carousel
-  headline: `Discover the ${product.name} – ${product.category} Excellence.`, // Dynamic headline
-  subHeadline: product.fullDescription.split('.')[0] + '.', // First sentence of full description
-  productName: product.name,
-  productDescription: product.fullDescription.split('.')[0] + '.', // Short description
-  price: product.price,
+  headline: "Discover the ZenBook Pro 14 OLED – Laptops Excellence.", // Static headline
+  subHeadline: "The ZenBook Pro 14 OLED is a powerhouse designed for creative professionals.", // Static sub-headline
+  productName: product.name, // Keep product name dynamic
+  productDescription: product.fullDescription.split('.')[0] + '.', // Keep product description dynamic
+  price: product.price, // Keep price dynamic
   ctaText: `Shop ${product.category} Now`,
   ctaLink: `/products/${product.id}`, // Link to product details page
 }));
