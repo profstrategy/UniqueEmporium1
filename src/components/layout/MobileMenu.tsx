@@ -46,7 +46,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, compareCount, itemCount }:
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-full sm:max-w-xs flex flex-col">
+      <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col"> {/* Adjusted width */}
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold text-primary">ElectroPro</SheetTitle>
         </SheetHeader>
@@ -56,10 +56,10 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, compareCount, itemCount }:
           animate="visible"
           variants={menuVariants}
         >
-          <Button variant="ghost" className="justify-start text-lg" onClick={() => handleLinkClick("/")}>
+          <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/")}> {/* Adjusted font size */}
             <Home className="mr-2 h-5 w-5" /> Home
           </Button>
-          <Button variant="ghost" className="justify-start text-lg" onClick={() => handleLinkClick("/products")}>
+          <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/products")}> {/* Adjusted font size */}
             <Laptop className="mr-2 h-5 w-5" /> Electronics
           </Button>
 
@@ -81,25 +81,25 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, compareCount, itemCount }:
           </div>
 
           <div className="border-t border-border pt-4">
-            <Button variant="ghost" className="justify-start text-lg relative" onClick={() => handleLinkClick("/favorites")}>
+            <Button variant="ghost" className="justify-start text-base relative" onClick={() => handleLinkClick("/favorites")}> {/* Adjusted font size */}
               <Heart className="mr-2 h-5 w-5" /> Favorites
               <Badge count={totalFavorites} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
             </Button>
-            <Button variant="ghost" className="justify-start text-lg relative" onClick={() => handleLinkClick("/compare")}>
+            <Button variant="ghost" className="justify-start text-base relative" onClick={() => handleLinkClick("/compare")}> {/* Adjusted font size */}
               <Scale className="mr-2 h-5 w-5" /> Compare
               <Badge count={totalCompareItems} variant="secondary" className="absolute right-4 top-1/2 -translate-y-1/2" /> {/* Use totalCompareItems */}
             </Button>
-            <Button variant="ghost" className="justify-start text-lg relative" onClick={() => handleLinkClick("/cart")}>
+            <Button variant="ghost" className="justify-start text-base relative" onClick={() => handleLinkClick("/cart")}> {/* Adjusted font size */}
               <ShoppingBag className="mr-2 h-5 w-5" /> Cart
               <Badge count={totalItems} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
             </Button>
           </div>
 
           <div className="border-t border-border pt-4">
-            <Button variant="ghost" className="justify-start text-lg" onClick={() => handleLinkClick("/about")}>
+            <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/about")}> {/* Adjusted font size */}
               <Info className="mr-2 h-5 w-5" /> About Us
             </Button>
-            <Button variant="ghost" className="justify-start text-lg" onClick={() => handleLinkClick("/contact")}>
+            <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/contact")}> {/* Adjusted font size */}
               <Mail className="mr-2 h-5 w-5" /> Contact
             </Button>
           </div>
