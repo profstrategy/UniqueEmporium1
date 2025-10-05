@@ -142,7 +142,7 @@ const HeroCarousel = () => {
 
           {/* Product Info Card */}
           <motion.div
-            className="mt-6 rounded-lg border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg md:w-2/3 lg:w-1/2"
+            className="mt-6 rounded-lg border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg md:w-2/3 lg:w-2/3"
             variants={fadeInUpVariants}
             initial="hidden"
             animate="visible"
