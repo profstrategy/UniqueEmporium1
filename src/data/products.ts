@@ -19,7 +19,6 @@ export interface ProductDetails extends Product {
     isVerifiedBuyer: boolean; // New field
   }[];
   relatedProducts: string[]; // Array of product IDs
-  modelPath?: string; // Re-added modelPath
 }
 
 export const mockProducts: ProductDetails[] = [
@@ -113,7 +112,6 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["soundwave-noise-cancelling-headphones", "ultrawide-monitor-32"],
-    modelPath: "/models/zenbook_pro_14_oled.glb",
   },
   {
     id: "surface-pro-9",
@@ -172,7 +170,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev27", author: "Sarah M.", rating: 4, date: "2023-11-25", title: "Great, but accessories are pricey", comment: "The device itself is fantastic, but the keyboard and pen add up.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["ergogrip-wireless-mouse"],
-    modelPath: "/models/surface_pro_9.glb",
   },
   {
     id: "echo-dot-5th-gen",
@@ -224,7 +221,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev29", author: "Jessica R.", rating: 4, date: "2023-11-30", title: "Great, but sometimes mishears me", comment: "Mostly works perfectly, but occasionally struggles with my accent.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["smarthome-hub-pro"],
-    modelPath: "/models/echo_dot_5th_gen.glb",
   },
   {
     id: "ergofit-wireless-keyboard",
@@ -277,7 +273,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev31", author: "Laura K.", rating: 4, date: "2023-12-05", title: "Good, but a bit bulky", comment: "Works great, but it's quite large on my desk.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["ergogrip-wireless-mouse"],
-    modelPath: "/models/ergofit_wireless_keyboard.glb",
   },
   {
     id: "prodisplay-xdr",
@@ -331,7 +326,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev33", author: "Sophie H.", rating: 4, date: "2023-12-10", title: "Expensive, but worth it for pros", comment: "The price is steep, but the quality is unmatched for professional work.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/prodisplay_xdr.glb",
   },
   {
     id: "gaming-beast-desktop-pc",
@@ -388,7 +382,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev35", author: "TechGuru", rating: 5, date: "2023-12-18", title: "Stunning performance and looks", comment: "Not just powerful, but also looks incredible with the RGB lighting.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["prodisplay-xdr", "gaming-pro-wireless-mouse"],
-    modelPath: "/models/gaming_beast_desktop_pc.glb",
   },
   {
     id: "soundwave-noise-cancelling-headphones",
@@ -459,7 +452,6 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["zenbook-pro-14-oled", "ergofit-wireless-keyboard"],
-    modelPath: "/models/soundwave_headphones.glb",
   },
   {
     id: "ultrafast-1tb-external-ssd",
@@ -530,7 +522,6 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/ultrafast_1tb_external_ssd.glb",
   },
   {
     id: "smarthome-hub-pro",
@@ -599,7 +590,6 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["echo-dot-5th-gen"],
-    modelPath: "/models/smarthome_hub_pro.glb",
   },
   {
     id: "powercharge-100w-gan-charger",
@@ -670,7 +660,6 @@ export const mockProducts: ProductDetails[] = [
       },
     ],
     relatedProducts: ["ergofit-wireless-keyboard"],
-    modelPath: "/models/powercharge_100w_gan_charger.glb",
   },
   {
     id: "visionpro-4k-webcam",
@@ -724,7 +713,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev37", author: "RemoteWorker", rating: 4, date: "2023-12-20", title: "Great for meetings", comment: "Much better than my laptop camera. Good value for 4K.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["gaming-beast-desktop-pc"],
-    modelPath: "/models/visionpro_4k_webcam.glb",
   },
   {
     id: "swiftbook-air-13",
@@ -781,7 +769,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev39", author: "Traveler", rating: 4, date: "2024-01-01", title: "Great travel companion", comment: "Fits easily in my bag. Screen is good, but wish it was brighter outdoors.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["ultrafast-1tb-external-ssd"],
-    modelPath: "/models/swiftbook_air_13.glb",
   },
   {
     id: "galaxy-tab-s9-ultra",
@@ -837,7 +824,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev41", author: "Multitasker", rating: 4, date: "2024-01-08", title: "A bit too big, but powerful", comment: "Amazing for productivity, but it's definitely a two-hand device.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["surface-pro-9"],
-    modelPath: "/models/galaxy_tab_s9_ultra.glb",
   },
   {
     id: "officemaster-all-in-one-pc",
@@ -894,7 +880,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev43", author: "FamilyUser", rating: 4, date: "2024-01-12", title: "Solid family computer", comment: "Handles all our needs, but the speakers could be better.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["prodisplay-xdr"],
-    modelPath: "/models/officemaster_all_in_one_pc.glb",
   },
   {
     id: "gaming-pro-wireless-mouse",
@@ -949,7 +934,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev45", author: "CasualGamer", rating: 4, date: "2024-01-18", title: "Great, but a bit pricey", comment: "Fantastic performance, but it's a premium price for a mouse.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["gaming-beast-desktop-pc"],
-    modelPath: "/models/gaming_pro_wireless_mouse.glb",
   },
   {
     id: "smartwatch-xtreme",
@@ -1006,7 +990,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev47", author: "TechWearer", rating: 4, date: "2024-01-22", title: "Stylish and functional", comment: "Looks great and has all the features I need. Notifications are a bit small.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["soundwave-noise-cancelling-headphones"],
-    modelPath: "/models/smartwatch_xtreme.glb",
   },
   {
     id: "portable-projector-mini",
@@ -1060,7 +1043,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev49", author: "Presenter", rating: 4, date: "2024-01-28", title: "Handy for presentations", comment: "Works well for quick meetings, but the fan can be a bit loud.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["smarthome-hub-pro"],
-    modelPath: "/models/portable_projector_mini.glb",
   },
   {
     id: "cyberbook-pro-16",
@@ -1119,7 +1101,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev51", author: "DeveloperX", rating: 5, date: "2024-02-01", title: "Powerful workstation", comment: "Compiles code super fast. Great for virtual machines and heavy development.", isVerifiedBuyer: true },
     ],
     relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/cyberbook_pro_16.glb",
   },
   {
     id: "homeserver-nas-4-bay",
@@ -1174,7 +1155,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev53", author: "MediaStreamer", rating: 4, date: "2024-02-08", title: "Great for Plex", comment: "Streams all my movies without a hitch. The interface could be a bit more modern.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["ultrafast-1tb-external-ssd"],
-    modelPath: "/models/homeserver_nas_4_bay.glb",
   },
   {
     id: "smartdesk-standing-desk",
@@ -1225,7 +1205,6 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev55", author: "ProductivityHack", rating: 4, date: "2024-02-12", title: "Great desk, minor wobble at max height", comment: "Mostly solid, but there's a slight wobble when fully extended. Still highly recommend.", isVerifiedBuyer: false },
     ],
     relatedProducts: ["ergofit-wireless-keyboard"],
-    modelPath: "/models/smartdesk_standing_desk.glb",
   },
 ];
 

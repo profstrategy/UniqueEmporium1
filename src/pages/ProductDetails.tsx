@@ -10,7 +10,6 @@ import ProductInfoSection from "@/components/product-details/ProductInfoSection.
 import ProductTabs from "@/components/product-details/ProductTabs.tsx";
 import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Existing component
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // New component
-import Product3DViewer from "@/components/Product3DViewer.tsx"; // Import Product3DViewer
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -127,7 +126,6 @@ const ProductDetails = () => {
               images={product.images}
               productName={product.name}
             />
-            {product.modelPath && <Product3DViewer modelPath={product.modelPath} productName={product.name} />}
           </motion.div>
 
           {/* Product Info & Actions */}
