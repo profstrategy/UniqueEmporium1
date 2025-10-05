@@ -35,7 +35,7 @@ const teamMembers: TeamMember[] = [
     name: "David Green",
     role: "Customer Relations Lead",
     bio: "Dedicated to providing exceptional support and building lasting relationships.",
-    image: "https://images.unsplash.com/photo-1557862921-37829c790f51?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Placeholder image 4
+    image: "https://images.unsplash.com/photo-1560250097-0b7553030ba1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // New placeholder image for David Green
   },
 ];
 
