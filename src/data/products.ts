@@ -811,7 +811,11 @@ export const mockProducts: ProductDetails[] = [
     id: "officemaster-all-in-one-pc",
     name: "OfficeMaster All-in-One PC",
     category: "Laptops", // Broad category for computing devices
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg",
+      "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=930&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 700000.00,
     originalPrice: 750000.00,
     discountPercentage: 6,
@@ -972,7 +976,11 @@ export const mockProducts: ProductDetails[] = [
     id: "portable-projector-mini",
     name: "Portable Projector Mini",
     category: "Accessories", // Changed category from Smart Home to Accessories
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1638154320403-1bc308a01398?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1638154320388-93039efa870b?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1670198867841-7d2d4c1bd4fd?q=80&w=2172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 95000.00,
     rating: 4.3,
     reviewCount: 70,
@@ -1081,7 +1089,11 @@ export const mockProducts: ProductDetails[] = [
     id: "homeserver-nas-4-bay",
     name: "HomeServer NAS 4-Bay",
     category: "Smart Home", // Changed category from Storage to Smart Home
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://neuralservers.com/cdn/shop/products/iw-ms04ph13fei_1_1024x1024.jpg?v=1664476140",
+      "https://www.thinkpenguin.com/files/penguin-4-bay-nas-mini-server_0_1.png",
+      "https://m.media-amazon.com/images/I/91ucldvrNdL._AC_SL1500_.jpg"
+    ],
     price: 350000.00,
     originalPrice: 380000.00,
     discountPercentage: 8,
