@@ -85,16 +85,16 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 text-foreground hover:bg-white z-10 h-6 w-6 p-2"
-              onClick={scrollPrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 text-foreground hover:bg-white z-20 h-6 w-6 p-2"
+              onClick={(e) => { e.stopPropagation(); scrollPrev(); }}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 text-foreground hover:bg-white z-10 h-6 w-6 p-2"
-              onClick={scrollNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 text-foreground hover:bg-white z-20 h-6 w-6 p-2"
+              onClick={(e) => { e.stopPropagation(); scrollNext(); }}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
