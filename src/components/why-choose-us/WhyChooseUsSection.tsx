@@ -97,7 +97,7 @@ const WhyChooseUsSection = () => {
           variants={fadeInUp}
         >
           <img
-            src="/public/placeholder.svg" // Placeholder image for the banner
+            src="/my-banner.webp" // Updated to use my-banner.webp
             alt="Why Choose Us Banner"
             className="w-full h-full object-cover object-center"
           />
