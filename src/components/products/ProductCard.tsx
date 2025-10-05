@@ -14,6 +14,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
 export interface Product {
   id: string;
@@ -53,6 +54,9 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate
 
+  // State to track loading status of each image
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
+
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
@@ -70,6 +74,24 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Initialize image loading states when product changes
+  useEffect(() => {
+    const initialLoadingStates: Record<string, boolean> = {};
+    product.images.forEach(image => {
+      initialLoadingStates[image] = true;
+    });
+    setImageLoadingStates(initialLoadingStates);
+  }, [product.images]);
+
+  const handleImageLoad = useCallback((imageUrl: string) => {
+    setImageLoadingStates(prev => ({ ...prev, [imageUrl]: false }));
+  }, []);
+
+  const handleImageError = useCallback((imageUrl: string) => {
+    // Even if there's an error, stop showing the skeleton
+    setImageLoadingStates(prev => ({ ...prev, [imageUrl]: false }));
+  }, []);
 
   // Auto-scrolling logic for specs row on desktop hover
   useEffect(() => {
@@ -184,11 +206,17 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             <div className="embla h-full" ref={emblaRef}>
               <div className="embla__container flex h-full">
                 {product.images.map((image, index) => (
-                  <div className="embla__slide relative flex-none w-full" key={index}>
+                  <div className="embla__slide relative flex-none w-full h-full" key={index}>
+                    {imageLoadingStates[image] && (
+                      <Skeleton className="absolute inset-0 h-full w-full" />
+                    )}
                     <img
                       src={image}
                       alt={`${product.name} - Image ${index + 1}`}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain transition-opacity duration-300"
+                      style={{ opacity: imageLoadingStates[image] ? 0 : 1 }}
+                      onLoad={() => handleImageLoad(image)}
+                      onError={() => handleImageError(image)}
                     />
                   </div>
                 ))}
