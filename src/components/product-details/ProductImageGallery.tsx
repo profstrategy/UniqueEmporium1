@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, Easing } from "framer-motion";
+import { motion, Easing } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
@@ -37,12 +37,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     };
   }, [emblaApi, onSelect]);
 
-  const imageVariants = {
-    enter: { opacity: 0, scale: 0.95 },
-    center: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" as Easing } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeIn" as Easing } },
-  };
-
   const handleImageClick = () => {
     setIsZoomed(true); // Open the dialog for zoom
   };
@@ -51,33 +45,27 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     <div className="relative w-full rounded-xl overflow-hidden shadow-lg bg-muted">
       {/* Main Image Area */}
       <div className="relative h-[300px] sm:h-[400px] md:h-[500px] bg-muted flex items-center justify-center">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={selectedIndex}
-            className="embla h-full w-full relative cursor-pointer group"
-            variants={imageVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            onClick={handleImageClick} // This will now open the dialog
-          >
-            <div className="embla__container flex h-full">
-              {images.map((image, index) => (
-                <div className="embla__slide relative flex-none w-full h-full" key={index}>
-                  <img
-                    src={image}
-                    alt={`Product image ${index + 1} of ${productName}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-            {/* Zoom Indicator */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-              <ZoomIn className="h-10 w-10 text-white" />
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <div
+          className="embla h-full w-full relative cursor-pointer group"
+          ref={emblaRef} // emblaRef applied here
+          onClick={handleImageClick} // This will now open the dialog
+        >
+          <div className="embla__container flex h-full">
+            {images.map((image, index) => (
+              <div className="embla__slide relative flex-none w-full h-full" key={index}>
+                <img
+                  src={image}
+                  alt={`Product image ${index + 1} of ${productName}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Zoom Indicator */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
+            <ZoomIn className="h-10 w-10 text-white" />
+          </div>
+        </div>
 
         {/* Navigation Arrows */}
         {images.length > 1 && (
