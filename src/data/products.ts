@@ -174,7 +174,11 @@ export const mockProducts: ProductDetails[] = [
     id: "echo-dot-5th-gen",
     name: "Echo Dot (5th Gen)",
     category: "Smart Home",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1512446816042-444d641267d4?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1544451256-d79e9e199fa8?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 45000.00,
     rating: 4.7,
     reviewCount: 300,
@@ -222,7 +226,11 @@ export const mockProducts: ProductDetails[] = [
     id: "ergofit-wireless-keyboard",
     name: "ErgoFit Wireless Keyboard",
     category: "Accessories",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1701253053045-abdb5499a451?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 60000.00,
     rating: 4.5,
     reviewCount: 180,
@@ -1003,9 +1011,9 @@ export const mockProducts: ProductDetails[] = [
     name: "CyberBook Pro 16",
     category: "Laptops",
     images: [
-      "https://images.unsplash.com/photo-1588872657578-7efd1f155d51?auto=format&fit=crop&w=2070&q=80",
-      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=2070&q=80",
-      "https://images.pexels.com/photos/34130516/pexels-photo-34130516.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.pexels.com/photos/34130516/pexels-photo-34130516.jpeg"
     ],
     price: 1500000.00,
     originalPrice: 1600000.00,
