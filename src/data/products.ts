@@ -390,7 +390,11 @@ export const mockProducts: ProductDetails[] = [
     id: "soundwave-noise-cancelling-headphones",
     name: "SoundWave Noise-Cancelling Headphones",
     category: "Audio",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://plus.unsplash.com/premium_photo-1680346529160-549ad950bd1f?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1710962439403-a35fbc684b15?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1680346528789-0ffcc13f5ebf?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 175000.00,
     rating: 4.5,
     reviewCount: 230,
@@ -524,7 +528,11 @@ export const mockProducts: ProductDetails[] = [
     id: "smarthome-hub-pro",
     name: "SmartHome Hub Pro",
     category: "Smart Home",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1729265012673-c6e5e3a29374?q=80&w=2107&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://plus.unsplash.com/premium_photo-1729574858839-5a145c914bac?q=80&w=1788&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 65000.00,
     rating: 4.2,
     reviewCount: 80,
@@ -931,7 +939,11 @@ export const mockProducts: ProductDetails[] = [
     id: "smartwatch-xtreme",
     name: "SmartWatch Xtreme",
     category: "Accessories", // Changed category from Smart Home to Accessories
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1709087241763-23609bb0854e?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1654208398202-1edef1cf23b5?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://cdn.pixabay.com/photo/2018/10/29/07/18/apple-3780515_1280.jpg"
+    ],
     price: 120000.00,
     originalPrice: 135000.00,
     discountPercentage: 11,
