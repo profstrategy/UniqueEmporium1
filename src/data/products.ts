@@ -329,7 +329,11 @@ export const mockProducts: ProductDetails[] = [
     id: "gaming-beast-desktop-pc",
     name: "Gaming Beast Desktop PC",
     category: "Laptops", // Assuming 'Laptops' is a broad category for high-performance computing
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg",
+      "https://images.unsplash.com/photo-1593642532744-d377ab507dc8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 1800000.00,
     originalPrice: 2000000.00,
     discountPercentage: 10,
@@ -751,7 +755,11 @@ export const mockProducts: ProductDetails[] = [
     id: "galaxy-tab-s9-ultra",
     name: "Galaxy Tab S9 Ultra",
     category: "Tablets",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1620288650879-20db0eb38c05?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1657446733024-d1803925d529?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1631342617268-61f3b16d2e6b?q=80&w=930&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 1100000.00,
     rating: 4.8,
     reviewCount: 160,
@@ -856,7 +864,11 @@ export const mockProducts: ProductDetails[] = [
     id: "gaming-pro-wireless-mouse",
     name: "Gaming Pro Wireless Mouse",
     category: "Accessories",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1650310722799-293144cf7f61?q=80&w=2126&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1599779600619-1012639ed04b?q=80&w=1774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1536632437243-cc0c5b4c18b8?q=80&w=1776&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 45000.00,
     originalPrice: 50000.00,
     discountPercentage: 10,
