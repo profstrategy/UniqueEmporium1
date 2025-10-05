@@ -26,6 +26,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         backgroundImage: "url('/3d-viewer-background.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundColor: "#ff0000", // Temporary red background for testing
       }}
     >
       <model-viewer
@@ -33,6 +34,8 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         alt={`3D view of ${productName}`}
         auto-rotate
         camera-controls
+        environment-image="none" // Explicitly disable environment image
+        skybox-image="none"     // Explicitly disable skybox image
         style={{
           width: "100%",
           height: "100%",
