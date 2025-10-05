@@ -21,7 +21,12 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative w-full h-72 lg:h-96 bg-muted border rounded-xl overflow-hidden"
+      className="relative w-full h-72 lg:h-96 border rounded-xl overflow-hidden"
+      style={{
+        backgroundImage: "url('/3d-viewer-background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <model-viewer
         src={modelPath}
@@ -31,7 +36,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#f9f9f9",
+          backgroundColor: "transparent", // Make model-viewer background transparent to show container background
           borderRadius: "12px",
         }}
       ></model-viewer>
