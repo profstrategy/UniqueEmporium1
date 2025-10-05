@@ -119,7 +119,11 @@ export const mockProducts: ProductDetails[] = [
     id: "surface-pro-9",
     name: "Surface Pro 9",
     category: "Tablets",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://cdn.pixabay.com/photo/2020/10/21/18/07/laptop-5673901_1280.jpg",
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1565906624603-eae91627707b?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 780000.00,
     originalPrice: 850000.00,
     discountPercentage: 8,
@@ -461,7 +465,11 @@ export const mockProducts: ProductDetails[] = [
     id: "ultrafast-1tb-external-ssd",
     name: "UltraFast 1TB External SSD",
     category: "Accessories", // Changed category from Storage to Accessories
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.pexels.com/photos/2942361/pexels-photo-2942361.jpeg",
+      "https://images.pexels.com/photos/18121142/pexels-photo-18121142.jpeg",
+      "https://images.pexels.com/photos/6373758/pexels-photo-6373758.jpeg"
+    ],
     price: 150000.00,
     originalPrice: 165000.00,
     discountPercentage: 9,
@@ -668,7 +676,11 @@ export const mockProducts: ProductDetails[] = [
     id: "visionpro-4k-webcam",
     name: "VisionPro 4K Webcam",
     category: "Accessories",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://cdn.pixabay.com/photo/2016/01/27/08/53/video-conference-1163880_1280.jpg",
+      "https://cdn.pixabay.com/photo/2016/02/24/12/30/camera-1219748_1280.jpg",
+      "https://cdn.pixabay.com/photo/2020/04/26/15/42/videoanruf-5095868_1280.jpg"
+    ],
     price: 80000.00,
     rating: 4.6,
     reviewCount: 110,
@@ -718,7 +730,11 @@ export const mockProducts: ProductDetails[] = [
     id: "swiftbook-air-13",
     name: "SwiftBook Air 13",
     category: "Laptops",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=2565&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1772&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
     price: 680000.00,
     originalPrice: 720000.00,
     discountPercentage: 5,
