@@ -9,7 +9,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import FloatingTag from "@/components/common/FloatingTag.tsx";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
@@ -51,6 +51,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
   const { addToCompare, removeFromCompare, isInComparison } = useCompare(); // Use CompareContext
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -145,6 +146,13 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
     }
   };
 
+  const handleCardClick = () => {
+    // Only navigate if not on mobile, as mobile has dedicated buttons/links
+    if (!isMobile) {
+      navigate(`/products/${product.id}`);
+    }
+  };
+
   const favorited = isFavorited(product.id);
   const inComparison = isInComparison(product.id);
 
@@ -154,9 +162,10 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       initial={disableEntryAnimation ? null : "hidden"}
       whileInView={disableEntryAnimation ? null : "visible"}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative h-[420px] flex flex-col"
+      className="relative h-[420px] flex flex-col cursor-pointer" // Added cursor-pointer
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleCardClick} // Added onClick to the entire card
       whileHover={{
         y: -8,
         boxShadow: "0 20px 30px rgba(0, 0, 0, 0.25)",
@@ -168,9 +177,9 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 right-2 z-50" />
         )}
 
-        {/* Product Image Area - now a clickable div, with the Link inside covering the image */}
+        {/* Product Image Area */}
         <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
-          {/* This Link covers the entire image area for navigation to product details */}
+          {/* The Link component is still here for semantic purposes and direct clicks */}
           <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
             <div className="embla h-full" ref={emblaRef}>
               <div className="embla__container flex h-full">
@@ -290,7 +299,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </span>
 
           {/* Product Name */}
-          <Link to={`/products/${product.id}`}> {/* This Link is fine here */}
+          <Link to={`/products/${product.id}`} onClick={(e) => e.stopPropagation()}> {/* Added stopPropagation */}
             <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
@@ -357,7 +366,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
             {/* Desktop-specific layout: View Details link and favorite icon */}
             <div className="hidden md:flex items-center justify-between">
-              <Link to={`/products/${product.id}`} className="inline-flex">
+              <Link to={`/products/${product.id}`} className="inline-flex" onClick={(e) => e.stopPropagation()}> {/* Added stopPropagation */}
                 <span className="text-xs text-muted-foreground hover:underline">View Details</span>
               </Link>
               <Button
