@@ -18,32 +18,27 @@ const fadeInUp = {
 
 const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
   const [isModelLoading, setIsModelLoading] = useState(true);
-  const modelViewerRef = useRef<HTMLDivElement>(null); // Use HTMLDivElement for the container
+  const modelViewerElementRef = useRef<HTMLDivElement & { model?: any }>(null); // Ref for the model-viewer element
 
   useEffect(() => {
-    const currentModelViewer = modelViewerRef.current?.querySelector('model-viewer');
+    const currentModelViewer = modelViewerElementRef.current;
 
     const handleLoad = () => {
       setIsModelLoading(false);
     };
 
     if (currentModelViewer) {
-      // Check if the model is already loaded (e.g., from cache)
-      // model-viewer doesn't expose a direct 'isLoaded' property,
-      // but we can assume if it's already rendered, it's loaded.
-      // For a more robust solution, one might check `readyState` or similar.
-      // For now, we'll rely on the 'load' event.
       currentModelViewer.addEventListener("load", handleLoad);
     }
 
-    // Fallback for cases where load event might not fire immediately or for initial render
-    // A small timeout to ensure the event listener has a chance to catch the load.
-    // If the model loads very fast, the spinner might flash briefly.
+    // Fallback for cases where load event might not fire immediately (e.g., cached models)
+    // Check if the model is already loaded after a short delay
     const timeoutId = setTimeout(() => {
-      if (currentModelViewer && currentModelViewer.shadowRoot?.querySelector('canvas')) {
+      // Access the internal model property if available, or check for canvas presence
+      if (currentModelViewer && (currentModelViewer.model || currentModelViewer.shadowRoot?.querySelector('canvas'))) {
         setIsModelLoading(false);
       }
-    }, 100); // Adjust this delay if the spinner flashes too much
+    }, 100); 
 
     return () => {
       if (currentModelViewer) {
@@ -64,7 +59,6 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      ref={modelViewerRef}
     >
       {isModelLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-10">
@@ -72,6 +66,7 @@ const Product3DViewer = ({ modelPath, productName }: Product3DViewerProps) => {
         </div>
       )}
       <model-viewer
+        ref={modelViewerElementRef} // Attach the ref directly to model-viewer
         src={modelPath}
         alt={`3D view of ${productName}`}
         auto-rotate
