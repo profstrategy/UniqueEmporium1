@@ -83,7 +83,7 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <motion.div
-            className="mt-8 flex flex-col sm:flex-row gap-4 justify-center" // Added justify-center
+            className="mt-8 flex flex-col sm:flex-row gap-4 justify-center max-w-xs mx-auto" // Added max-w-xs and mx-auto for mobile
             variants={ctaFloatVariants}
             initial="initial"
             animate="animate"
@@ -92,7 +92,7 @@ const HeroSection = () => {
           >
             <Button
               asChild
-              className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg" // Reduced padding and text size for mobile
+              className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg w-full" // Ensure button still takes full width of its *constrained* parent
             >
               <Link to={heroItem.ctaLink1}>{heroItem.ctaText1}</Link>
             </Button>
