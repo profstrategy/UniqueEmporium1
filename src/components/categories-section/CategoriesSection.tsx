@@ -104,7 +104,7 @@ const CategoriesSection = () => {
         </motion.p>
 
         <motion.div
-          className="flex space-x-4 overflow-x-auto pb-[6px] no-scrollbar"
+          className="flex space-x-4 overflow-x-auto pb-[3px] no-scrollbar"
           ref={scrollRef}
           onMouseEnter={() => !isMobile && setIsPaused(true)}
           onMouseLeave={() => !isMobile && setIsPaused(false)}
