@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 30 20% 95%; /* Light Cream */
+    --primary: 30 20% 90%; /* Deep Cream */
     --primary-foreground: 222.2 84% 4.9%; /* Dark text for contrast */
 
     --secondary: 260 70% 79%; /* #B88AFF */
@@ -54,7 +54,7 @@
     --popover: 260 90% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 30 20% 95%; /* Light Cream */
+    --primary: 30 20% 90%; /* Deep Cream */
     --primary-foreground: 222.2 84% 4.9%; /* Dark text for contrast */
 
     --secondary: 260 70% 79%; /* #B88AFF */
