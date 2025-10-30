@@ -100,22 +100,19 @@ const HeroSection = () => {
       {/* Main Content Block */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col px-4 py-8 md:flex-row md:items-center md:justify-between lg:px-8">
         <div className="flex flex-col space-y-4 md:w-1/2">
-          {/* Removed main h1 headline */}
-          {/* Removed main p sub-headline */}
-
           {/* Product Info Card - Now displays custom text */}
           <motion.div
-            className="mt-6 rounded-lg border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg md:w-2/3 lg:w-full"
+            className="mt-6 rounded-lg border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg md:w-2/3 lg:w-full text-center"
             variants={fadeInUpVariants}
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }}
           >
             <h1 className="font-poppins text-lg font-bold text-white/90 md:text-xl">
-              {heroItem.headline}
+              Unveil Your Uniqueness — Luxury Meets Everyday Comfort
             </h1>
             <h2 className="font-poppins text-sm text-white/80 md:text-base mt-2">
-              {heroItem.subHeadline}
+              Step into Nigeria’s fashion hub for SHEIN gowns, vintage shirts, kids’ jeans, and luxury thrift collections.
             </h2>
           </motion.div>
 
