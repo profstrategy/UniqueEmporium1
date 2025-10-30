@@ -96,7 +96,7 @@ const Index = () => {
         >
           {/* Moved paragraph */}
           <motion.p
-            className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-4 mb-8" // Adjusted margin-bottom
+            className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-2 mb-8 md:mb-12" // Changed mt-4 to mt-2
             variants={fadeInUp}
           >
             Explore the latest SHEIN gowns, vintage shirts, kids’ jeans, and curated fashion bundles with effortless navigation, smart recommendations, and a transparent checkout.
