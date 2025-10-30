@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"; // Assuming shadcn Skeleton
 
 const ProductCardSkeleton = () => {
   return (
-    <Card className="relative h-[370px] flex flex-col overflow-hidden rounded-2xl shadow-lg animate-pulse">
+    <Card className="relative h-[340px] flex flex-col overflow-hidden rounded-2xl shadow-lg animate-pulse">
       <div className="relative h-[200px] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
         <Skeleton className="h-full w-full" />
       </div>

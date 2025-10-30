@@ -122,7 +122,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       initial={disableEntryAnimation ? null : "hidden"}
       whileInView={disableEntryAnimation ? null : "visible"}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative h-[370px] flex flex-col cursor-pointer"
+      className="relative h-[340px] flex flex-col cursor-pointer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={handleCardClick}
