@@ -57,7 +57,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
         <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={handleLogoClick}>
-            <UniqueEmporiumLogo className="h-10" /> {/* Using the new logo component */}
+            <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
           </Link>
 
           {/* Desktop Navigation Links */}

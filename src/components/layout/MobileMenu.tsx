@@ -45,7 +45,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col">
         <SheetHeader className="flex items-center justify-center py-4"> {/* Center the logo */}
-          <UniqueEmporiumLogo className="h-12" /> {/* Using the new logo component */}
+          <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
         </SheetHeader>
         <motion.nav
           className="flex flex-col space-y-4 py-4 overflow-y-auto"

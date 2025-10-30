@@ -104,7 +104,7 @@ const Footer = () => {
           {/* Column 1: Company Info */}
           <motion.div variants={fadeInUp}>
             <Link to="/" className="mb-4 flex items-center">
-              <UniqueEmporiumLogo className="h-12" /> {/* Using the new logo component */}
+              <UniqueEmporiumLogo className="h-[110px]" /> {/* Updated height to 110px */}
             </Link>
             <p className="mb-4 text-sm text-primary-foreground/80">
               Your ultimate destination for luxury thrift, fashion bundles, and unique wears.
