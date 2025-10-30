@@ -121,9 +121,19 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Moved Banner Image with Overlay Text */}
+      {/* Moved introductory text before the banner image */}
+      <motion.p
+        className="text-base md:text-2xl font-bold text-foreground max-w-2xl mx-auto text-center mt-12 px-4 sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
+      >
+        Unique Emporium makes luxury fashion accessible, fast, and inspiring.
+      </motion.p>
+
+      {/* Moved Banner Image */}
       <motion.div
-        className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12 mb-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center text-center"
+        className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-8 mb-12 px-4 sm:px-6 lg:px-8"
         variants={fadeInUp}
         initial="hidden"
         whileInView="visible"
@@ -132,18 +142,8 @@ const Index = () => {
         <img
           src="/my-banner.webp"
           alt="Unique Emporium Fashion Banner"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-          <motion.p
-            className="text-base md:text-2xl font-bold text-white max-w-2xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
-          >
-            Unique Emporium makes luxury fashion accessible, fast, and inspiring.
-          </motion.p>
-        </div>
       </motion.div>
 
       {/* Top Selling Products Section (on Home Page) */}
