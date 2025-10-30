@@ -1,11 +1,11 @@
 "use client";
 
-import HeroCarousel from "@/components/hero-carousel/HeroCarousel.tsx";
+import HeroSection from "@/components/hero-section/HeroSection.tsx";
 import HeroIntroBanner from "@/components/hero-intro-banner/HeroIntroBanner.tsx";
 import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
-import CustomerReviewsSection from "@/components/customer-reviews/CustomerReviewsSection.tsx"; // Import new component
+import CustomerReviewsSection from "@/components/customer-reviews/CustomerReviewsSection.tsx";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
@@ -72,7 +72,7 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen w-full">
-      <HeroCarousel onScrollToFeatured={scrollToFeaturedProducts} />
+      <HeroSection />
       <HeroIntroBanner />
       <CategoriesSection />
 
