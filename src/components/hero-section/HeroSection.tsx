@@ -29,7 +29,7 @@ const heroItem: HeroItem = selectedProductForHero ? {
   image: selectedProductForHero.images[0],
   headline: "Unveil Your Uniqueness — Luxury Meets Everyday Comfort",
   subHeadline: "Nigeria’s futuristic fashion hub for SHEIN gowns, vintage shirts, kids’ jeans, and luxury thrift collections. Bold. Timeless. Truly you.",
-  productName: selectedProductForHero.name,
+  productName: selectedProductForHero.name, // Fixed here
   productDescription: selectedProductForHero.fullDescription.split('.')[0] + '.',
   price: selectedProductForHero.price,
   ctaText1: "Shop the Collection",
@@ -152,13 +152,7 @@ const HeroSection = () => {
             >
               <Link to={heroItem.ctaLink1}>{heroItem.ctaText1}</Link>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="px-6 py-2 text-base md:px-8 md:py-3 md:text-lg border-white text-white hover:bg-white/10"
-            >
-              <Link to={heroItem.ctaLink2}>{heroItem.ctaText2}</Link>
-            </Button>
+            {/* Removed the "Explore Trending Styles" button */}
           </motion.div>
         </div>
 
