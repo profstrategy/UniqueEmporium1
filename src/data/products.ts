@@ -1,4 +1,4 @@
-import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag } from "lucide-react"; // Updated icons for fashion
+import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag, Sun, Watch, Glasses } from "lucide-react"; // Updated icons for fashion
 import { Product } from "@/components/products/ProductCard.tsx";
 
 export interface ProductDetails extends Product {
@@ -258,7 +258,7 @@ export const mockProducts: ProductDetails[] = [
     category: "Luxury Thrift",
     images: [
       "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
     price: 28000.00,
@@ -313,7 +313,7 @@ export const mockProducts: ProductDetails[] = [
     name: "SHEIN Ruffle Hem Mini Dress",
     category: "SHEIN Gowns",
     images: [
-      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
@@ -593,6 +593,292 @@ export const mockProducts: ProductDetails[] = [
     ],
     relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
     modelPath: "/models/kids_fashion_bundle.glb", // Placeholder 3D model
+  },
+  // --- New Products Added Below ---
+  {
+    id: "shein-summer-midi-dress",
+    name: "SHEIN Flowy Summer Midi Dress",
+    category: "SHEIN Gowns",
+    images: [
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
+    ],
+    price: 30000.00,
+    originalPrice: 38000.00,
+    discountPercentage: 21,
+    rating: 4.6,
+    reviewCount: 150,
+    tag: "Summer Essential",
+    tagVariant: "default",
+    limitedStock: false,
+    fullDescription: `Embrace the sunshine with this light and airy SHEIN midi dress. Featuring a flattering A-line cut and breathable fabric, it's perfect for warm weather. The vibrant print adds a touch of playful elegance to your summer wardrobe.`,
+    keyFeatures: [
+      "Lightweight and breathable fabric",
+      "Flattering A-line midi silhouette",
+      "Vibrant summer-ready print",
+      "Comfortable for all-day wear",
+      "Easy to dress up or down",
+    ],
+    styleNotes: `Pair with espadrille sandals and a straw bag for a perfect beach or brunch look. Add delicate gold jewelry for an elevated touch.`,
+    detailedSpecs: [
+      {
+        group: "Fabric & Care",
+        items: [
+          { label: "Material", value: "100% Rayon", icon: Shirt },
+          { label: "Care Instructions", value: "Hand wash cold, line dry" },
+          { label: "Stretch", value: "Non-stretch" },
+        ],
+      },
+      {
+        group: "Fit & Sizing",
+        items: [
+          { label: "Fit Type", value: "A-Line", icon: Ruler },
+          { label: "Neckline", value: "Square Neck" },
+          { label: "Sleeve Length", value: "Sleeveless" },
+          { label: "Hem Length", value: "Midi" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Shirt, label: "Material", value: "Rayon" },
+      { icon: Ruler, label: "Fit", value: "A-Line" },
+      { icon: Palette, label: "Color", value: "Floral Print" },
+      { icon: Tag, label: "Brand", value: "SHEIN" },
+    ],
+    reviews: [
+      { id: "rev21", author: "Ngozi P.", rating: 5, date: "2024-08-01", title: "Perfect summer dress!", comment: "So comfortable and stylish. I love the print and how it flows.", isVerifiedBuyer: true },
+      { id: "rev22", author: "Chika A.", rating: 4, date: "2024-07-29", title: "Great for holidays", comment: "Wore this on my trip, got many compliments. Fabric is a bit thin but good for heat.", isVerifiedBuyer: true },
+    ],
+    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    modelPath: "/models/shein_summer_midi_dress.glb",
+  },
+  {
+    id: "vintage-leather-crossbody-bag",
+    name: "Vintage Leather Crossbody Bag",
+    category: "Luxury Thrift",
+    images: [
+      "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
+    ],
+    price: 55000.00,
+    originalPrice: 70000.00,
+    discountPercentage: 21,
+    rating: 4.8,
+    reviewCount: 40,
+    tag: "Timeless Accessory",
+    tagVariant: "destructive",
+    limitedStock: true,
+    fullDescription: `A beautifully preserved vintage leather crossbody bag, perfect for adding a touch of classic elegance to any outfit. Crafted from genuine leather, this bag features a durable construction and a timeless design that never goes out of style.`,
+    keyFeatures: [
+      "Genuine vintage leather material",
+      "Durable and long-lasting construction",
+      "Adjustable crossbody strap",
+      "Multiple compartments for organization",
+      "Unique, pre-loved character",
+    ],
+    styleNotes: `Ideal for everyday use, this bag pairs well with both casual and semi-formal attire. Its classic design makes it a versatile addition to any wardrobe.`,
+    detailedSpecs: [
+      {
+        group: "Material & Condition",
+        items: [
+          { label: "Material", value: "Genuine Leather", icon: Gem },
+          { label: "Condition", value: "Used - Very Good" },
+          { label: "Color", value: "Brown" },
+        ],
+      },
+      {
+        group: "Dimensions",
+        items: [
+          { label: "Size", value: "Medium (25x20x8 cm)", icon: Ruler },
+          { label: "Strap Length", value: "Adjustable (100-120 cm)" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Gem, label: "Material", value: "Leather" },
+      { icon: Tag, label: "Style", value: "Crossbody" },
+      { icon: Palette, label: "Color", value: "Brown" },
+      { icon: ShieldCheck, label: "Condition", value: "Very Good" },
+    ],
+    reviews: [
+      { id: "rev23", author: "Uche M.", rating: 5, date: "2024-08-03", title: "Stunning bag!", comment: "The leather is beautiful and it's in fantastic condition for a vintage piece. Very happy!", isVerifiedBuyer: true },
+      { id: "rev24", author: "Bisi O.", rating: 4, date: "2024-07-31", title: "Great quality", comment: "A bit smaller than I expected, but the quality is undeniable. Love the vintage feel.", isVerifiedBuyer: false },
+    ],
+    relatedProducts: ["luxury-thrift-silk-scarf", "vintage-denim-jacket"],
+    modelPath: "/models/vintage_leather_bag.glb",
+  },
+  {
+    id: "kids-graphic-tshirt-pack",
+    name: "Kids' 3-Pack Graphic T-Shirts",
+    category: "Kids' Jeans", // Broad category for kids' apparel
+    images: [
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
+    ],
+    price: 20000.00,
+    originalPrice: 25000.00,
+    discountPercentage: 20,
+    rating: 4.7,
+    reviewCount: 110,
+    tag: "Value Pack",
+    tagVariant: "secondary",
+    limitedStock: false,
+    fullDescription: `A fantastic value pack of three graphic t-shirts for kids. Made from soft, durable cotton, these shirts feature fun and colorful prints, perfect for everyday wear and play. An essential addition to any child's wardrobe.`,
+    keyFeatures: [
+      "Pack of 3 unique graphic t-shirts",
+      "Soft and breathable 100% cotton",
+      "Vibrant, kid-friendly designs",
+      "Durable for frequent washing and wear",
+      "Great for mixing and matching",
+    ],
+    styleNotes: `Pair with jeans, shorts, or skirts for easy, comfortable outfits. Ideal for school, playdates, or casual family outings.`,
+    detailedSpecs: [
+      {
+        group: "Fabric & Care",
+        items: [
+          { label: "Material", value: "100% Cotton", icon: Baby },
+          { label: "Care Instructions", value: "Machine wash warm, tumble dry low" },
+          { label: "Stretch", value: "Slight Stretch" },
+        ],
+      },
+      {
+        group: "Fit & Sizing",
+        items: [
+          { label: "Fit Type", value: "Regular Fit", icon: Ruler },
+          { label: "Sizes Available", value: "2T, 3T, 4T, 5, 6, 7, 8" },
+          { label: "Sleeve Length", value: "Short Sleeve" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Baby, label: "Material", value: "Cotton" },
+      { icon: Tag, label: "Items", value: "3-Pack" },
+      { icon: Palette, label: "Color", value: "Assorted Graphics" },
+      { icon: ShieldCheck, label: "Durability", value: "High" },
+    ],
+    reviews: [
+      { id: "rev25", author: "Funmi S.", rating: 5, date: "2024-08-05", title: "Excellent value!", comment: "My kids love these shirts. They're soft, the prints are fun, and they hold up well.", isVerifiedBuyer: true },
+      { id: "rev26", author: "Kola T.", rating: 4, date: "2024-08-02", title: "Good everyday shirts", comment: "Solid quality for the price. Perfect for school.", isVerifiedBuyer: true },
+    ],
+    relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
+    modelPath: "/models/kids_tshirt_pack.glb",
+  },
+  {
+    id: "mens-casual-linen-shirt",
+    name: "Men's Casual Linen Blend Shirt",
+    category: "Vintage Shirts", // Can fit here for casual/men's tops
+    images: [
+      "https://images.unsplash.com/photo-1607345366928-199ea26756c7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1607345366928-199ea26756c7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1607345366928-199ea26756c7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
+    ],
+    price: 25000.00,
+    originalPrice: 30000.00,
+    discountPercentage: 17,
+    rating: 4.5,
+    reviewCount: 70,
+    tag: "Breathable",
+    tagVariant: "default",
+    limitedStock: false,
+    fullDescription: `Stay cool and stylish with this men's casual linen blend shirt. Perfect for warm Nigerian weather, its breathable fabric and relaxed fit offer ultimate comfort. Ideal for both casual outings and semi-formal events.`,
+    keyFeatures: [
+      "Lightweight and breathable linen blend",
+      "Relaxed fit for maximum comfort",
+      "Versatile for various occasions",
+      "Classic button-down design",
+      "Easy to care for and maintain",
+    ],
+    styleNotes: `Pair with chinos or tailored shorts for a smart-casual look. Can be worn untucked for a relaxed vibe or tucked in for a more polished appearance.`,
+    detailedSpecs: [
+      {
+        group: "Fabric & Care",
+        items: [
+          { label: "Material", value: "70% Linen, 30% Cotton", icon: Shirt },
+          { label: "Care Instructions", value: "Machine wash cold, hang dry" },
+          { label: "Season", value: "Summer, All-season" },
+        ],
+      },
+      {
+        group: "Fit & Sizing",
+        items: [
+          { label: "Fit Type", value: "Relaxed Fit", icon: Ruler },
+          { label: "Sizes Available", value: "M, L, XL, XXL" },
+          { label: "Sleeve Length", value: "Long Sleeve (roll-up tabs)" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Shirt, label: "Material", value: "Linen Blend" },
+      { icon: Ruler, label: "Fit", value: "Relaxed" },
+      { icon: Palette, label: "Color", value: "White" },
+      { icon: Tag, label: "Style", value: "Casual" },
+    ],
+    reviews: [
+      { id: "rev27", author: "Ahmed D.", rating: 5, date: "2024-08-07", title: "Perfect for the heat!", comment: "This shirt is so comfortable and keeps me cool. Looks great too.", isVerifiedBuyer: true },
+      { id: "rev28", author: "Chidi N.", rating: 4, date: "2024-08-04", title: "Good quality", comment: "Nice shirt, a bit prone to wrinkles but that's linen for you. Happy with it.", isVerifiedBuyer: true },
+    ],
+    relatedProducts: ["vintage-graphic-tee-90s", "mens-fashion-bundle-streetwear"],
+    modelPath: "/models/mens_linen_shirt.glb",
+  },
+  {
+    id: "luxury-thrift-designer-sunglasses",
+    name: "Luxury Thrift Designer Sunglasses",
+    category: "Luxury Thrift",
+    images: [
+      "https://images.unsplash.com/photo-1508349937151-22b68f72d38c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1508349937151-22b68f72d38c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1508349937151-22b68f72d38c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
+    ],
+    price: 60000.00,
+    originalPrice: 85000.00,
+    discountPercentage: 29,
+    rating: 4.9,
+    reviewCount: 30,
+    tag: "Exclusive",
+    tagVariant: "destructive",
+    limitedStock: true,
+    fullDescription: `Elevate your style with these pre-loved designer sunglasses. Each pair is authenticated and carefully inspected to ensure excellent condition, offering a sustainable way to own high-end eyewear. Protect your eyes in style.`,
+    keyFeatures: [
+      "Authentic designer eyewear",
+      "High-quality lenses with UV protection",
+      "Excellent pre-loved condition",
+      "Unique frame styles",
+      "Comes with original case (if available)",
+    ],
+    styleNotes: `A perfect accessory to complete any look, from casual to sophisticated. Adds an instant touch of glamour and mystery.`,
+    detailedSpecs: [
+      {
+        group: "Details",
+        items: [
+          { label: "Brand", value: "Assorted Designer", icon: Tag },
+          { label: "Condition", value: "Used - Excellent" },
+          { label: "Lens Type", value: "UV Protected" },
+        ],
+      },
+      {
+        group: "Frame",
+        items: [
+          { label: "Frame Material", value: "Acetate/Metal", icon: Glasses },
+          { label: "Frame Color", value: "Black/Tortoise" },
+          { label: "Style", value: "Cat-Eye/Aviator/Wayfarer" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Glasses, label: "Type", value: "Sunglasses" },
+      { icon: Tag, label: "Brand", value: "Designer" },
+      { icon: Gem, label: "Condition", value: "Excellent" },
+      { icon: Sun, label: "Protection", value: "UV400" },
+    ],
+    reviews: [
+      { id: "rev29", author: "Zainab H.", rating: 5, date: "2024-08-09", title: "Love my new shades!", comment: "They look brand new and are exactly what I wanted. Great deal for designer sunglasses.", isVerifiedBuyer: true },
+      { id: "rev30", author: "Obi K.", rating: 5, date: "2024-08-06", title: "Fantastic find", comment: "The quality is superb, and they fit perfectly. Very stylish.", isVerifiedBuyer: true },
+    ],
+    relatedProducts: ["luxury-thrift-silk-scarf", "vintage-leather-crossbody-bag"],
+    modelPath: "/models/designer_sunglasses.glb",
   },
 ];
 
