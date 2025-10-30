@@ -77,7 +77,7 @@ const Index = () => {
 
       {/* Moved introductory text before CategoriesSection */}
       <motion.p
-        className="font-semibold text-base md:text-xl lg:text-2xl text-primary max-w-2xl mx-auto text-center mt-12 px-4 sm:px-6 lg:px-8"
+        className="font-semibold text-base md:text-xl lg:text-2xl text-primary max-w-2xl mx-auto text-left mt-12 px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
@@ -131,6 +131,16 @@ const Index = () => {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* Moved introductory text before the banner image */}
+      <motion.p
+        className="text-base md:text-2xl font-bold text-foreground max-w-2xl mx-auto text-left mt-12 px-4 sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
+      >
+        Unique Emporium makes luxury fashion accessible, fast, and inspiring.
+      </motion.p>
 
       {/* Moved Banner Image */}
       <motion.div
