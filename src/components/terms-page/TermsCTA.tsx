@@ -20,10 +20,10 @@ const TermsCTA = () => {
       viewport={{ once: true, amount: 0.3 }}
     >
       <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
-        Questions About Our Terms?
+        Questions About Our Fashion Terms?
       </h2>
       <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
-        If you have any concerns or require further clarification on our terms of service, please don't hesitate to reach out.
+        If you have any concerns or require further clarification on our terms of service for unique wears, please don't hesitate to reach out.
       </p>
       <Button asChild size="lg">
         <Link to="/contact">Contact Us</Link>

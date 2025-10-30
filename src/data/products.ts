@@ -1,10 +1,10 @@
-import { Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Camera, Weight, Ruler, Palette, Speaker, Mic, ShieldCheck, Star, Heart } from "lucide-react";
-import { Product } from "@/components/products/ProductCard.tsx"; // Assuming Product interface is exported
+import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag } from "lucide-react"; // Updated icons for fashion
+import { Product } from "@/components/products/ProductCard.tsx";
 
 export interface ProductDetails extends Product {
   fullDescription: string;
-  keyFeatures: string[]; // New field
-  applications: string; // New field
+  keyFeatures: string[];
+  styleNotes: string; // New field for fashion styling tips
   detailedSpecs: {
     group: string;
     items: { label: string; value: string; icon?: React.ElementType }[];
@@ -16,1216 +16,583 @@ export interface ProductDetails extends Product {
     date: string;
     title: string;
     comment: string;
-    isVerifiedBuyer: boolean; // New field
+    isVerifiedBuyer: boolean;
   }[];
-  relatedProducts: string[]; // Array of product IDs
-  modelPath?: string; // Re-added modelPath
+  relatedProducts: string[];
+  modelPath?: string;
 }
 
 export const mockProducts: ProductDetails[] = [
   {
-    id: "zenbook-pro-14-oled",
-    name: "ZenBook Pro 14 OLED",
-    category: "Laptops",
+    id: "shein-floral-maxi-gown",
+    name: "SHEIN Elegant Floral Maxi Gown",
+    category: "SHEIN Gowns",
     images: [
-      "https://images.unsplash.com/photo-1515343480029-43cdfe6b6aae?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://cdn.pixabay.com/photo/2020/10/21/18/07/laptop-5673901_1280.jpg",
-      "https://cdn.pixabay.com/photo/2019/07/13/10/55/desk-4334575_1280.jpg"
+      "https://images.unsplash.com/photo-1581044777550-4cfa607037dc?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ],
-    price: 950000.00,
-    originalPrice: 1000000.00,
-    discountPercentage: 5,
-    rating: 4.8,
-    reviewCount: 150,
-    tag: "Best Seller",
-    tagVariant: "destructive",
-    limitedStock: true,
-    fullDescription: `The ZenBook Pro 14 OLED is a powerhouse designed for creative professionals. Featuring a stunning 14-inch 4K OLED display, it delivers vibrant colors and deep blacks, perfect for graphic design, video editing, and immersive entertainment. Powered by the latest Intel Core i7 processor and 16GB of RAM, it handles demanding tasks with ease. Its sleek, lightweight design makes it highly portable, while the long-lasting battery ensures you stay productive on the go. Experience unparalleled performance and visual brilliance.`,
-    keyFeatures: [
-      "Stunning 4K OLED display for vibrant visuals",
-      "Powerful Intel Core i7 processor for demanding tasks",
-      "Lightweight and portable design",
-      "Long-lasting battery for on-the-go productivity",
-      "NVIDIA GeForce RTX 3050 graphics for creative work and light gaming",
-    ],
-    applications: `Ideal for graphic designers, video editors, photographers, and anyone requiring high-performance computing with exceptional visual fidelity. Also suitable for students and professionals who need a powerful yet portable workstation.`,
-    detailedSpecs: [
-      {
-        group: "Performance",
-        items: [
-          { label: "Processor", value: "Intel Core i7-12700H", icon: Cpu },
-          { label: "RAM", value: "16GB DDR4", icon: MemoryStick },
-          { label: "Storage", value: "512GB NVMe SSD", icon: HardDrive },
-          { label: "Graphics", value: "NVIDIA GeForce RTX 3050" },
-        ],
-      },
-      {
-        group: "Display",
-        items: [
-          { label: "Size", value: "14-inch", icon: Monitor },
-          { label: "Resolution", value: "4K OLED (3840x2400)" },
-          { label: "Refresh Rate", value: "90Hz" },
-          { label: "Brightness", value: "550 nits peak" },
-        ],
-      },
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Wi-Fi", value: "Wi-Fi 6E", icon: Wifi },
-          { label: "Bluetooth", value: "Bluetooth 5.2" },
-          { label: "Ports", value: "2x Thunderbolt 4, 1x USB 3.2 Gen 2, HDMI 2.1, Audio Jack" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i7-12700H" },
-      { icon: MemoryStick, label: "RAM", value: "16GB" },
-      { icon: HardDrive, label: "Storage", value: "512GB SSD" },
-      { icon: Monitor, label: "Display", value: "14\" 4K OLED" },
-    ],
-    reviews: [
-      {
-        id: "rev1",
-        author: "Alice J.",
-        rating: 5,
-        date: "2023-10-26",
-        title: "Absolutely stunning!",
-        comment: "The OLED screen is breathtaking. Perfect for my design work. Performance is top-notch.",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev2",
-        author: "Bob K.",
-        rating: 4,
-        date: "2023-10-20",
-        title: "Great laptop, minor quibbles",
-        comment: "Fast and powerful. Battery life is good, but could be better under heavy load. Still highly recommend.",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev25",
-        author: "Carol S.",
-        rating: 5,
-        date: "2023-11-01",
-        title: "Best laptop for creatives!",
-        comment: "I've been using this for a month now, and it handles all my video editing projects without a hitch. The screen is a dream.",
-        isVerifiedBuyer: true,
-      },
-    ],
-    relatedProducts: ["soundwave-noise-cancelling-headphones", "ultrawide-monitor-32"],
-    modelPath: "/models/zenbook_pro_14_oled.glb",
-  },
-  {
-    id: "surface-pro-9",
-    name: "Surface Pro 9",
-    category: "Tablets",
-    images: [
-      "https://cdn.pixabay.com/photo/2020/10/21/18/07/laptop-5673901_1280.jpg",
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1565906624603-eae91627707b?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 780000.00,
-    originalPrice: 850000.00,
-    discountPercentage: 8,
-    rating: 4.6,
-    reviewCount: 120,
-    tag: "Productivity",
-    tagVariant: "default",
-    limitedStock: false,
-    fullDescription: `The Surface Pro 9 is a versatile 2-in-1 device that combines the power of a laptop with the flexibility of a tablet. Featuring a stunning PixelSense display, it's perfect for work, creativity, and entertainment. Powered by the latest Intel Evo platform, it delivers fast performance and all-day battery life.`,
-    keyFeatures: [
-      "Versatile 2-in-1 design",
-      "High-resolution PixelSense display",
-      "Powerful Intel Evo platform",
-      "All-day battery life",
-      "Optional Surface Slim Pen 2 and Keyboard",
-    ],
-    applications: `Ideal for students, professionals, and artists who need a portable device for note-taking, drawing, presentations, and general computing tasks.`,
-    detailedSpecs: [
-      {
-        group: "Performance",
-        items: [
-          { label: "Processor", value: "Intel Core i5/i7 Evo" },
-          { label: "RAM", value: "8GB/16GB LPDDR5" },
-          { label: "Storage", value: "256GB/512GB SSD" },
-          { label: "Graphics", value: "Intel Iris Xe Graphics" },
-        ],
-      },
-      {
-        group: "Display",
-        items: [
-          { label: "Size", value: "13-inch" },
-          { label: "Resolution", value: "2880x1920" },
-          { label: "Refresh Rate", value: "120Hz" },
-          { label: "Touch", value: "10-point multi-touch" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i5/i7 Evo" },
-      { icon: MemoryStick, label: "RAM", value: "8GB/16GB" },
-      { icon: HardDrive, label: "Storage", value: "256GB SSD" },
-      { icon: Monitor, label: "Display", value: "13\" PixelSense" },
-    ],
-    reviews: [
-      { id: "rev26", author: "David L.", rating: 5, date: "2023-12-01", title: "Amazing versatility!", comment: "Perfect for my hybrid work setup. Love the pen input.", isVerifiedBuyer: true },
-      { id: "rev27", author: "Sarah M.", rating: 4, date: "2023-11-25", title: "Great, but accessories are pricey", comment: "The device itself is fantastic, but the keyboard and pen add up.", isVerifiedBuyer: false },
-    ],
-    relatedProducts: ["ergogrip-wireless-mouse"],
-    modelPath: "/models/surface_pro_9.glb",
-  },
-  {
-    id: "echo-dot-5th-gen",
-    name: "Echo Dot (5th Gen)",
-    category: "Smart Home",
-    images: [
-      "https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1512446816042-444d641267d4?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1544451256-d79e9e199fa8?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 45000.00,
+    price: 35000.00,
+    originalPrice: 40000.00,
+    discountPercentage: 12,
     rating: 4.7,
-    reviewCount: 300,
-    tag: "Smart Speaker",
-    tagVariant: "secondary",
-    limitedStock: false,
-    fullDescription: `The Echo Dot (5th Gen) is Amazon's most popular smart speaker with Alexa. Enjoy improved audio for vibrant sound, deeper bass, and clear vocals. Ask Alexa to play music, answer questions, read the news, check the weather, set alarms, control compatible smart home devices, and more.`,
-    keyFeatures: [
-      "Improved audio with deeper bass",
-      "Built-in Alexa voice assistant",
-      "Control smart home devices",
-      "Compact design",
-      "Privacy controls",
-    ],
-    applications: `Ideal for anyone looking to add smart home capabilities, stream music, get information, or manage daily tasks hands-free.`,
-    detailedSpecs: [
-      {
-        group: "Audio",
-        items: [
-          { label: "Speaker", value: "1.73-inch front-firing speaker" },
-          { label: "Microphones", value: "Multiple microphones" },
-        ],
-      },
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Wi-Fi", value: "Dual-band Wi-Fi" },
-          { label: "Bluetooth", value: "Bluetooth 5.0" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Speaker, label: "Speaker", value: "1.73-inch" },
-      { icon: Mic, label: "Voice Asst.", value: "Alexa" },
-      { icon: Wifi, label: "Connectivity", value: "Wi-Fi, BT" },
-    ],
-    reviews: [
-      { id: "rev28", author: "Mark T.", rating: 5, date: "2023-12-05", title: "Love my new Echo Dot!", comment: "Sound is surprisingly good for its size. Alexa is super helpful.", isVerifiedBuyer: true },
-      { id: "rev29", author: "Jessica R.", rating: 4, date: "2023-11-30", title: "Great, but sometimes mishears me", comment: "Mostly works perfectly, but occasionally struggles with my accent.", isVerifiedBuyer: true },
-    ],
-    relatedProducts: ["smarthome-hub-pro"],
-    modelPath: "/models/echo_dot_5th_gen.glb",
-  },
-  {
-    id: "ergofit-wireless-keyboard",
-    name: "ErgoFit Wireless Keyboard",
-    category: "Accessories",
-    images: [
-      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1701253053045-abdb5499a451?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 60000.00,
-    rating: 4.5,
     reviewCount: 180,
-    tag: "Ergonomic",
-    tagVariant: "default",
-    limitedStock: false,
-    fullDescription: `The ErgoFit Wireless Keyboard is designed for maximum comfort and productivity. Its split, curved layout and integrated palm rest reduce strain on your wrists and forearms, making long typing sessions more comfortable. Enjoy quiet, responsive keys and seamless wireless connectivity.`,
-    keyFeatures: [
-      "Ergonomic split design",
-      "Integrated palm rest",
-      "Quiet, responsive keys",
-      "2.4GHz wireless connectivity",
-      "Long battery life",
-    ],
-    applications: `Perfect for office workers, writers, and anyone who spends extended periods typing and wants to improve comfort and reduce the risk of repetitive strain injuries.`,
-    detailedSpecs: [
-      {
-        group: "Design",
-        items: [
-          { label: "Layout", value: "Split ergonomic" },
-          { label: "Palm Rest", value: "Integrated" },
-          { label: "Key Type", value: "Membrane" },
-        ],
-      },
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Wireless", value: "2.4GHz USB Receiver" },
-          { label: "Battery", value: "2x AAA (included)" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "Layout", value: "Ergonomic" }, // Reusing CPU icon for layout
-      { icon: BatteryCharging, label: "Battery", value: "Long" },
-      { icon: Wifi, label: "Wireless", value: "2.4GHz" },
-    ],
-    reviews: [
-      { id: "rev30", author: "Chris P.", rating: 5, date: "2023-12-10", title: "My wrists thank me!", comment: "Huge improvement in comfort. Took a day to get used to, but now I love it.", isVerifiedBuyer: true },
-      { id: "rev31", author: "Laura K.", rating: 4, date: "2023-12-05", title: "Good, but a bit bulky", comment: "Works great, but it's quite large on my desk.", isVerifiedBuyer: false },
-    ],
-    relatedProducts: ["ergogrip-wireless-mouse"],
-    modelPath: "/models/ergofit_wireless_keyboard.glb",
-  },
-  {
-    id: "prodisplay-xdr",
-    name: "ProDisplay XDR",
-    category: "Monitors",
-    images: [
-      "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1614624532983-4ce03382d63d?q=80&w=2531&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1725817853503-645c1c0cbfa2?q=80&w=1694&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 2500000.00,
-    rating: 4.9,
-    reviewCount: 90,
-    tag: "Professional",
-    tagVariant: "destructive",
-    limitedStock: true,
-    fullDescription: `The ProDisplay XDR is a groundbreaking 32-inch Retina 6K display designed for professional workflows. With extreme dynamic range (XDR), stunning brightness, and incredible contrast, it delivers an unparalleled viewing experience for color-critical work.`,
-    keyFeatures: [
-      "32-inch Retina 6K display",
-      "Extreme Dynamic Range (XDR)",
-      "1,000,000:1 contrast ratio",
-      "P3 wide color gamut",
-      "Thunderbolt 3 connectivity",
-    ],
-    applications: `Essential for video editors, graphic designers, photographers, and developers who require the highest color accuracy and resolution for their professional work.`,
-    detailedSpecs: [
-      {
-        group: "Display",
-        items: [
-          { label: "Size", value: "32-inch", icon: Monitor },
-          { label: "Resolution", value: "6016x3384 (6K)" },
-          { label: "Refresh Rate", value: "90Hz" },
-          { label: "Brightness", value: "1000 nits sustained, 1600 nits peak" },
-        ],
-      },
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Thunderbolt", value: "1x Thunderbolt 3" },
-          { label: "USB-C", value: "3x USB-C" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Monitor, label: "Size", value: "32-inch" },
-      { icon: Camera, label: "Resolution", value: "6K Retina" }, // Reusing Camera icon for resolution
-      { icon: Wifi, label: "Connectivity", value: "Thunderbolt 3" }, // Reusing Wifi icon for connectivity
-    ],
-    reviews: [
-      { id: "rev32", author: "Alex G.", rating: 5, date: "2023-12-15", title: "The best display I've ever used!", comment: "Unbelievable color accuracy and brightness. A game-changer for my studio.", isVerifiedBuyer: true },
-      { id: "rev33", author: "Sophie H.", rating: 4, date: "2023-12-10", title: "Expensive, but worth it for pros", comment: "The price is steep, but the quality is unmatched for professional work.", isVerifiedBuyer: true },
-    ],
-    relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/prodisplay_xdr.glb",
-  },
-  {
-    id: "gaming-beast-desktop-pc",
-    name: "Gaming Beast Desktop PC",
-    category: "Laptops", // Assuming 'Laptops' is a broad category for high-performance computing
-    images: [
-      "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg",
-      "https://images.unsplash.com/photo-1593642532744-d377ab507dc8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 1800000.00,
-    originalPrice: 2000000.00,
-    discountPercentage: 10,
-    rating: 4.9,
-    reviewCount: 250,
-    tag: "Gaming",
-    tagVariant: "destructive",
-    limitedStock: false,
-    fullDescription: `Unleash the ultimate gaming experience with the Gaming Beast Desktop PC. Equipped with a powerful Intel i9 processor and NVIDIA GeForce RTX 4090 graphics, it delivers unparalleled performance for the most demanding games and creative applications. Liquid-cooled and housed in a sleek, RGB-lit chassis, this PC is built for extreme performance and aesthetics.`,
-    keyFeatures: [
-      "Intel Core i9-14900K Processor",
-      "NVIDIA GeForce RTX 4090 Graphics Card",
-      "32GB DDR5 RAM",
-      "2TB NVMe SSD Storage",
-      "Advanced Liquid Cooling System",
-    ],
-    applications: `Designed for hardcore gamers, esports enthusiasts, streamers, and professionals who require top-tier performance for gaming, 3D rendering, video editing, and other resource-intensive tasks.`,
-    detailedSpecs: [
-      {
-        group: "Performance",
-        items: [
-          { icon: Cpu, label: "CPU", value: "Intel Core i9-14900K" },
-          { label: "RAM", value: "32GB DDR5-6000" },
-          { label: "Storage", value: "2TB NVMe SSD" },
-          { label: "Graphics", value: "NVIDIA GeForce RTX 4090" },
-        ],
-      },
-      {
-        group: "Cooling",
-        items: [
-          { label: "CPU Cooler", value: "360mm AIO Liquid Cooler" },
-          { label: "Case Fans", value: "6x RGB Fans" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i9-14900K" },
-      { icon: MemoryStick, label: "RAM", value: "32GB DDR5" },
-      { icon: HardDrive, label: "Storage", value: "2TB SSD" },
-      { icon: Monitor, label: "GPU", value: "RTX 4090" }, // Reusing Monitor icon for GPU
-    ],
-    reviews: [
-      { id: "rev34", author: "GamerPro", rating: 5, date: "2023-12-20", title: "Absolute powerhouse!", comment: "Runs every game at max settings without breaking a sweat. Worth every penny!", isVerifiedBuyer: true },
-      { id: "rev35", author: "TechGuru", rating: 5, date: "2023-12-18", title: "Stunning performance and looks", comment: "Not just powerful, but also looks incredible with the RGB lighting.", isVerifiedBuyer: true },
-    ],
-    relatedProducts: ["prodisplay-xdr", "gaming-pro-wireless-mouse"],
-    modelPath: "/models/gaming_beast_desktop_pc.glb",
-  },
-  {
-    id: "soundwave-noise-cancelling-headphones",
-    name: "SoundWave Noise-Cancelling Headphones",
-    category: "Audio",
-    images: [
-      "https://plus.unsplash.com/premium_photo-1680346529160-549ad950bd1f?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://plus.unsplash.com/premium_photo-1710962439403-a35fbc684b15?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://plus.unsplash.com/premium_photo-1680346528789-0ffcc13f5ebf?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 175000.00,
-    rating: 4.5,
-    reviewCount: 230,
     tag: "New Arrival",
     tagVariant: "default",
-    limitedStock: false,
-    fullDescription: `Immerse yourself in pure audio bliss with the SoundWave Noise-Cancelling Headphones. Featuring advanced active noise cancellation, these headphones block out distractions, allowing you to focus on your music, podcasts, or calls. The ergonomic design ensures supreme comfort for extended listening sessions, while the powerful drivers deliver rich, detailed sound with deep bass. With up to 30 hours of battery life and quick charging, your soundtrack never has to stop.`,
+    limitedStock: true,
+    fullDescription: `Step out in style with this elegant SHEIN floral maxi gown. Crafted from lightweight, breathable fabric, it features a flattering silhouette and vibrant floral print, perfect for any occasion. Its comfortable fit and chic design make it a must-have for your wardrobe.`,
     keyFeatures: [
-      "Advanced Hybrid Active Noise Cancellation",
-      "Ergonomic design for supreme comfort",
-      "Rich, detailed sound with deep bass",
-      "Up to 30 hours of battery life",
-      "Quick charging capabilities",
+      "Flowy, breathable fabric for ultimate comfort",
+      "Vibrant and elegant floral print",
+      "Flattering maxi length silhouette",
+      "Perfect for casual outings or special events",
+      "Adjustable waist tie for a custom fit",
     ],
-    applications: `Perfect for audiophiles, commuters, students, and anyone seeking an immersive listening experience without distractions. Great for travel, work, or simply relaxing with your favorite tunes.`,
+    styleNotes: `Pair with sandals for a relaxed daytime look or dress it up with heels and statement jewelry for an evening event. A wide-brimmed hat completes the perfect summer ensemble.`,
     detailedSpecs: [
       {
-        group: "Audio",
+        group: "Fabric & Care",
         items: [
-          { label: "Driver Size", value: "40mm" },
-          { label: "Frequency Response", value: "20Hz - 20kHz" },
-          { label: "Noise Cancellation", value: "Hybrid Active Noise Cancellation" },
+          { label: "Material", value: "100% Polyester", icon: Shirt },
+          { label: "Care Instructions", value: "Machine wash cold, tumble dry low" },
+          { label: "Stretch", value: "Non-stretch" },
         ],
       },
       {
-        group: "Connectivity",
+        group: "Fit & Sizing",
         items: [
-          { label: "Bluetooth", value: "Bluetooth 5.2" },
-          { label: "Codecs", value: "SBC, AAC, aptX" },
-          { label: "Wired", value: "3.5mm Audio Jack" },
+          { label: "Fit Type", value: "Regular Fit", icon: Ruler },
+          { label: "Neckline", value: "V-Neck" },
+          { label: "Sleeve Length", value: "Short Sleeve" },
+          { label: "Hem Length", value: "Maxi" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Speaker, label: "Drivers", value: "40mm" },
-      { icon: Mic, label: "ANC", value: "Hybrid" },
-      { icon: BatteryCharging, label: "Battery", value: "30 Hrs" },
-      { icon: Wifi, label: "Bluetooth", value: "5.2" },
+    specs: [
+      { icon: Shirt, label: "Material", value: "Polyester" },
+      { icon: Ruler, label: "Fit", value: "Regular" },
+      { icon: Palette, label: "Color", value: "Floral" },
+      { icon: Tag, label: "Brand", value: "SHEIN" },
     ],
     reviews: [
-      {
-        id: "rev3",
-        author: "Charlie D.",
-        rating: 5,
-        date: "2023-11-01",
-        title: "Best headphones I've owned!",
-        comment: "The ANC is incredible, and the sound quality is fantastic. Very comfortable too.",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev4",
-        author: "Eve F.",
-        rating: 4,
-        date: "2023-10-28",
-        title: "Great value for money",
-        comment: "Solid performance, good battery. A bit bulky for my taste, but overall excellent.",
-        isVerifiedBuyer: false,
-      },
+      { id: "rev1", author: "Aisha O.", rating: 5, date: "2024-07-20", title: "Absolutely beautiful!", comment: "The gown is even prettier in person. So comfortable and perfect for Nigerian weather.", isVerifiedBuyer: true },
+      { id: "rev2", author: "Funke A.", rating: 4, date: "2024-07-15", title: "Great value", comment: "Love the print and the fit. A bit long for me, but easily altered.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["zenbook-pro-14-oled", "ergofit-wireless-keyboard"],
-    modelPath: "/models/soundwave_headphones.glb",
+    relatedProducts: ["shein-ruffle-mini-dress", "ladies-fashion-bundle-casual"],
+    modelPath: "/models/shein_floral_maxi_gown.glb", // Placeholder 3D model
   },
   {
-    id: "ultrafast-1tb-external-ssd",
-    name: "UltraFast 1TB External SSD",
-    category: "Accessories", // Changed category from Storage to Accessories
+    id: "vintage-graphic-tee-90s",
+    name: "Vintage 90s Graphic T-Shirt",
+    category: "Vintage Shirts",
     images: [
-      "https://images.pexels.com/photos/2942361/pexels-photo-2942361.jpeg",
-      "https://images.pexels.com/photos/18121142/pexels-photo-18121142.jpeg",
-      "https://images.pexels.com/photos/6373758/pexels-photo-6373758.jpeg"
+      "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     ],
-    price: 150000.00,
-    originalPrice: 165000.00,
-    discountPercentage: 9,
-    rating: 4.7,
-    reviewCount: 130,
-    tag: "Storage",
+    price: 12000.00,
+    originalPrice: 15000.00,
+    discountPercentage: 20,
+    rating: 4.5,
+    reviewCount: 120,
+    tag: "Thrift Find",
+    tagVariant: "secondary",
+    limitedStock: false,
+    fullDescription: `Relive the 90s with this authentic vintage graphic t-shirt. Each piece is hand-picked for its unique design and excellent condition, offering a sustainable and stylish addition to your wardrobe. Soft, worn-in cotton ensures maximum comfort.`,
+    keyFeatures: [
+      "Authentic 90s vintage design",
+      "Soft, pre-loved cotton for comfort",
+      "Unique graphic print, one-of-a-kind",
+      "Excellent condition, carefully curated",
+      "Sustainable fashion choice",
+    ],
+    styleNotes: `Pair with distressed jeans and sneakers for a classic retro look, or layer under a blazer for a modern streetwear vibe. Perfect for adding a touch of nostalgia to your outfit.`,
+    detailedSpecs: [
+      {
+        group: "Fabric & Care",
+        items: [
+          { label: "Material", value: "100% Cotton", icon: Shirt },
+          { label: "Condition", value: "Used - Excellent" },
+          { label: "Care Instructions", value: "Machine wash cold, hang dry" },
+        ],
+      },
+      {
+        group: "Fit & Sizing",
+        items: [
+          { label: "Fit Type", value: "Relaxed Fit", icon: Ruler },
+          { label: "Size", value: "Varies (S-XL available)" },
+          { label: "Neckline", value: "Crew Neck" },
+        ],
+      },
+    ],
+    specs: [
+      { icon: Shirt, label: "Material", value: "Cotton" },
+      { icon: Ruler, label: "Fit", value: "Relaxed" },
+      { icon: Tag, label: "Era", value: "90s Vintage" },
+      { icon: Gem, label: "Condition", value: "Excellent" },
+    ],
+    reviews: [
+      { id: "rev3", author: "Chinedu E.", rating: 5, date: "2024-07-18", title: "Love my new vintage tee!", comment: "The graphic is amazing, and it feels so soft. Exactly as described.", isVerifiedBuyer: true },
+      { id: "rev4", author: "Ngozi I.", rating: 4, date: "2024-07-10", title: "Great find", comment: "Unique design, good quality. A little faded, but that's part of the charm!", isVerifiedBuyer: false },
+    ],
+    relatedProducts: ["vintage-denim-jacket", "mens-fashion-bundle-streetwear"],
+    modelPath: "/models/vintage_graphic_tee.glb", // Placeholder 3D model
+  },
+  {
+    id: "kids-distressed-denim-jeans",
+    name: "Kids' Stylish Distressed Denim Jeans",
+    category: "Kids' Jeans",
+    images: [
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    price: 18000.00,
+    originalPrice: 22000.00,
+    discountPercentage: 18,
+    rating: 4.8,
+    reviewCount: 95,
+    tag: "Kids' Fashion",
     tagVariant: "destructive",
-    limitedStock: false,
-    fullDescription: `Carry your data with confidence and speed using the UltraFast 1TB External SSD. This ultra-fast external solid-state drive offers massive storage capacity in a pocket-sized design. With USB 3.2 Gen2 connectivity, achieve blazing-fast read/write speeds of up to 1000MB/s, perfect for large files, 4K videos, and gaming libraries. Its durable, shock-resistant build ensures your data is safe on the go.`,
+    limitedStock: true,
+    fullDescription: `Durable and stylish distressed denim jeans for kids. Made from soft, flexible denim, these jeans are perfect for active children, offering both comfort and a trendy look. Features an adjustable waistband for a perfect fit.`,
     keyFeatures: [
-      "Ultra-fast external solid-state drive",
-      "Massive 1TB storage capacity in a pocket-sized design",
-      "USB 3.2 Gen2 connectivity for blazing-fast read/write speeds",
-      "Perfect for large files, 4K videos, and gaming libraries",
-      "Durable, shock-resistant build for data safety on the go",
+      "Soft and flexible denim for active kids",
+      "Trendy distressed details",
+      "Adjustable waistband for growing children",
+      "Durable construction for long-lasting wear",
+      "Easy to mix and match with various tops",
     ],
-    applications: `Essential for professionals, content creators, and gamers who need to quickly transfer and store large amounts of data. Ideal for expanding laptop storage, backing up important files, or running games directly from the drive.`,
+    styleNotes: `Pair with a graphic tee and sneakers for a cool, casual look. Can be dressed up with a button-down shirt for semi-formal occasions.`,
     detailedSpecs: [
       {
-        group: "Storage",
+        group: "Fabric & Care",
         items: [
-          { icon: HardDrive, label: "Capacity", value: "1TB" },
-          { label: "Type", value: "External SSD" },
+          { label: "Material", value: "98% Cotton, 2% Spandex", icon: Baby },
+          { label: "Care Instructions", value: "Machine wash warm, inside out" },
+          { label: "Stretch", value: "Slight Stretch" },
         ],
       },
       {
-        group: "Performance",
+        group: "Fit & Sizing",
         items: [
-          { label: "Interface", value: "USB 3.2 Gen2 (10Gbps)" },
-          { label: "Read Speed", value: "Up to 1050MB/s" },
-          { label: "Write Speed", value: "Up to 1000MB/s" },
+          { label: "Fit Type", value: "Slim Fit", icon: Ruler },
+          { label: "Sizes Available", value: "2T, 3T, 4T, 5, 6, 7, 8" },
+          { label: "Waist", value: "Adjustable Elastic" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: HardDrive, label: "Capacity", value: "1TB" },
-      { icon: Cpu, label: "Interface", value: "USB 3.2 Gen2" }, // Reusing CPU icon for interface
-      { icon: MemoryStick, label: "Read Speed", value: "1050MB/s" }, // Reusing MemoryStick icon for read speed
+    specs: [
+      { icon: Baby, label: "Material", value: "Cotton Blend" },
+      { icon: Ruler, label: "Fit", value: "Slim" },
+      { icon: Palette, label: "Color", value: "Blue Denim" },
+      { icon: Tag, label: "Style", value: "Distressed" },
     ],
     reviews: [
-      {
-        id: "rev23",
-        author: "Jack K.",
-        rating: 5,
-        date: "2023-11-09",
-        title: "Blazing fast and tiny!",
-        comment: "Transfers huge files in seconds. Fits in my pocket. Essential for my work.",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev24",
-        author: "Laura M.",
-        rating: 4,
-        date: "2023-11-06",
-        title: "Great, but runs warm",
-        comment: "Performance is excellent, but it gets noticeably warm during sustained transfers. Not a dealbreaker.",
-        isVerifiedBuyer: false,
-      },
+      { id: "rev5", author: "Blessing N.", rating: 5, date: "2024-07-22", title: "My son loves them!", comment: "Great quality and super stylish. They fit perfectly and he can move around easily.", isVerifiedBuyer: true },
+      { id: "rev6", author: "Tunde O.", rating: 4, date: "2024-07-19", title: "Good, but a bit pricey", comment: "Nice jeans, but I wish they were a bit more affordable. Still, happy with the purchase.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/ultrafast_1tb_external_ssd.glb",
+    relatedProducts: ["kids-graphic-hoodie", "kids-fashion-bundle-playtime"],
+    modelPath: "/models/kids_distressed_jeans.glb", // Placeholder 3D model
   },
   {
-    id: "smarthome-hub-pro",
-    name: "SmartHome Hub Pro",
-    category: "Smart Home",
+    id: "ladies-fashion-bundle-casual",
+    name: "Ladies' Casual Chic Fashion Bundle",
+    category: "Fashion Bundles",
     images: [
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://plus.unsplash.com/premium_photo-1729265012673-c6e5e3a29374?q=80&w=2107&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://plus.unsplash.com/premium_photo-1729574858839-5a145c914bac?q=80&w=1788&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
     price: 65000.00,
-    rating: 4.2,
-    reviewCount: 80,
-    tag: undefined,
-    tagVariant: undefined,
-    limitedStock: true,
-    fullDescription: `The SmartHome Hub Pro is the central brain for your connected home. Seamlessly integrate and control all your smart devices, from lighting and thermostats to security cameras and door locks, all from one intuitive app. Compatible with multiple protocols like Zigbee, Z-Wave, and Wi-Fi, it offers unparalleled flexibility. Enjoy advanced automation, voice assistant integration (Alexa, Google Assistant), and robust security features to keep your home safe and smart.`,
-    keyFeatures: [
-      "Centralized control for all smart devices",
-      "Multi-protocol compatibility (Zigbee, Z-Wave, Wi-Fi)",
-      "Advanced automation and customizable routines",
-      "Voice assistant integration (Alexa, Google Assistant)",
-      "Robust security features with AES-128 encryption",
-    ],
-    applications: `Essential for building a comprehensive smart home ecosystem. Ideal for homeowners looking to automate lighting, climate, security, and entertainment systems, enhancing convenience, energy efficiency, and peace of mind.`,
-    detailedSpecs: [
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Protocols", value: "Wi-Fi, Zigbee, Z-Wave, Bluetooth" },
-          { label: "Ethernet", value: "1x Gigabit Ethernet" },
-        ],
-      },
-      {
-        group: "Features",
-        items: [
-          { label: "Voice Assistants", value: "Amazon Alexa, Google Assistant" },
-          { label: "Automation", value: "Customizable routines" },
-          { label: "Security", value: "AES-128 Encryption", icon: ShieldCheck },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Wifi, label: "Protocols", value: "Multi-protocol" },
-      { icon: Mic, label: "Voice Asst.", value: "Alexa, Google" },
-      { icon: ShieldCheck, label: "Security", value: "AES-128" },
-    ],
-    reviews: [
-      {
-        id: "rev9",
-        author: "Kevin L.",
-        rating: 4,
-        date: "2023-09-28",
-        title: "Solid hub, easy setup",
-        comment: "Works well with all my devices. Setup was surprisingly simple. A few minor bugs, but updates are frequent.",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev10",
-        author: "Mia N.",
-        rating: 3,
-        date: "2023-09-20",
-        title: "Good potential, needs refinement",
-        comment: "It's powerful, but the app can be a bit slow sometimes. Hoping for performance improvements.",
-        isVerifiedBuyer: false,
-      },
-    ],
-    relatedProducts: ["echo-dot-5th-gen"],
-    modelPath: "/models/smarthome_hub_pro.glb",
-  },
-  {
-    id: "powercharge-100w-gan-charger",
-    name: "PowerCharge 100W GaN Charger",
-    category: "Accessories",
-    images: [
-      "https://images.unsplash.com/photo-1727885796960-70a0adfe40ef?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1731616103600-3fe7ccdc5a59?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://plus.unsplash.com/premium_photo-1677723581361-f661203302e3?q=80&w=1625&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 25000.00,
-    originalPrice: 30000.00,
-    discountPercentage: 17,
-    rating: 4.9,
-    reviewCount: 450,
-    tag: "Limited Stock",
-    tagVariant: "destructive",
-    limitedStock: true,
-    fullDescription: `Revolutionize your charging experience with the PowerCharge 100W GaN Charger. Utilizing advanced Gallium Nitride (GaN) technology, this compact charger delivers a massive 100W of power, capable of fast-charging laptops, tablets, and smartphones simultaneously. With two USB-C ports and one USB-A port, it's the only charger you'll need for all your devices. Its intelligent power distribution ensures optimal charging speeds for each connected device.`,
-    keyFeatures: [
-      "Advanced Gallium Nitride (GaN) technology for compact size",
-      "Massive 100W power output for fast charging",
-      "Simultaneous charging for laptops, tablets, and smartphones",
-      "Two USB-C ports and one USB-A port for versatile compatibility",
-      "Intelligent power distribution for optimal charging speeds",
-    ],
-    applications: `An essential accessory for travelers, remote workers, and anyone with multiple devices needing fast and efficient charging. Perfect for decluttering your charging setup and ensuring all your gadgets are powered up quickly.`,
-    detailedSpecs: [
-      {
-        group: "Power Output",
-        items: [
-          { label: "Total Output", value: "100W Max" },
-          { label: "USB-C1/C2", value: "PD 100W Max" },
-          { label: "USB-A", value: "QC 18W Max" },
-        ],
-      },
-      {
-        group: "Ports",
-        items: [
-          { label: "USB-C", value: "2" },
-          { label: "USB-A", value: "1" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: BatteryCharging, label: "Output", value: "100W" },
-      { icon: Cpu, label: "Tech", value: "GaN" }, // Reusing CPU icon for tech
-      { icon: Wifi, label: "Ports", value: "2C, 1A" }, // Reusing Wifi icon for ports
-    ],
-    reviews: [
-      {
-        id: "rev11",
-        author: "Oscar P.",
-        rating: 5,
-        date: "2023-11-10",
-        title: "Incredible charger!",
-        comment: "Charges my laptop and phone super fast. So compact for travel. A must-have!",
-        isVerifiedBuyer: true,
-      },
-      {
-        id: "rev12",
-        author: "Quinn R.",
-        rating: 5,
-        date: "2023-11-08",
-        title: "Replaced all my other chargers",
-        comment: "Finally, one charger for everything. No more bulky power bricks. Works perfectly.",
-        isVerifiedBuyer: true,
-      },
-    ],
-    relatedProducts: ["ergofit-wireless-keyboard"],
-    modelPath: "/models/powercharge_100w_gan_charger.glb",
-  },
-  {
-    id: "visionpro-4k-webcam",
-    name: "VisionPro 4K Webcam",
-    category: "Accessories",
-    images: [
-      "https://cdn.pixabay.com/photo/2016/01/27/08/53/video-conference-1163880_1280.jpg",
-      "https://cdn.pixabay.com/photo/2016/02/24/12/30/camera-1219748_1280.jpg",
-      "https://cdn.pixabay.com/photo/2020/04/26/15/42/videoanruf-5095868_1280.jpg"
-    ],
-    price: 80000.00,
+    originalPrice: 80000.00,
+    discountPercentage: 18,
     rating: 4.6,
-    reviewCount: 110,
-    tag: "Streaming",
-    tagVariant: "default",
+    reviewCount: 75,
+    tag: "Best Seller",
+    tagVariant: "destructive",
     limitedStock: false,
-    fullDescription: `Elevate your video calls and streaming with the VisionPro 4K Webcam. Featuring stunning 4K Ultra HD resolution, autofocus, and a wide 90-degree field of view, it delivers crystal-clear video quality. Built-in dual microphones ensure your voice is heard clearly, even in noisy environments.`,
+    fullDescription: `Elevate your everyday style with our Ladies' Casual Chic Fashion Bundle. This curated collection includes a stylish top, comfortable jeans, and a versatile accessory, all designed to create effortless and fashionable outfits. Perfect for the modern Nigerian woman.`,
     keyFeatures: [
-      "4K Ultra HD resolution",
-      "Autofocus and auto light correction",
-      "Wide 90-degree field of view",
-      "Dual noise-cancelling microphones",
-      "Privacy shutter",
+      "Curated 3-piece outfit for effortless styling",
+      "High-quality, comfortable fabrics",
+      "Versatile pieces for various occasions",
+      "Trendy designs for a chic look",
+      "Great value for a complete ensemble",
     ],
-    applications: `Perfect for remote work, online meetings, content creation, and live streaming, providing superior video and audio quality.`,
+    styleNotes: `Mix and match the pieces with your existing wardrobe for endless outfit possibilities. Add a pair of heels for a night out or sneakers for a casual day.`,
     detailedSpecs: [
       {
-        group: "Camera",
+        group: "Bundle Contents",
         items: [
-          { label: "Resolution", value: "4K UHD (3840x2160)" },
-          { label: "Frame Rate", value: "30fps (4K), 60fps (1080p)" },
-          { label: "Field of View", value: "90 degrees" },
-          { label: "Focus", value: "Autofocus" },
+          { label: "Item 1", value: "Floral Blouse", icon: Shirt },
+          { label: "Item 2", value: "High-Waist Jeans", icon: Ruler },
+          { label: "Item 3", value: "Statement Necklace", icon: Gem },
         ],
       },
       {
-        group: "Audio",
+        group: "General",
         items: [
-          { label: "Microphones", value: "Dual omni-directional" },
-          { label: "Noise Cancellation", value: "Yes" },
+          { label: "Sizes Available", value: "S, M, L, XL" },
+          { label: "Colors", value: "Assorted" },
+          { label: "Condition", value: "New" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Camera, label: "Resolution", value: "4K UHD" },
-      { icon: Mic, label: "Mics", value: "Dual NC" },
-      { icon: Cpu, label: "FOV", value: "90°" }, // Reusing CPU icon for FOV
+    specs: [
+      { icon: ShoppingBag, label: "Items", value: "3-Piece" },
+      { icon: Ruler, label: "Sizes", value: "S-XL" },
+      { icon: Palette, label: "Style", value: "Casual Chic" },
+      { icon: Tag, label: "Value", value: "Bundle Deal" },
     ],
     reviews: [
-      { id: "rev36", author: "VideoCreator", rating: 5, date: "2023-12-25", title: "Amazing clarity!", comment: "My streams look so much more professional now. The autofocus is spot on.", isVerifiedBuyer: true },
-      { id: "rev37", author: "RemoteWorker", rating: 4, date: "2023-12-20", title: "Great for meetings", comment: "Much better than my laptop camera. Good value for 4K.", isVerifiedBuyer: true },
+      { id: "rev7", author: "Amaka J.", rating: 5, date: "2024-07-25", title: "Love this bundle!", comment: "All the pieces are beautiful and fit well. Such a great deal for the price.", isVerifiedBuyer: true },
+      { id: "rev8", author: "Chioma K.", rating: 4, date: "2024-07-20", title: "Good quality", comment: "Happy with the purchase, though the necklace was a bit different than expected.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["gaming-beast-desktop-pc"],
-    modelPath: "/models/visionpro_4k_webcam.glb",
+    relatedProducts: ["shein-floral-maxi-gown", "luxury-thrift-silk-scarf"],
+    modelPath: "/models/ladies_fashion_bundle.glb", // Placeholder 3D model
   },
   {
-    id: "swiftbook-air-13",
-    name: "SwiftBook Air 13",
-    category: "Laptops",
+    id: "luxury-thrift-silk-scarf",
+    name: "Luxury Thrift Silk Scarf (Designer)",
+    category: "Luxury Thrift",
     images: [
-      "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=2565&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1772&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
-    price: 680000.00,
-    originalPrice: 720000.00,
-    discountPercentage: 5,
-    rating: 4.7,
-    reviewCount: 190,
-    tag: "Lightweight",
-    tagVariant: "default",
-    limitedStock: false,
-    fullDescription: `The SwiftBook Air 13 is an ultra-portable laptop designed for on-the-go productivity. Weighing just 1.2kg, it features a vibrant 13.3-inch Full HD display, a powerful Intel Core i5 processor, and up to 12 hours of battery life. Perfect for students and professionals who need a reliable and lightweight companion.`,
-    keyFeatures: [
-      "Ultra-portable and lightweight design (1.2kg)",
-      "Vibrant 13.3-inch Full HD display",
-      "Intel Core i5 processor",
-      "Up to 12 hours of battery life",
-      "Fast SSD storage",
-    ],
-    applications: `Ideal for students, business travelers, and anyone needing a highly portable and efficient laptop for everyday tasks, web browsing, and light productivity.`,
-    detailedSpecs: [
-      {
-        group: "Performance",
-        items: [
-          { label: "Processor", value: "Intel Core i5-1235U" },
-          { label: "RAM", value: "8GB LPDDR4X" },
-          { label: "Storage", value: "256GB NVMe SSD" },
-          { label: "Graphics", value: "Intel Iris Xe Graphics" },
-        ],
-      },
-      {
-        group: "Display",
-        items: [
-          { label: "Size", value: "13.3-inch" },
-          { label: "Resolution", value: "Full HD (1920x1080)" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i5-1235U" },
-      { icon: MemoryStick, label: "RAM", value: "8GB" },
-      { icon: HardDrive, label: "Storage", value: "256GB SSD" },
-      { icon: Monitor, label: "Display", value: "13.3\" FHD" },
-    ],
-    reviews: [
-      { id: "rev38", author: "StudentLife", rating: 5, date: "2024-01-05", title: "Perfect for university!", comment: "Lightweight, fast, and the battery lasts all day. Couldn't ask for more.", isVerifiedBuyer: true },
-      { id: "rev39", author: "Traveler", rating: 4, date: "2024-01-01", title: "Great travel companion", comment: "Fits easily in my bag. Screen is good, but wish it was brighter outdoors.", isVerifiedBuyer: true },
-    ],
-    relatedProducts: ["ultrafast-1tb-external-ssd"],
-    modelPath: "/models/swiftbook_air_13.glb",
-  },
-  {
-    id: "galaxy-tab-s9-ultra",
-    name: "Galaxy Tab S9 Ultra",
-    category: "Tablets",
-    images: [
-      "https://images.unsplash.com/photo-1620288650879-20db0eb38c05?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1657446733024-d1803925d529?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1631342617268-61f3b16d2e6b?q=80&w=930&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 1100000.00,
-    rating: 4.8,
-    reviewCount: 160,
-    tag: "Premium",
+    price: 28000.00,
+    originalPrice: 35000.00,
+    discountPercentage: 20,
+    rating: 4.9,
+    reviewCount: 50,
+    tag: "Premium Thrift",
     tagVariant: "destructive",
     limitedStock: true,
-    fullDescription: `The Galaxy Tab S9 Ultra is Samsung's most powerful and largest tablet, featuring a stunning 14.6-inch Dynamic AMOLED 2X display. Powered by the Snapdragon 8 Gen 2 for Galaxy, it delivers unparalleled performance for gaming, multitasking, and creative work. Includes the S Pen for precision input.`,
+    fullDescription: `Discover a touch of luxury with this exquisite pre-loved silk scarf from a renowned designer. Each scarf is carefully inspected to ensure excellent condition, offering a sustainable way to own high-end fashion. Perfect for adding a sophisticated flair to any outfit.`,
     keyFeatures: [
-      "Massive 14.6-inch Dynamic AMOLED 2X display",
-      "Snapdragon 8 Gen 2 for Galaxy processor",
-      "Included S Pen",
-      "IP68 water and dust resistance",
-      "Long-lasting battery",
+      "Authentic designer silk scarf",
+      "Luxurious 100% silk material",
+      "Unique patterns and vibrant colors",
+      "Excellent pre-loved condition",
+      "Versatile styling accessory",
     ],
-    applications: `Ideal for professionals, artists, and power users who need a large, high-performance tablet for drawing, video editing, extensive multitasking, and immersive entertainment.`,
+    styleNotes: `Wear it around your neck, tie it to your handbag, or use it as a headscarf for a chic and elegant look. A timeless piece that elevates any ensemble.`,
     detailedSpecs: [
       {
-        group: "Display",
+        group: "Material & Origin",
         items: [
-          { label: "Size", value: "14.6-inch" },
-          { label: "Panel Type", value: "Dynamic AMOLED 2X" },
-          { label: "Refresh Rate", value: "120Hz" },
-          { label: "Resolution", value: "2960x1848" },
+          { label: "Material", value: "100% Silk", icon: Gem },
+          { label: "Condition", value: "Used - Excellent" },
+          { label: "Brand", value: "Assorted Designer" },
         ],
       },
       {
-        group: "Performance",
+        group: "Dimensions",
         items: [
-          { label: "Processor", value: "Snapdragon 8 Gen 2 for Galaxy" },
-          { label: "RAM", value: "12GB/16GB" },
-          { label: "Storage", value: "256GB/512GB/1TB" },
+          { label: "Size", value: "90cm x 90cm (approx)", icon: Ruler },
+          { label: "Shape", value: "Square" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "Snapdragon 8 Gen 2" },
-      { icon: MemoryStick, label: "RAM", value: "12GB" },
-      { icon: HardDrive, label: "Storage", value: "256GB SSD" },
-      { icon: Monitor, label: "Display", value: "14.6\" AMOLED" },
+    specs: [
+      { icon: Gem, label: "Material", value: "100% Silk" },
+      { icon: Tag, label: "Brand", value: "Designer" },
+      { icon: Ruler, label: "Size", value: "90x90cm" },
+      { icon: ShieldCheck, label: "Condition", value: "Excellent" },
     ],
     reviews: [
-      { id: "rev40", author: "DigitalArtist", rating: 5, date: "2024-01-10", title: "Incredible screen for art!", comment: "The display is gorgeous and the S Pen is super responsive. My new favorite drawing tablet.", isVerifiedBuyer: true },
-      { id: "rev41", author: "Multitasker", rating: 4, date: "2024-01-08", title: "A bit too big, but powerful", comment: "Amazing for productivity, but it's definitely a two-hand device.", isVerifiedBuyer: true },
+      { id: "rev9", author: "Fatima G.", rating: 5, date: "2024-07-28", title: "Stunning quality!", comment: "The scarf is absolutely gorgeous and feels so luxurious. Looks brand new!", isVerifiedBuyer: true },
+      { id: "rev10", author: "Kemi L.", rating: 5, date: "2024-07-26", title: "My new favorite accessory", comment: "Adds so much elegance to my outfits. Very happy with this thrift find.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["surface-pro-9"],
-    modelPath: "/models/galaxy_tab_s9_ultra.glb",
+    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    modelPath: "/models/silk_scarf.glb", // Placeholder 3D model
   },
   {
-    id: "officemaster-all-in-one-pc",
-    name: "OfficeMaster All-in-One PC",
-    category: "Laptops", // Broad category for computing devices
+    id: "shein-ruffle-mini-dress",
+    name: "SHEIN Ruffle Hem Mini Dress",
+    category: "SHEIN Gowns",
     images: [
-      "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg",
-      "https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?q=80&w=1674&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=930&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
-    price: 700000.00,
-    originalPrice: 750000.00,
-    discountPercentage: 6,
+    price: 28000.00,
+    originalPrice: 32000.00,
+    discountPercentage: 12,
     rating: 4.4,
-    reviewCount: 90,
-    tag: "Office",
-    tagVariant: "secondary",
+    reviewCount: 110,
+    tag: "Trendy",
+    tagVariant: "default",
     limitedStock: false,
-    fullDescription: `The OfficeMaster All-in-One PC offers a sleek, space-saving design with powerful performance for all your business and home office needs. Featuring a vibrant 24-inch Full HD display, Intel Core i7 processor, and ample storage, it's ready for multitasking, video conferencing, and everyday computing.`,
+    fullDescription: `A playful and chic SHEIN mini dress featuring a delicate ruffle hem. Made from a comfortable, slightly stretchy fabric, this dress is perfect for a casual day out or a fun evening with friends. Its vibrant color and flattering cut will make you stand out.`,
     keyFeatures: [
-      "Sleek, space-saving all-in-one design",
-      "Vibrant 24-inch Full HD display",
-      "Intel Core i7 processor",
-      "Integrated webcam and speakers",
-      "Wireless keyboard and mouse included",
+      "Stylish ruffle hem design",
+      "Comfortable and slightly stretchy fabric",
+      "Vibrant color options",
+      "Versatile for day or night wear",
+      "Easy to care for and maintain",
     ],
-    applications: `Perfect for home offices, small businesses, and families needing a reliable and efficient computer for productivity, online learning, and entertainment.`,
+    styleNotes: `Pair with white sneakers for a cute daytime look, or elevate with block heels and a clutch for a night out. Add a denim jacket for a casual layer.`,
     detailedSpecs: [
       {
-        group: "Performance",
+        group: "Fabric & Care",
         items: [
-          { label: "Processor", value: "Intel Core i7-12700" },
-          { label: "RAM", value: "16GB DDR4" },
-          { label: "Storage", value: "512GB SSD + 1TB HDD" },
+          { label: "Material", value: "95% Polyester, 5% Spandex", icon: Shirt },
+          { label: "Care Instructions", value: "Hand wash cold, do not bleach" },
+          { label: "Stretch", value: "Slight Stretch" },
         ],
       },
       {
-        group: "Display",
+        group: "Fit & Sizing",
         items: [
-          { label: "Size", value: "24-inch" },
-          { label: "Resolution", value: "Full HD (1920x1080)" },
-          { label: "Touchscreen", value: "Optional" },
+          { label: "Fit Type", value: "Slim Fit", icon: Ruler },
+          { label: "Neckline", value: "Round Neck" },
+          { label: "Sleeve Length", value: "Sleeveless" },
+          { label: "Hem Length", value: "Mini" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i7-12700" },
-      { icon: MemoryStick, label: "RAM", value: "16GB" },
-      { icon: HardDrive, label: "Storage", value: "512GB SSD" },
-      { icon: Monitor, label: "Display", value: "24\" FHD" },
+    specs: [
+      { icon: Shirt, label: "Material", value: "Poly/Spandex" },
+      { icon: Ruler, label: "Fit", value: "Slim" },
+      { icon: Palette, label: "Color", value: "Assorted" },
+      { icon: Tag, label: "Brand", value: "SHEIN" },
     ],
     reviews: [
-      { id: "rev42", author: "OfficePro", rating: 5, date: "2024-01-15", title: "Great for my home office!", comment: "Clean setup, fast performance, and the screen is perfect for my work.", isVerifiedBuyer: true },
-      { id: "rev43", author: "FamilyUser", rating: 4, date: "2024-01-12", title: "Solid family computer", comment: "Handles all our needs, but the speakers could be better.", isVerifiedBuyer: false },
+      { id: "rev11", author: "Adaobi C.", rating: 4, date: "2024-07-10", title: "Cute and comfy!", comment: "Love this dress, it's perfect for summer. The ruffles are a nice touch.", isVerifiedBuyer: true },
+      { id: "rev12", author: "Gloria M.", rating: 5, date: "2024-07-05", title: "My new favorite!", comment: "Fits perfectly and the fabric is soft. Received many compliments!", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["prodisplay-xdr"],
-    modelPath: "/models/officemaster_all_in_one_pc.glb",
+    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    modelPath: "/models/shein_ruffle_mini_dress.glb", // Placeholder 3D model
   },
   {
-    id: "gaming-pro-wireless-mouse",
-    name: "Gaming Pro Wireless Mouse",
-    category: "Accessories",
+    id: "vintage-denim-jacket",
+    name: "Classic Vintage Denim Jacket",
+    category: "Vintage Shirts", // Broad category for vintage apparel
     images: [
-      "https://images.unsplash.com/photo-1650310722799-293144cf7f61?q=80&w=2126&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1599779600619-1012639ed04b?q=80&w=1774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1536632437243-cc0c5b4c18b8?q=80&w=1776&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "https://images.unsplash.com/photo-1543076447-2159f93a34ee?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1543076447-2159f93a34ee?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1543076447-2159f93a34ee?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
     price: 45000.00,
-    originalPrice: 50000.00,
-    discountPercentage: 10,
-    rating: 4.7,
-    reviewCount: 280,
-    tag: "Gaming",
-    tagVariant: "destructive",
-    limitedStock: false,
-    fullDescription: `Dominate the competition with the Gaming Pro Wireless Mouse. Featuring an ultra-fast optical sensor with up to 26,000 DPI, lightning-fast wireless connectivity, and a lightweight ergonomic design, it's built for precision and speed. Customizable RGB lighting and programmable buttons complete your gaming setup.`,
-    keyFeatures: [
-      "Ultra-fast optical sensor (up to 26,000 DPI)",
-      "Lightning-fast wireless connectivity",
-      "Lightweight ergonomic design",
-      "Customizable RGB lighting",
-      "Programmable buttons",
-    ],
-    applications: `Essential for competitive gamers and esports enthusiasts who demand extreme precision, speed, and comfort for peak performance.`,
-    detailedSpecs: [
-      {
-        group: "Performance",
-        items: [
-          { label: "Sensor", value: "Optical (26,000 DPI)" },
-          { label: "Tracking Speed", value: "650 IPS" },
-          { label: "Acceleration", value: "50G" },
-        ],
-      },
-      {
-        group: "Connectivity",
-        items: [
-          { label: "Wireless", value: "2.4GHz USB Receiver" },
-          { label: "Battery Life", value: "Up to 100 hours" },
-        ],
-      },
-    ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "Sensor", value: "26K DPI" },
-      { icon: BatteryCharging, label: "Battery", value: "100 Hrs" },
-      { icon: Wifi, label: "Wireless", value: "2.4GHz" },
-    ],
-    reviews: [
-      { id: "rev44", author: "EsportsChamp", rating: 5, date: "2024-01-20", title: "Best gaming mouse ever!", comment: "Super precise, no lag, and incredibly comfortable for long sessions.", isVerifiedBuyer: true },
-      { id: "rev45", author: "CasualGamer", rating: 4, date: "2024-01-18", title: "Great, but a bit pricey", comment: "Fantastic performance, but it's a premium price for a mouse.", isVerifiedBuyer: false },
-    ],
-    relatedProducts: ["gaming-beast-desktop-pc"],
-    modelPath: "/models/gaming_pro_wireless_mouse.glb",
-  },
-  {
-    id: "smartwatch-xtreme",
-    name: "SmartWatch Xtreme",
-    category: "Accessories", // Changed category from Smart Home to Accessories
-    images: [
-      "https://images.unsplash.com/photo-1709087241763-23609bb0854e?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1654208398202-1edef1cf23b5?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://cdn.pixabay.com/photo/2018/10/29/07/18/apple-3780515_1280.jpg"
-    ],
-    price: 120000.00,
-    originalPrice: 135000.00,
-    discountPercentage: 11,
-    rating: 4.5,
-    reviewCount: 210,
-    tag: "Fitness",
-    tagVariant: "default",
+    originalPrice: 55000.00,
+    discountPercentage: 18,
+    rating: 4.8,
+    reviewCount: 60,
+    tag: "Timeless",
+    tagVariant: "secondary",
     limitedStock: true,
-    fullDescription: `The SmartWatch Xtreme is your ultimate companion for fitness and connectivity. Featuring a vibrant AMOLED display, advanced health tracking (heart rate, SpO2, sleep), GPS, and long battery life, it keeps you informed and motivated. Make calls, receive notifications, and control music directly from your wrist.`,
+    fullDescription: `A timeless classic, this vintage denim jacket is a wardrobe essential. Each piece is hand-selected for its quality and authentic vintage appeal, offering a unique and durable outer layer. Perfect for all seasons and effortlessly stylish.`,
     keyFeatures: [
-      "Vibrant AMOLED display",
-      "Advanced health tracking (HR, SpO2, Sleep)",
-      "Built-in GPS",
-      "Long battery life",
-      "Water resistant",
+      "Authentic vintage denim, unique wash",
+      "Durable and high-quality construction",
+      "Versatile for layering in any season",
+      "Classic fit, never goes out of style",
+      "Sustainable fashion choice",
     ],
-    applications: `Ideal for fitness enthusiasts, athletes, and anyone who wants to monitor their health, track workouts, and stay connected on the go.`,
+    styleNotes: `Layer over a hoodie for a casual look, or pair with a dress for an edgy contrast. Can be worn buttoned up or open.`,
     detailedSpecs: [
       {
-        group: "Display",
+        group: "Material & Condition",
         items: [
-          { label: "Type", value: "AMOLED" },
-          { label: "Size", value: "1.4-inch" },
-          { label: "Resolution", value: "454x454" },
+          { label: "Material", value: "100% Cotton Denim", icon: Shirt },
+          { label: "Condition", value: "Used - Excellent" },
+          { label: "Wash", value: "Medium Blue" },
         ],
       },
       {
-        group: "Health Sensors",
+        group: "Fit & Sizing",
         items: [
-          { label: "Heart Rate", value: "Optical" },
-          { label: "SpO2", value: "Yes" },
-          { label: "Sleep Tracking", value: "Yes" },
+          { label: "Fit Type", value: "Regular Fit", icon: Ruler },
+          { label: "Sizes Available", value: "S, M, L" },
+          { label: "Closure", value: "Button-Front" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Monitor, label: "Display", value: "AMOLED" },
-      { icon: Heart, label: "HR", value: "Yes" }, // Reusing Heart icon for Heart Rate
-      { icon: BatteryCharging, label: "Battery", value: "Long" },
-      { icon: Wifi, label: "GPS", value: "Built-in" }, // Reusing Wifi icon for GPS
+    specs: [
+      { icon: Shirt, label: "Material", value: "Denim" },
+      { icon: Ruler, label: "Fit", value: "Regular" },
+      { icon: Palette, label: "Color", value: "Blue" },
+      { icon: Gem, label: "Condition", value: "Excellent" },
     ],
     reviews: [
-      { id: "rev46", author: "FitnessFan", rating: 5, date: "2024-01-25", title: "Love this watch!", comment: "Tracks everything perfectly, and the battery lasts for days. Great for my runs.", isVerifiedBuyer: true },
-      { id: "rev47", author: "TechWearer", rating: 4, date: "2024-01-22", title: "Stylish and functional", comment: "Looks great and has all the features I need. Notifications are a bit small.", isVerifiedBuyer: false },
+      { id: "rev13", author: "David O.", rating: 5, date: "2024-07-29", title: "Perfect vintage jacket!", comment: "The wash is exactly what I wanted, and it fits great. So happy with this purchase.", isVerifiedBuyer: true },
+      { id: "rev14", author: "Sarah U.", rating: 4, date: "2024-07-25", title: "Good quality, a bit stiff", comment: "Solid jacket, but it's a bit stiff initially. I'm sure it will soften with wear.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["soundwave-noise-cancelling-headphones"],
-    modelPath: "/models/smartwatch_xtreme.glb",
+    relatedProducts: ["vintage-graphic-tee-90s", "mens-fashion-bundle-streetwear"],
+    modelPath: "/models/vintage_denim_jacket.glb", // Placeholder 3D model
   },
   {
-    id: "portable-projector-mini",
-    name: "Portable Projector Mini",
-    category: "Accessories", // Changed category from Smart Home to Accessories
+    id: "kids-graphic-hoodie",
+    name: "Kids' Fun Graphic Hoodie",
+    category: "Kids' Jeans", // Broad category for kids' apparel
     images: [
-      "https://images.unsplash.com/photo-1638154320403-1bc308a01398?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1638154320388-93039efa870b?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1670198867841-7d2d4c1bd4fd?q=80&w=2172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
-    price: 95000.00,
-    rating: 4.3,
-    reviewCount: 70,
-    tag: "Entertainment",
+    price: 15000.00,
+    originalPrice: 18000.00,
+    discountPercentage: 16,
+    rating: 4.7,
+    reviewCount: 80,
+    tag: "Cozy",
     tagVariant: "secondary",
     limitedStock: false,
-    fullDescription: `Transform any space into a home theater with the Portable Projector Mini. This compact projector delivers a bright, clear image up to 100 inches, with built-in speakers and versatile connectivity options. Perfect for movie nights, presentations, or gaming on the go.`,
+    fullDescription: `Keep your little ones warm and stylish with this fun graphic hoodie. Made from soft, fleece-lined cotton, it's perfect for cooler days and playful adventures. Features a vibrant graphic print and a comfortable fit.`,
     keyFeatures: [
-      "Compact and portable design",
-      "Projects up to 100-inch image",
-      "Built-in stereo speakers",
-      "HDMI, USB, and Wi-Fi connectivity",
-      "Long-lasting LED lamp",
+      "Soft, fleece-lined cotton for warmth",
+      "Vibrant and playful graphic print",
+      "Comfortable hood and kangaroo pocket",
+      "Durable for everyday wear and play",
+      "Easy to layer over t-shirts",
     ],
-    applications: `Ideal for home entertainment, outdoor movie nights, business presentations, and casual gaming, offering a large-screen experience anywhere.`,
+    styleNotes: `Pair with jeans or joggers for a comfortable and casual outfit. Great for school, playdates, or just lounging at home.`,
     detailedSpecs: [
       {
-        group: "Display",
+        group: "Fabric & Care",
         items: [
-          { label: "Resolution", value: "1080p (Native)" },
-          { label: "Brightness", value: "300 ANSI Lumens" },
-          { label: "Projection Size", value: "30-100 inches" },
+          { label: "Material", value: "80% Cotton, 20% Polyester", icon: Baby },
+          { label: "Care Instructions", value: "Machine wash cold, inside out" },
+          { label: "Season", value: "All-season" },
         ],
       },
       {
-        group: "Connectivity",
+        group: "Fit & Sizing",
         items: [
-          { label: "HDMI", value: "1x" },
-          { label: "USB", value: "1x" },
-          { label: "Wi-Fi", value: "Yes" },
+          { label: "Fit Type", value: "Regular Fit", icon: Ruler },
+          { label: "Sizes Available", value: "2T, 3T, 4T, 5, 6, 7, 8" },
+          { label: "Sleeve Length", value: "Long Sleeve" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Monitor, label: "Resolution", value: "1080p" },
-      { icon: Speaker, label: "Brightness", value: "300 Lumens" }, // Reusing Speaker icon for brightness
-      { icon: Wifi, label: "Connectivity", value: "HDMI, USB, Wi-Fi" },
+    specs: [
+      { icon: Baby, label: "Material", value: "Cotton Blend" },
+      { icon: Ruler, label: "Fit", value: "Regular" },
+      { icon: Palette, label: "Color", value: "Assorted" },
+      { icon: Tag, label: "Style", value: "Graphic" },
     ],
     reviews: [
-      { id: "rev48", author: "MovieBuff", rating: 5, date: "2024-01-30", title: "Great for outdoor movies!", comment: "Surprisingly bright and clear. Easy to set up. Kids love it.", isVerifiedBuyer: true },
-      { id: "rev49", author: "Presenter", rating: 4, date: "2024-01-28", title: "Handy for presentations", comment: "Works well for quick meetings, but the fan can be a bit loud.", isVerifiedBuyer: false },
+      { id: "rev15", author: "Nkechi P.", rating: 5, date: "2024-07-27", title: "My daughter loves it!", comment: "The print is so cute, and it's very soft. She wears it all the time.", isVerifiedBuyer: true },
+      { id: "rev16", author: "Segun R.", rating: 4, date: "2024-07-23", title: "Good hoodie", comment: "Warm and comfortable. The sizing was accurate.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["smarthome-hub-pro"],
-    modelPath: "/models/portable_projector_mini.glb",
+    relatedProducts: ["kids-distressed-denim-jeans", "kids-fashion-bundle-playtime"],
+    modelPath: "/models/kids_graphic_hoodie.glb", // Placeholder 3D model
   },
   {
-    id: "cyberbook-pro-16",
-    name: "CyberBook Pro 16",
-    category: "Laptops",
+    id: "mens-fashion-bundle-streetwear",
+    name: "Men's Urban Streetwear Fashion Bundle",
+    category: "Fashion Bundles",
     images: [
-      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.pexels.com/photos/34130516/pexels-photo-34130516.jpeg"
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
-    price: 1500000.00,
-    originalPrice: 1600000.00,
-    discountPercentage: 6,
-    rating: 4.9,
-    reviewCount: 170,
-    tag: "Creator",
+    price: 75000.00,
+    originalPrice: 90000.00,
+    discountPercentage: 16,
+    rating: 4.7,
+    reviewCount: 65,
+    tag: "Trending",
     tagVariant: "destructive",
     limitedStock: false,
-    fullDescription: `The CyberBook Pro 16 is a high-performance laptop built for creative professionals and power users. Featuring a stunning 16-inch Mini-LED display, Intel Core i9 processor, NVIDIA RTX 4070 graphics, and 32GB of RAM, it handles the most demanding tasks with ease. Its robust aluminum chassis and advanced cooling ensure sustained performance.`,
+    fullDescription: `Curated for the modern man, our Urban Streetwear Fashion Bundle offers a complete look with a stylish tee, comfortable joggers, and a trendy cap. All pieces are selected for their quality, comfort, and contemporary design, perfect for making a statement.`,
     keyFeatures: [
-      "Stunning 16-inch Mini-LED display",
-      "Intel Core i9 processor",
-      "NVIDIA RTX 4070 graphics",
-      "32GB RAM and 1TB SSD",
-      "Robust aluminum chassis",
+      "Complete 3-piece streetwear outfit",
+      "Premium quality fabrics for comfort and durability",
+      "Modern, urban designs",
+      "Versatile pieces for casual and semi-casual wear",
+      "Excellent value for a coordinated look",
     ],
-    applications: `Ideal for video editors, 3D artists, software developers, and gamers who require top-tier performance and a high-quality display for intensive creative and computing tasks.`,
+    styleNotes: `Wear the full set for an instant streetwear vibe, or mix and match with other items in your wardrobe. Add chunky sneakers to complete the look.`,
     detailedSpecs: [
       {
-        group: "Performance",
+        group: "Bundle Contents",
         items: [
-          { label: "Processor", value: "Intel Core i9-13900H" },
-          { label: "RAM", value: "32GB DDR5" },
-          { label: "Storage", value: "1TB NVMe SSD" },
-          { label: "Graphics", value: "NVIDIA GeForce RTX 4070" },
+          { label: "Item 1", value: "Graphic T-Shirt", icon: Shirt },
+          { label: "Item 2", value: "Cargo Joggers", icon: Ruler },
+          { label: "Item 3", value: "Baseball Cap", icon: Tag },
         ],
       },
       {
-        group: "Display",
+        group: "General",
         items: [
-          { label: "Size", value: "16-inch" },
-          { label: "Panel Type", value: "Mini-LED" },
-          { label: "Resolution", value: "2560x1600" },
-          { label: "Refresh Rate", value: "120Hz" },
+          { label: "Sizes Available", value: "M, L, XL, XXL" },
+          { label: "Colors", value: "Assorted" },
+          { label: "Condition", value: "New" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: Cpu, label: "CPU", value: "i9-13900H" },
-      { icon: MemoryStick, label: "RAM", value: "32GB DDR5" },
-      { icon: HardDrive, label: "Storage", value: "1TB SSD" },
-      { icon: Monitor, label: "Display", value: "16\" Mini-LED" },
+    specs: [
+      { icon: ShoppingBag, label: "Items", value: "3-Piece" },
+      { icon: Ruler, label: "Sizes", value: "M-XXL" },
+      { icon: Palette, label: "Style", value: "Streetwear" },
+      { icon: Tag, label: "Value", value: "Bundle Deal" },
     ],
     reviews: [
-      { id: "rev50", author: "ProEditor", rating: 5, date: "2024-02-05", title: "Unmatched performance for editing!", comment: "Handles 8K footage like a dream. The screen is incredible.", isVerifiedBuyer: true },
-      { id: "rev51", author: "DeveloperX", rating: 5, date: "2024-02-01", title: "Powerful workstation", comment: "Compiles code super fast. Great for virtual machines and heavy development.", isVerifiedBuyer: true },
+      { id: "rev17", author: "Kunle S.", rating: 5, date: "2024-07-30", title: "Fresh look!", comment: "This bundle is fire! Everything fits well and looks great together. Highly recommend.", isVerifiedBuyer: true },
+      { id: "rev18", author: "Emeka T.", rating: 4, date: "2024-07-26", title: "Good quality for the price", comment: "The materials are good, and the style is on point. Happy with my purchase.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["zenbook-pro-14-oled"],
-    modelPath: "/models/cyberbook_pro_16.glb",
+    relatedProducts: ["vintage-graphic-tee-90s", "vintage-denim-jacket"],
+    modelPath: "/models/mens_fashion_bundle.glb", // Placeholder 3D model
   },
   {
-    id: "homeserver-nas-4-bay",
-    name: "HomeServer NAS 4-Bay",
-    category: "Smart Home", // Changed category from Storage to Smart Home
+    id: "kids-fashion-bundle-playtime",
+    name: "Kids' Playtime Essentials Fashion Bundle",
+    category: "Fashion Bundles",
     images: [
-      "https://neuralservers.com/cdn/shop/products/iw-ms04ph13fei_1_1024x1024.jpg?v=1664476140",
-      "https://www.thinkpenguin.com/files/penguin-4-bay-nas-mini-server_0_1.png",
-      "https://m.media-amazon.com/images/I/91ucldvrNdL._AC_SL1500_.jpg"
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D"
     ],
-    price: 350000.00,
-    originalPrice: 380000.00,
-    discountPercentage: 8,
-    rating: 4.6,
-    reviewCount: 60,
-    tag: "Storage",
-    tagVariant: "default",
+    price: 40000.00,
+    originalPrice: 50000.00,
+    discountPercentage: 20,
+    rating: 4.5,
+    reviewCount: 70,
+    tag: "Kids' Value",
+    tagVariant: "secondary",
     limitedStock: false,
-    fullDescription: `The HomeServer NAS 4-Bay is a powerful network-attached storage solution for your home or small office. Easily store, share, and back up all your digital files, photos, and videos. Supports up to 4 hard drives for massive capacity and data redundancy. Stream media to all your devices.`,
+    fullDescription: `Our Kids' Playtime Essentials Fashion Bundle is perfect for active little ones. This bundle includes durable t-shirts, comfortable shorts/leggings, and a fun accessory, all designed for maximum comfort and freedom of movement during play.`,
     keyFeatures: [
-      "4-bay network-attached storage (NAS)",
-      "Centralized data storage and backup",
-      "Media streaming capabilities",
-      "Data redundancy (RAID support)",
-      "Easy setup and management",
+      "3-piece bundle for everyday play",
+      "Durable and comfortable fabrics",
+      "Bright and fun designs",
+      "Easy to wash and maintain",
+      "Great value for growing kids",
     ],
-    applications: `Ideal for families, content creators, and small businesses needing a reliable and scalable solution for storing large amounts of data, media streaming, and secure backups.`,
+    styleNotes: `Mix and match these pieces for various casual outfits. Perfect for school, park visits, or just playing at home.`,
     detailedSpecs: [
       {
-        group: "Storage",
+        group: "Bundle Contents",
         items: [
-          { label: "Drive Bays", value: "4x 3.5-inch/2.5-inch SATA" },
-          { label: "Max Capacity", value: "Up to 80TB (20TB per drive)" },
-          { label: "RAID Support", value: "RAID 0, 1, 5, 6, 10" },
+          { label: "Item 1", value: "2x Cotton T-Shirts", icon: Baby },
+          { label: "Item 2", value: "1x Denim Shorts/Leggings", icon: Ruler },
+          { label: "Item 3", value: "1x Fun Cap", icon: Tag },
         ],
       },
       {
-        group: "Connectivity",
+        group: "General",
         items: [
-          { label: "Ethernet", value: "2x Gigabit Ethernet" },
-          { label: "USB", value: "2x USB 3.0" },
+          { label: "Sizes Available", value: "2T, 3T, 4T, 5, 6" },
+          { label: "Colors", value: "Assorted" },
+          { label: "Condition", value: "New" },
         ],
       },
     ],
-    specs: [ // Added specs for ProductCard
-      { icon: HardDrive, label: "Bays", value: "4-Bay" },
-      { icon: Cpu, label: "Max Cap.", value: "80TB" }, // Reusing CPU icon for max capacity
-      { icon: Wifi, label: "Ethernet", value: "Gigabit" },
+    specs: [
+      { icon: ShoppingBag, label: "Items", value: "3-Piece" },
+      { icon: Ruler, label: "Sizes", value: "2T-6" },
+      { icon: Palette, label: "Style", value: "Playtime" },
+      { icon: Tag, label: "Value", value: "Bundle Deal" },
     ],
     reviews: [
-      { id: "rev52", author: "DataHoarder", rating: 5, date: "2024-02-10", title: "Excellent home server!", comment: "Easy to set up, fast transfers, and I feel much safer with my data backed up.", isVerifiedBuyer: true },
-      { id: "rev53", author: "MediaStreamer", rating: 4, date: "2024-02-08", title: "Great for Plex", comment: "Streams all my movies without a hitch. The interface could be a bit more modern.", isVerifiedBuyer: false },
+      { id: "rev19", author: "Gloria E.", rating: 5, date: "2024-07-28", title: "Perfect for my twins!", comment: "The clothes are durable and cute. They hold up well to all the playing.", isVerifiedBuyer: true },
+      { id: "rev20", author: "Femi A.", rating: 4, date: "2024-07-24", title: "Good everyday wear", comment: "Solid basics for kids. Nothing fancy, but good for the price.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["ultrafast-1tb-external-ssd"],
-    modelPath: "/models/homeserver_nas_4_bay.glb",
-  },
-  {
-    id: "smartdesk-standing-desk",
-    name: "SmartDesk Standing Desk",
-    category: "Accessories",
-    images: [
-      "https://images.unsplash.com/photo-1696453423500-98461c31ed64?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1696453423411-3fc7847a9611?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1696453423785-727e165462c1?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    ],
-    price: 280000.00,
-    originalPrice: 300000.00,
-    discountPercentage: 7,
-    rating: 4.7,
-    reviewCount: 100,
-    tag: "Ergonomic",
-    tagVariant: "default",
-    limitedStock: false,
-    fullDescription: `Improve your posture and productivity with the SmartDesk Standing Desk. This electric height-adjustable desk allows you to seamlessly switch between sitting and standing positions throughout your workday. Features a sturdy frame, quiet motors, and programmable memory presets for your preferred heights.`,
-    keyFeatures: [
-      "Electric height adjustment",
-      "Sturdy steel frame",
-      "Quiet dual motors",
-      "Programmable memory presets",
-      "Spacious desktop",
-    ],
-    applications: `Ideal for remote workers, office professionals, and students who want to incorporate more movement into their workday, reduce sedentary time, and improve overall well-being.`,
-    detailedSpecs: [
-      {
-        group: "Mechanism",
-        items: [
-          { label: "Type", value: "Electric" },
-          { label: "Motors", value: "Dual Motors" },
-          { label: "Height Range", value: "70cm - 120cm" },
-          { label: "Lift Speed", value: "38mm/s" },
-        ],
-      },
-      {
-        group: "Design",
-        items: [
-          { label: "Frame Material", value: "Steel" },
-          { label: "Desktop Size", value: "120cm x 60cm (Customizable)" },
-        ],
-      },
-    ],
-    reviews: [
-      { id: "rev54", author: "WorkFromHome", rating: 5, date: "2024-02-15", title: "Game-changer for my home office!", comment: "Easy to assemble, super stable, and I feel much better standing throughout the day.", isVerifiedBuyer: true },
-      { id: "rev55", author: "ProductivityHack", rating: 4, date: "2024-02-12", title: "Great desk, minor wobble at max height", comment: "Mostly solid, but there's a slight wobble when fully extended. Still highly recommend.", isVerifiedBuyer: false },
-    ],
-    relatedProducts: ["ergofit-wireless-keyboard"],
-    modelPath: "/models/smartdesk_standing_desk.glb",
+    relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
+    modelPath: "/models/kids_fashion_bundle.glb", // Placeholder 3D model
   },
 ];
 

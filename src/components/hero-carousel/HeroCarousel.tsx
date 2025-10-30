@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ElectroProLogo3D from "./ElectroProLogo3D.tsx";
-import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import mockProducts and ProductDetails
-// Removed Link import as it's no longer used for the CTA button
+import UniqueEmporiumLogo3D from "@/components/logo/UniqueEmporiumLogo3D.tsx"; // Use new logo
+import { mockProducts, ProductDetails } from "@/data/products.ts";
+import { Link } from "react-router-dom"; // Re-added Link for CTA buttons
 
 interface CarouselItem {
   id: string;
@@ -16,31 +16,36 @@ interface CarouselItem {
   productName: string;
   productDescription: string;
   price: number;
-  ctaText: string;
-  // Removed ctaLink as it's no longer needed for scrolling
+  ctaText1: string;
+  ctaLink1: string;
+  ctaText2: string;
+  ctaLink2: string;
 }
 
 // Select specific products from mockProducts for the carousel
 const selectedProductsForCarousel: ProductDetails[] = [
-  mockProducts.find(p => p.id === "zenbook-pro-14-oled"),
-  mockProducts.find(p => p.id === "soundwave-noise-cancelling-headphones"),
-  mockProducts.find(p => p.id === "prodisplay-xdr"),
-  mockProducts.find(p => p.id === "gaming-beast-desktop-pc"),
+  mockProducts.find(p => p.id === "shein-floral-maxi-gown"),
+  mockProducts.find(p => p.id === "vintage-graphic-tee-90s"),
+  mockProducts.find(p => p.id === "kids-distressed-denim-jeans"),
+  mockProducts.find(p => p.id === "ladies-fashion-bundle-casual"),
 ].filter((product): product is ProductDetails => product !== undefined);
 
 const carouselItems: CarouselItem[] = selectedProductsForCarousel.map(product => ({
   id: product.id,
-  image: product.images[0], // Use the first image for the carousel
-  headline: "Cutting-Edge Electronics for a Connected World", // Updated static headline
-  subHeadline: "From powerful laptops to smart devices – explore the future of technology.", // Updated static sub-headline
-  productName: product.name, // Keep product name dynamic
-  productDescription: product.fullDescription.split('.')[0] + '.', // Keep product description dynamic
-  price: product.price, // Keep price dynamic
-  ctaText: "Explore Featured Products", // Generic CTA text for scrolling
+  image: product.images[0],
+  headline: "Unveil Your Uniqueness — Luxury Meets Everyday Comfort",
+  subHeadline: "Nigeria’s futuristic fashion hub for SHEIN gowns, vintage shirts, kids’ jeans, and luxury thrift collections. Bold. Timeless. Truly you.",
+  productName: product.name,
+  productDescription: product.fullDescription.split('.')[0] + '.',
+  price: product.price,
+  ctaText1: "Shop the Collection",
+  ctaLink1: "/products",
+  ctaText2: "Explore Trending Styles",
+  ctaLink2: "/products?tag=trending", // Example link for trending styles
 }));
 
 interface HeroCarouselProps {
-  onScrollToFeatured: () => void; // New prop for the scroll function
+  onScrollToFeatured: () => void;
 }
 
 const HeroCarousel = ({ onScrollToFeatured }: HeroCarouselProps) => {
@@ -62,7 +67,7 @@ const HeroCarousel = ({ onScrollToFeatured }: HeroCarouselProps) => {
 
   // Auto-advance carousel
   useEffect(() => {
-    const interval = setInterval(goToNext, 8000); // Change slide every 8 seconds
+    const interval = setInterval(goToNext, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -77,7 +82,7 @@ const HeroCarousel = ({ onScrollToFeatured }: HeroCarouselProps) => {
     initial: { opacity: 0, y: 50 },
     animate: {
       opacity: 1,
-      y: [0, -5, 0], // Float animation
+      y: [0, -5, 0],
       transition: {
         y: {
           duration: 2,
@@ -161,9 +166,9 @@ const HeroCarousel = ({ onScrollToFeatured }: HeroCarouselProps) => {
             </p>
           </motion.div>
 
-          {/* CTA Button */}
+          {/* CTA Buttons */}
           <motion.div
-            className="mt-8"
+            className="mt-8 flex flex-col sm:flex-row gap-4"
             variants={ctaFloatVariants}
             initial="initial"
             animate="animate"
@@ -171,17 +176,24 @@ const HeroCarousel = ({ onScrollToFeatured }: HeroCarouselProps) => {
             whileTap="tap"
           >
             <Button
+              asChild
               className="px-6 py-2 text-base md:px-8 md:py-3 md:text-lg"
-              onClick={onScrollToFeatured} // Call the scroll function
             >
-              {currentItem.ctaText}
+              <Link to={currentItem.ctaLink1}>{currentItem.ctaText1}</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="px-6 py-2 text-base md:px-8 md:py-3 md:text-lg border-white text-white hover:bg-white/10"
+            >
+              <Link to={currentItem.ctaLink2}>{currentItem.ctaText2}</Link>
             </Button>
           </motion.div>
         </div>
 
         {/* 3D Rotating Logo (Desktop Only) */}
         <div className="absolute right-10 top-1/2 hidden -translate-y-1/2 lg:block">
-          <ElectroProLogo3D />
+          <UniqueEmporiumLogo3D />
         </div>
       </div>
 

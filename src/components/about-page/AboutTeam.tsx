@@ -16,26 +16,26 @@ const teamMembers: TeamMember[] = [
   {
     name: "Jane Doe",
     role: "CEO & Founder",
-    bio: "Visionary leader passionate about tech innovation and customer experience.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Placeholder image 1
+    bio: "Visionary leader passionate about fashion innovation and customer experience.",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     name: "John Smith",
-    role: "Chief Technology Officer",
-    bio: "Architect of our digital infrastructure, ensuring seamless operations.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Placeholder image 2
+    role: "Chief Fashion Officer",
+    bio: "Curator of our unique collections, ensuring style and quality.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     name: "Emily White",
-    role: "Head of Product Curation",
-    bio: "Expert in identifying the next big thing in electronics.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Placeholder image 3
+    role: "Head of Styling & Trends",
+    bio: "Expert in identifying the next big thing in fashion and styling.",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     name: "David Green",
-    role: "Customer Relations Lead",
-    bio: "Dedicated to providing exceptional support and building lasting relationships.",
-    image: "https://cdn.pixabay.com/photo/2012/02/29/11/59/agent-18762_1280.jpg", // Updated image for David Green
+    role: "Customer Experience Lead",
+    bio: "Dedicated to providing exceptional support and building lasting relationships with our fashion community.",
+    image: "https://cdn.pixabay.com/photo/2012/02/29/11/59/agent-18762_1280.jpg",
   },
 ];
 
@@ -66,10 +66,10 @@ const AboutTeam = () => {
       >
         <Badge variant="outline" className="mb-4 text-sm">Meet the Team</Badge>
         <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-foreground">
-          The Minds Behind ElectroPro
+          The Visionaries Behind Unique Emporium
         </h2>
         <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-12">
-          Our diverse team of experts is united by a shared passion for technology and a commitment to your satisfaction.
+          Our diverse team of fashion experts is united by a shared passion for unique style and a commitment to your satisfaction.
         </p>
       </motion.div>
 

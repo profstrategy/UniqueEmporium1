@@ -38,12 +38,10 @@ const ContactFormMap = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
 
-    // Show a toast notification
     toast.success("Message sent successfully!", {
       description: "We'll get back to you as soon as possible.",
     });
 
-    // Clear form
     setFormData({
       firstName: "",
       lastName: "",
@@ -75,7 +73,7 @@ const ContactFormMap = () => {
                       id="firstName"
                       name="firstName"
                       type="text"
-                      placeholder="John"
+                      placeholder="Jane"
                       value={formData.firstName}
                       onChange={handleChange}
                       required
@@ -102,7 +100,7 @@ const ContactFormMap = () => {
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="john.doe@example.com"
+                      placeholder="jane.doe@example.com"
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -114,7 +112,7 @@ const ContactFormMap = () => {
                       id="phone"
                       name="phone"
                       type="tel"
-                      placeholder="+1 (555) 123-4567"
+                      placeholder="+234 (800) 123-4567"
                       value={formData.phone}
                       onChange={handleChange}
                     />
@@ -127,7 +125,7 @@ const ContactFormMap = () => {
                     id="company"
                     name="company"
                     type="text"
-                    placeholder="ElectroPro Inc."
+                    placeholder="Unique Emporium Inc."
                     value={formData.company}
                     onChange={handleChange}
                   />
@@ -166,12 +164,11 @@ const ContactFormMap = () => {
             <CardHeader>
               <CardTitle className="text-lg md:text-2xl font-bold text-foreground">Visit Our Showroom</CardTitle>
               <p className="text-xs md:text-sm text-muted-foreground mt-2">
-                Experience our products firsthand at our state-of-the-art showroom.
+                Experience our unique collections firsthand at our state-of-the-art showroom.
               </p>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col">
               <div className="relative h-64 md:h-96 rounded-lg bg-muted mb-6 flex items-center justify-center overflow-hidden">
-                {/* Placeholder for an actual map (e.g., Google Maps iframe) */}
                 <img src="/public/placeholder.svg" alt="Map Placeholder" className="w-full h-full object-cover opacity-50" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-muted-foreground">
                   <MapPin className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
@@ -182,10 +179,10 @@ const ContactFormMap = () => {
 
               <div className="mb-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Find us at: <span className="font-semibold text-foreground">123 Tech Avenue, Innovation City, TX 78701</span>
+                  Find us at: <span className="font-semibold text-foreground">456 Fashion Blvd, Lagos, Nigeria</span>
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  (Appointments recommended for personalized service)
+                  (Appointments recommended for personalized styling sessions)
                 </p>
               </div>
 
@@ -193,13 +190,13 @@ const ContactFormMap = () => {
                 <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">Showroom Features:</h3>
                 <ul className="space-y-3 text-xs md:text-sm text-muted-foreground">
                   <li className="flex items-center">
-                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Live product demonstrations
+                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Live styling consultations
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Expert consultations
+                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Exclusive bundle previews
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Exclusive in-store offers
+                    <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> Personalized shopping experience
                   </li>
                 </ul>
                 <Button className="w-full mt-8" variant="outline">

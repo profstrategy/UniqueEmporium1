@@ -4,26 +4,24 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Cpu, MemoryStick, HardDrive, Monitor, BatteryCharging, Wifi, Laptop, Tablet, Headphones, LayoutGrid, Home as HomeIcon, SlidersHorizontal } from "lucide-react"; // Import icons for specs and categories
+import { Search, Shirt, Baby, Gem, ShoppingBag, SlidersHorizontal } from "lucide-react"; // Updated icons for fashion
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import mockProducts, ProductDetails, getProductsByIds
-import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx"; // Import RecommendedProductsSection
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
-import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx"; // Import ProductCardSkeleton
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts";
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
+import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 
-// Placeholder product data - now directly using mockProducts
 const allProducts: ProductDetails[] = mockProducts;
 
 const categories = [
   { name: "All Categories", value: "all" },
-  { name: "Laptops", value: "Laptops", icon: Laptop },
-  { name: "Tablets", value: "Tablets", icon: Tablet },
-  { name: "Audio", value: "Audio", icon: Headphones },
-  { name: "Monitors", value: "Monitors", icon: LayoutGrid },
-  { name: "Accessories", value: "Accessories", icon: LayoutGrid },
-  { name: "Smart Home", value: "Smart Home", icon: HomeIcon },
+  { name: "SHEIN Gowns", value: "SHEIN Gowns", icon: Shirt },
+  { name: "Vintage Shirts", value: "Vintage Shirts", icon: Shirt },
+  { name: "Kids' Jeans", value: "Kids' Jeans", icon: Baby },
+  { name: "Luxury Thrift", value: "Luxury Thrift", icon: Gem },
+  { name: "Fashion Bundles", value: "Fashion Bundles", icon: ShoppingBag },
 ];
 
 const sortOptions = [
@@ -63,16 +61,15 @@ const Products = () => {
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false);
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(true); // New loading state
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     setCurrentQuery(initialQuery);
     setSelectedCategory(initialCategory);
-    // Simulate loading for products
     setLoadingProducts(true);
     const timer = setTimeout(() => {
       setLoadingProducts(false);
-    }, 800); // Simulate 800ms loading
+    }, 800);
     return () => clearTimeout(timer);
   }, [initialQuery, initialCategory]);
 
@@ -93,13 +90,13 @@ const Products = () => {
       searchParams.set("category", value);
     }
     setSearchParams(searchParams);
-    setLoadingProducts(true); // Trigger loading state on filter change
+    setLoadingProducts(true);
     setTimeout(() => setLoadingProducts(false), 800);
   };
 
   const handleSortByChange = (value: string) => {
     setSortBy(value);
-    setLoadingProducts(true); // Trigger loading state on sort change
+    setLoadingProducts(true);
     setTimeout(() => setLoadingProducts(false), 800);
   };
 
@@ -111,7 +108,7 @@ const Products = () => {
       searchParams.delete("query");
     }
     setSearchParams(searchParams);
-    setLoadingProducts(true); // Trigger loading state on search submit
+    setLoadingProducts(true);
     setTimeout(() => setLoadingProducts(false), 800);
   };
 
@@ -139,7 +136,6 @@ const Products = () => {
         filtered.sort((a, b) => b.rating - a.rating);
         break;
       default:
-        // No specific sort, maintain original order or a default one
         break;
     }
     return filtered;
@@ -152,9 +148,9 @@ const Products = () => {
     setCurrentQuery("");
     setSelectedCategory("all");
     setSortBy("default");
-    setSearchParams({}); // Clear all search params
-    setIsMobileFilterPanelOpen(false); // Close panel on clear
-    setLoadingProducts(true); // Trigger loading state on clear filters
+    setSearchParams({});
+    setIsMobileFilterPanelOpen(false);
+    setLoadingProducts(true);
     setTimeout(() => setLoadingProducts(false), 800);
   };
 
@@ -174,13 +170,13 @@ const Products = () => {
           className="font-poppins text-3xl md:text-4xl font-bold text-foreground mb-2"
           variants={fadeInUp}
         >
-          All Electronics
+          Our Unique Collections
         </motion.h1>
         <motion.p
           className="text-lg text-muted-foreground max-w-2xl mx-auto"
           variants={fadeInUp}
         >
-          Explore our extensive collection of cutting-edge electronics, from powerful laptops to smart home devices.
+          Explore our extensive collection of luxury thrift, fashion bundles, and unique wears.
         </motion.p>
       </motion.div>
 
@@ -197,7 +193,7 @@ const Products = () => {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search unique wears..."
               className="w-full pl-9"
               value={currentQuery}
               onChange={handleSearchChange}
@@ -297,13 +293,13 @@ const Products = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="text-muted-foreground text-center mb-8"
       >
-        {loadingProducts ? "Loading products..." : `Showing ${displayedProducts.length} of ${allProducts.length} electronics`}
+        {loadingProducts ? "Loading products..." : `Showing ${displayedProducts.length} of ${allProducts.length} unique wears`}
       </motion.p>
 
       {/* Product Grid Display */}
       {loadingProducts ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5">
-          {Array.from({ length: 8 }).map((_, i) => ( // Show 8 skeletons
+          {Array.from({ length: 8 }).map((_, i) => (
             <ProductCardSkeleton key={i} />
           ))}
         </div>

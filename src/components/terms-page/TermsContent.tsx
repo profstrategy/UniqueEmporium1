@@ -18,47 +18,47 @@ const termItems: TermItem[] = [
   {
     question: "1. Acceptance of Terms",
     answer:
-      "By accessing or using ElectroPro's website and services, you agree to be bound by these Terms of Service and all terms incorporated by reference. If you do not agree to all of these terms, do not use our website or services.",
+      "By accessing or using Unique Emporium's website and services, you agree to be bound by these Terms of Service and all terms incorporated by reference. If you do not agree to all of these terms, do not use our website or services.",
   },
   {
     question: "2. User Accounts",
     answer:
-      "To access certain features of the website, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.",
+      "To access certain features of the website, such as wishlists and order history, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.",
   },
   {
     question: "3. Product Information and Pricing",
     answer:
-      "We strive to ensure that all product descriptions, images, and pricing are accurate. However, errors may occur. We reserve the right to correct any errors, inaccuracies, or omissions and to change or update information at any time without prior notice.",
+      "We strive to ensure that all product descriptions, images, and pricing for our unique wears are accurate. However, errors may occur. We reserve the right to correct any errors, inaccuracies, or omissions and to change or update information at any time without prior notice.",
   },
   {
     question: "4. Orders and Payment",
     answer:
-      "All orders placed through the website are subject to our acceptance. We may refuse to accept or may cancel any order, whether or not the order has been confirmed, for any or no reason, and without liability to you or anyone else.",
+      "All orders placed through the website are subject to our acceptance. We may refuse to accept or may cancel any order, whether or not the order has been confirmed, for any or no reason, and without liability to you or anyone else. Payment options include Debit/Credit Card and Bank Transfer.",
   },
   {
     question: "5. Shipping and Delivery",
     answer:
-      "Our shipping and delivery terms are outlined in our separate Shipping Policy. By placing an order, you agree to the terms and conditions of our Shipping Policy.",
+      "Our shipping and delivery terms for fashion items are outlined in our separate Shipping Policy. By placing an order, you agree to the terms and conditions of our Shipping Policy.",
   },
   {
     question: "6. Returns and Refunds",
     answer:
-      "Our returns and refunds are governed by our Returns & Refunds Policy. Please review this policy carefully before making a purchase.",
+      "Our returns and refunds for unique wears are governed by our Returns & Refunds Policy. Please review this policy carefully before making a purchase, especially for thrift items.",
   },
   {
     question: "7. Intellectual Property",
     answer:
-      "All content on this website, including text, graphics, logos, images, and software, is the property of ElectroPro or its content suppliers and is protected by international copyright laws.",
+      "All content on this website, including text, graphics, logos, images, and software, is the property of Unique Emporium or its content suppliers and is protected by international copyright laws.",
   },
   {
     question: "8. Limitation of Liability",
     answer:
-      "ElectroPro shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to, damages for loss of profits, goodwill, use, data, or other intangible losses.",
+      "Unique Emporium shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to, damages for loss of profits, goodwill, use, data, or other intangible losses arising from the use of our fashion products or services.",
   },
   {
     question: "9. Governing Law",
     answer:
-      "These Terms of Service and any separate agreements whereby we provide you services shall be governed by and construed in accordance with the laws of [Your Country/State].",
+      "These Terms of Service and any separate agreements whereby we provide you services shall be governed by and construed in accordance with the laws of Nigeria.",
   },
   {
     question: "10. Changes to Terms",

@@ -5,23 +5,24 @@ import HeroIntroBanner from "@/components/hero-intro-banner/HeroIntroBanner.tsx"
 import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
+import CustomerReviewsSection from "@/components/customer-reviews/CustomerReviewsSection.tsx"; // Import new component
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
-import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts"; // Import getProductsByIds
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx"; // Import RecentlyViewedProductsSection
-import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx"; // Reverted to alias path
-import React, { useEffect, useState, useRef } from "react"; // Import useEffect, useState, and useRef
-import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx"; // Import ProductCardSkeleton
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts";
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
+import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx";
+import React, { useEffect, useState, useRef } from "react";
+import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 
 // Select specific products from mockProducts to be featured
 const featuredProductIds = [
-  "zenbook-pro-14-oled",
-  "soundwave-noise-cancelling-headphones",
-  "ultrafast-1tb-external-ssd",
-  "ergofit-wireless-keyboard",
-  "smarthome-hub-pro",
-  "powercharge-100w-gan-charger",
+  "shein-floral-maxi-gown",
+  "vintage-graphic-tee-90s",
+  "kids-distressed-denim-jeans",
+  "ladies-fashion-bundle-casual",
+  "luxury-thrift-silk-scarf",
+  "mens-fashion-bundle-streetwear",
 ];
 
 const staggerContainer = {
@@ -45,14 +46,13 @@ const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
 const Index = () => {
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loadingFeatured, setLoadingFeatured] = useState(true); // New loading state for featured products
-  const featuredProductsRef = useRef<HTMLDivElement>(null); // Ref for the featured products section
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  const featuredProductsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
     setRecentlyViewedProductIds(storedViewed);
 
-    // Simulate loading for featured products
     setLoadingFeatured(true);
     const timer = setTimeout(() => {
       const fetchedFeatured = featuredProductIds
@@ -60,13 +60,12 @@ const Index = () => {
         .filter((product): product is ProductDetails => product !== undefined);
       setFeaturedProducts(fetchedFeatured);
       setLoadingFeatured(false);
-    }, 1000); // Simulate 1 second loading
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
   const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
 
-  // Function to scroll to the featured products section
   const scrollToFeaturedProducts = () => {
     featuredProductsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -90,13 +89,13 @@ const Index = () => {
             className="font-poppins font-bold text-xl md:text-4xl text-foreground"
             variants={fadeInUp}
           >
-            Featured Electronics
+            Featured Collections
           </motion.h2>
           <motion.p
             className="text-sm text-muted-foreground mt-2 mb-8 md:mb-12"
             variants={fadeInUp}
           >
-            Discover our most popular laptops, gadgets, and accessories
+            Discover our most popular SHEIN gowns, vintage shirts, and fashion bundles
           </motion.p>
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
@@ -109,7 +108,7 @@ const Index = () => {
 
           <motion.div variants={fadeInUp} className="mt-12">
             <Button size="lg" variant="outline" asChild>
-              <Link to="/products">Browse All Electronics</Link>
+              <Link to="/products">Shop the Collection</Link>
             </Button>
           </motion.div>
         </motion.div>
@@ -128,6 +127,9 @@ const Index = () => {
 
       {/* Why Choose Us Section */}
       <WhyChooseUsSection />
+
+      {/* Customer Reviews Section */}
+      <CustomerReviewsSection />
 
       {/* Recently Viewed Products Section (on Home Page) */}
       <motion.div

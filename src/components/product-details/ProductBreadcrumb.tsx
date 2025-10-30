@@ -11,8 +11,8 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-  BreadcrumbList, // Import BreadcrumbList
-} from "@/components/ui/breadcrumb"; // Assuming shadcn breadcrumb
+  BreadcrumbList,
+} from "@/components/ui/breadcrumb";
 
 interface ProductBreadcrumbProps {
   product: ProductDetailsType;
@@ -32,7 +32,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
       viewport={{ once: true, amount: 0.1 }}
     >
       <Breadcrumb>
-        <BreadcrumbList> {/* Added BreadcrumbList here */}
+        <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link to="/">
@@ -45,7 +45,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           </BreadcrumbSeparator>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/products">Electronics</Link>
+              <Link to="/products">Shop All</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
@@ -64,7 +64,7 @@ const ProductBreadcrumb = ({ product }: ProductBreadcrumbProps) => {
           <BreadcrumbItem>
             <BreadcrumbPage>{product.name}</BreadcrumbPage>
           </BreadcrumbItem>
-        </BreadcrumbList> {/* Closed BreadcrumbList here */}
+        </BreadcrumbList>
       </Breadcrumb>
     </motion.div>
   );

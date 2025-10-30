@@ -14,7 +14,7 @@ import Product3DViewer from "@/components/Product3DViewer.tsx";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import ProductDetailsSkeleton from "@/components/product-details/ProductDetailsSkeleton.tsx"; // Import ProductDetailsSkeleton
+import ProductDetailsSkeleton from "@/components/product-details/ProductDetailsSkeleton.tsx";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
@@ -35,13 +35,12 @@ const ProductDetails = () => {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    const timer = setTimeout(() => { // Simulate API call delay
+    const timer = setTimeout(() => {
       if (productId) {
         const fetchedProduct = getProductById(productId);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
 
-          // Update recently viewed product IDs in localStorage
           setRecentlyViewedProductIds((prevIds) => {
             const currentViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
             const updatedViewed = [productId, ...currentViewed.filter(id => id !== productId)].slice(0, MAX_RECENTLY_VIEWED);
@@ -58,11 +57,10 @@ const ProductDetails = () => {
         toast.error("Invalid product ID.", { description: "Please provide a valid product identifier." });
       }
       setLoading(false);
-    }, 700); // Simulate 700ms loading
+    }, 700);
     return () => clearTimeout(timer);
   }, [productId]);
 
-  // Load recently viewed product IDs from localStorage on initial mount
   useEffect(() => {
     const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
     setRecentlyViewedProductIds(storedViewed);
@@ -70,7 +68,7 @@ const ProductDetails = () => {
 
 
   if (loading) {
-    return <ProductDetailsSkeleton />; // Render skeleton while loading
+    return <ProductDetailsSkeleton />;
   }
 
   if (error || !product) {
@@ -99,7 +97,6 @@ const ProductDetails = () => {
     );
   }
 
-  // Get the actual product objects for recently viewed products
   const actualRecentlyViewedProducts = getRecentlyViewedProducts(recentlyViewedProductIds, product.id);
 
   return (

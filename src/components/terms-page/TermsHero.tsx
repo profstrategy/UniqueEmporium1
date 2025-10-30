@@ -25,7 +25,7 @@ const TermsHero = () => {
           Terms of Service
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Please read our terms and conditions carefully before using our services.
+          Please read our terms and conditions carefully before using Unique Emporium's services.
         </p>
       </motion.div>
     </section>

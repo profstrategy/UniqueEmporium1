@@ -15,17 +15,17 @@ const contactInfos: ContactInfo[] = [
   {
     icon: Mail,
     title: "Email Us",
-    details: ["support@electropro.com", "We typically respond within 24 hours."],
+    details: ["support@uniqueemporium.com", "We typically respond within 24 hours."],
   },
   {
     icon: Phone,
     title: "Call Us",
-    details: ["+1 (555) 123-4567", "Mon-Fri, 9 AM - 5 PM EST"],
+    details: ["+234 (800) 123-4567", "Mon-Fri, 9 AM - 5 PM WAT"],
   },
   {
     icon: MapPin,
-    title: "Our Location",
-    details: ["123 Tech Avenue", "Innovation City, TX 78701"],
+    title: "Our Showroom",
+    details: ["456 Fashion Blvd", "Lagos, Nigeria"],
   },
   {
     icon: Clock,
@@ -66,16 +66,16 @@ const ContactInfoCards = () => {
               <motion.div
                 className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(info.icon, { className: "h-full w-full" })}

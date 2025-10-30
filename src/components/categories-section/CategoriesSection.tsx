@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, Easing } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Laptop, Tablet, Headphones, Monitor, Mouse, Home, LucideIcon } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile"; // Import useIsMobile
+import { Shirt, Baby, Gem, ShoppingBag, LucideIcon } from "lucide-react"; // Updated icons for fashion
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Category {
   name: string;
@@ -14,16 +14,15 @@ interface Category {
 }
 
 const categories: Category[] = [
-  { name: "Laptops", icon: Laptop, description: "Powerful notebooks & ultrabooks", link: "/products?category=laptops" },
-  { name: "Tablets", icon: Tablet, description: "Portable entertainment & productivity", link: "/products?category=tablets" },
-  { name: "Audio", icon: Headphones, description: "Immersive sound experiences", link: "/products?category=audio" },
-  { name: "Monitors", icon: Monitor, description: "Stunning displays for work & play", link: "/products?category=monitors" },
-  { name: "Accessories", icon: Mouse, description: "Enhance your tech setup", link: "/products?category=accessories" },
-  { name: "Smart Home", icon: Home, description: "Connect & automate your living space", link: "/products?category=smart-home" },
+  { name: "SHEIN Gowns", icon: Shirt, description: "Elegant & trendy dresses", link: "/products?category=shein-gowns" },
+  { name: "Vintage Shirts", icon: Shirt, description: "Unique retro styles", link: "/products?category=vintage-shirts" },
+  { name: "Kids' Jeans", icon: Baby, description: "Durable & stylish denim for kids", link: "/products?category=kids-jeans" },
+  { name: "Luxury Thrift", icon: Gem, description: "High-end pre-loved fashion", link: "/products?category=luxury-thrift" },
+  { name: "Fashion Bundles", icon: ShoppingBag, description: "Curated outfits & collections", link: "/products?category=fashion-bundles" },
 ];
 
 // Duplicate categories to create a seamless loop effect
-const loopedCategories = [...categories, ...categories]; // Duplicate the array
+const loopedCategories = [...categories, ...categories];
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -45,12 +44,10 @@ const CategoriesSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
-  const scrollSpeed = 1; // Adjust scroll speed as needed
+  const scrollSpeed = 1;
 
   useEffect(() => {
     const scrollElement = scrollRef.current;
-    // On mobile, we always want it to scroll, so effectively treat isPaused as false.
-    // On desktop, respect the actual isPaused state (controlled by hover).
     const shouldBePaused = !isMobile && isPaused;
 
     if (!scrollElement || shouldBePaused) {
@@ -64,16 +61,13 @@ const CategoriesSection = () => {
       if (!lastTimestamp) lastTimestamp = timestamp;
       const elapsed = timestamp - lastTimestamp;
 
-      if (elapsed > 16) { // Roughly 60fps
+      if (elapsed > 16) {
         scrollElement.scrollLeft += scrollSpeed;
         
-        // Calculate the width of a single set of categories
-        // This assumes all category items have the same width and spacing
-        // A more robust solution might involve measuring the first set of items
         const singleSetWidth = scrollElement.scrollWidth / 2; 
 
         if (scrollElement.scrollLeft >= singleSetWidth) {
-          scrollElement.scrollLeft = 0; // Loop back to the start of the first duplicated set
+          scrollElement.scrollLeft = 0;
         }
         lastTimestamp = timestamp;
       }
@@ -85,7 +79,7 @@ const CategoriesSection = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isPaused, isMobile, scrollSpeed]); // Add scrollSpeed to dependency array
+  }, [isPaused, isMobile, scrollSpeed]);
 
   return (
     <section className="py-16 bg-background">
@@ -100,46 +94,45 @@ const CategoriesSection = () => {
           className="font-poppins font-bold text-xl md:text-4xl text-foreground"
           variants={fadeInUp}
         >
-          Explore Our Categories
+          Explore Our Collections
         </motion.h2>
         <motion.p
           className="text-sm text-muted-foreground mt-2 mb-8 md:mb-12"
           variants={fadeInUp}
         >
-          Find the perfect tech to power your productivity and lifestyle
+          Find the perfect style to express your uniqueness
         </motion.p>
 
         <motion.div
           className="flex space-x-4 overflow-x-auto pb-4 no-scrollbar"
           ref={scrollRef}
-          // Conditionally apply onMouseEnter/onMouseLeave based on isMobile
           onMouseEnter={() => !isMobile && setIsPaused(true)}
           onMouseLeave={() => !isMobile && setIsPaused(false)}
-          variants={staggerContainer} // Apply stagger to the container for cards
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {loopedCategories.map((category, index) => ( // Use loopedCategories here
-            <motion.div key={`${category.name}-${index}`} variants={fadeInUp}> {/* Unique key for duplicated items */}
+          {loopedCategories.map((category, index) => (
+            <motion.div key={`${category.name}-${index}`} variants={fadeInUp}>
               <Link
                 to={category.link}
                 className="group relative flex-shrink-0 w-[200px] h-16 lg:w-[250px] lg:h-24
-                           bg-gradient-to-br from-gray-800 to-gray-600 border border-gray-500
+                           bg-gradient-to-br from-primary/80 to-primary/60 border border-primary/50
                            rounded-xl overflow-hidden p-3 flex items-center justify-start text-left
                            transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-600/50 rounded-full flex items-center justify-center mr-3
-                                transition-colors duration-300 group-hover:bg-gray-500/70">
-                  <category.icon className="w-3 h-3 lg:w-6 lg:h-6 text-accent transition-all duration-300 group-hover:text-white group-hover:scale-110" />
+                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-primary/50 rounded-full flex items-center justify-center mr-3
+                                transition-colors duration-300 group-hover:bg-primary/70">
+                  <category.icon className="w-3 h-3 lg:w-6 lg:h-6 text-secondary transition-all duration-300 group-hover:text-white group-hover:scale-110" />
                 </div>
                 <div>
                   <h3 className="font-poppins font-semibold text-[10px] text-white lg:text-base
-                                 transition-colors duration-300 group-hover:text-accent">
+                                 transition-colors duration-300 group-hover:text-secondary">
                     {category.name}
                   </h3>
-                  <p className="text-[8px] text-gray-300 lg:text-sm
-                                transition-colors duration-300 group-hover:text-gray-100">
+                  <p className="text-[8px] text-primary-foreground/80 lg:text-sm
+                                transition-colors duration-300 group-hover:text-primary-foreground">
                     {category.description}
                   </p>
                 </div>

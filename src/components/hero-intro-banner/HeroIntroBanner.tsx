@@ -33,20 +33,20 @@ const HeroIntroBanner = () => {
           className="text-sm md:text-lg lg:text-xl text-foreground leading-relaxed"
           variants={fadeInUp}
         >
-          ElectroPro makes tech shopping simple, fast, and stress-free.
+          Unique Emporium makes luxury fashion accessible, fast, and inspiring.
         </motion.p>
         <motion.p
           className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-4"
           variants={fadeInUp}
         >
-          Explore the latest laptops, gadgets, and electronics with effortless navigation, smart
+          Explore the latest SHEIN gowns, vintage shirts, kids’ jeans, and curated fashion bundles with effortless navigation, smart
           recommendations, and a transparent checkout.
         </motion.p>
         <motion.p
           className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-6"
           variants={fadeInUp}
         >
-          Choose ElectroPro — where innovation meets convenience.
+          Choose Unique Emporium — where luxury meets everyday comfort.
         </motion.p>
 
         <motion.div
@@ -54,8 +54,8 @@ const HeroIntroBanner = () => {
           variants={fadeInUp}
         >
           <img
-            src="/my-banner.webp" // Placeholder image
-            alt="ElectroPro Banner"
+            src="/my-banner.webp"
+            alt="Unique Emporium Fashion Banner"
             className="w-full h-full object-cover object-center"
           />
         </motion.div>

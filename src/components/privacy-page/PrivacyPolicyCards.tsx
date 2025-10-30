@@ -15,12 +15,12 @@ const policyInfos: PrivacyInfo[] = [
   {
     icon: Database,
     title: "Data Collection",
-    description: "We collect necessary data to process orders and improve your shopping experience.",
+    description: "We collect necessary data to process orders and enhance your fashion shopping experience.",
   },
   {
     icon: BarChart2,
     title: "Data Usage",
-    description: "Your data is used for order fulfillment, customer support, and personalized recommendations.",
+    description: "Your data is used for order fulfillment, customer support, and personalized style recommendations.",
   },
   {
     icon: Lock,
@@ -35,7 +35,7 @@ const policyInfos: PrivacyInfo[] = [
   {
     icon: Cookie,
     title: "Cookie Policy",
-    description: "We use cookies to enhance site functionality, analyze traffic, and personalize content.",
+    description: "We use cookies to enhance site functionality, analyze traffic, and personalize content and offers.",
   },
   {
     icon: Share2,
@@ -76,16 +76,16 @@ const PrivacyPolicyCards = () => {
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(info.icon, { className: "h-full w-full" })}

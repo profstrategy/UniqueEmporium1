@@ -4,7 +4,7 @@ import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, Handshake, Leaf, Rocket } from "lucide-react";
+import { Lightbulb, Handshake, Leaf, Sparkles, Gem, TrendingUp } from "lucide-react"; // Updated icons
 
 interface Value {
   icon: React.ElementType;
@@ -14,24 +14,24 @@ interface Value {
 
 const values: Value[] = [
   {
-    icon: Lightbulb,
-    title: "Innovation",
-    description: "We constantly seek new technologies and creative solutions to enhance your experience.",
+    icon: Sparkles,
+    title: "Uniqueness",
+    description: "We celebrate individual style, offering pieces that help you stand out.",
   },
   {
-    icon: Handshake,
-    title: "Integrity",
-    description: "Honesty and transparency guide all our interactions and business practices.",
+    icon: Gem,
+    title: "Quality Thrift",
+    description: "Curating premium pre-loved fashion that feels luxurious and lasts.",
   },
   {
     icon: Leaf,
     title: "Sustainability",
-    description: "Committed to eco-friendly practices and products for a better future.",
+    description: "Committed to eco-friendly fashion choices and reducing waste.",
   },
   {
-    icon: Rocket,
-    title: "Excellence",
-    description: "Striving for the highest standards in every product and service we offer.",
+    icon: TrendingUp,
+    title: "Trendsetting",
+    description: "Staying ahead of fashion curves to bring you the latest and timeless styles.",
   },
 ];
 
@@ -62,7 +62,7 @@ const AboutValues = () => {
       >
         <Badge variant="outline" className="mb-4 text-sm">Our Principles</Badge>
         <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-foreground">
-          The Values That Drive Us
+          The Values That Define Our Style
         </h2>
       </motion.div>
 
@@ -79,16 +79,16 @@ const AboutValues = () => {
               <motion.div
                 className="h-8 w-8 text-primary mb-2"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(value.icon, { className: "h-full w-full" })}

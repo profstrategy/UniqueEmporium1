@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Package, Star, Award } from "lucide-react";
+import { Users, ShoppingBag, Star, Award } from "lucide-react"; // Updated icon for products
 
 interface Stat {
   icon: React.ElementType;
@@ -12,10 +12,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { icon: Users, value: "100K+", label: "Happy Customers" },
-  { icon: Package, value: "500+", label: "Products Shipped Daily" },
-  { icon: Star, value: "4.9/5", label: "Average Rating" },
-  { icon: Award, value: "10+", label: "Years in Business" },
+  { icon: Users, value: "50K+", label: "Happy Fashionistas" },
+  { icon: ShoppingBag, value: "200+", label: "Bundles Shipped Daily" },
+  { icon: Star, value: "4.8/5", label: "Average Rating" },
+  { icon: Award, value: "5+", label: "Years in Fashion" },
 ];
 
 const staggerContainer = {
@@ -50,16 +50,16 @@ const AboutStats = () => {
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(stat.icon, { className: "h-full w-full" })}

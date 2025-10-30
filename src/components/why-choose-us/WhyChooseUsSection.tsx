@@ -2,9 +2,9 @@
 
 import React from "react";
 import { motion, Easing } from "framer-motion";
-import { ShieldCheck, Truck, Headset, DollarSign, RefreshCw, Award } from "lucide-react";
+import { ShieldCheck, Truck, Headset, DollarSign, RefreshCw, Award, Gem, Sparkles, HeartHandshake, Tag } from "lucide-react"; // Updated icons
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge"; // Import Badge component
+import { Badge } from "@/components/ui/badge";
 
 interface Reason {
   icon: React.ElementType;
@@ -14,34 +14,34 @@ interface Reason {
 
 const reasons: Reason[] = [
   {
-    icon: ShieldCheck,
-    title: "Quality Assurance",
-    description: "Every product is rigorously tested for performance and durability.",
+    icon: Gem,
+    title: "Curated Premium Bundles",
+    description: "Hand-picked luxury thrift and fashion bundles at unbeatable prices.",
+  },
+  {
+    icon: Sparkles,
+    title: "Luxury Feel, Everyday Comfort",
+    description: "Experience high-end fashion designed for your daily comfort.",
   },
   {
     icon: Truck,
-    title: "Fast & Reliable Shipping",
-    description: "Get your tech delivered quickly and safely to your doorstep.",
-  },
-  {
-    icon: Headset,
-    title: "24/7 Customer Support",
-    description: "Our dedicated team is always here to help you with any queries.",
-  },
-  {
-    icon: DollarSign,
-    title: "Competitive Pricing",
-    description: "Enjoy the best deals and value for your money on all electronics.",
+    title: "Fast Nationwide Delivery",
+    description: "Get your unique wears delivered quickly and safely across Nigeria.",
   },
   {
     icon: RefreshCw,
-    title: "Hassle-Free Returns",
-    description: "Easy and straightforward return policy for your peace of mind.",
+    title: "Easy Returns & Exchanges",
+    description: "Hassle-free policy for your peace of mind and satisfaction.",
   },
   {
-    icon: Award,
-    title: "Trusted Brand",
-    description: "Join thousands of satisfied customers who trust ElectroPro.",
+    icon: HeartHandshake,
+    title: "Trusted by Fashion Lovers",
+    description: "Join hundreds of satisfied Nigerian customers who love our style.",
+  },
+  {
+    icon: Tag,
+    title: "Unbeatable Value",
+    description: "Enjoy premium quality and unique styles without breaking the bank.",
   },
 ];
 
@@ -74,19 +74,19 @@ const WhyChooseUsSection = () => {
         {/* Header (Title, Description, Badge) */}
         <div className="text-center mb-16">
           <motion.div variants={fadeInUp}>
-            <Badge variant="outline" className="mb-4 text-xs">Your Trusted Tech Partner</Badge>
+            <Badge variant="outline" className="mb-4 text-xs">Your Futuristic Fashion Hub</Badge>
           </motion.div>
           <motion.h2
             className="font-poppins font-bold text-sm md:text-5xl lg:text-2xl text-foreground mb-6"
             variants={fadeInUp}
           >
-            Why Choose ElectroPro?
+            Why Choose Unique Emporium?
           </motion.h2>
           <motion.p
             className="text-xs lg:text-sm text-muted-foreground max-w-3xl mx-auto"
             variants={fadeInUp}
           >
-            Experience the difference with our commitment to quality, service, and innovation.
+            Experience the difference with our commitment to unique style, quality, and exceptional service.
           </motion.p>
         </div>
 
@@ -97,8 +97,8 @@ const WhyChooseUsSection = () => {
           variants={fadeInUp}
         >
           <img
-            src="/my-banner.webp" // Updated to use my-banner.webp
-            alt="Why Choose Us Banner"
+            src="/my-banner.webp"
+            alt="Unique Emporium Fashion Advantage"
             className="w-full h-full object-cover object-center"
           />
         </motion.div>
@@ -111,8 +111,8 @@ const WhyChooseUsSection = () => {
             variants={fadeInUp}
           >
             <img
-              src="https://images.pexels.com/photos/6407435/pexels-photo-6407435.jpeg" // Updated image source
-              alt="ElectroPro Advantage"
+              src="https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Fashion-related image
+              alt="Unique Emporium Advantage"
               className="w-full h-full object-cover object-center"
             />
           </motion.div>
@@ -128,16 +128,16 @@ const WhyChooseUsSection = () => {
                 <motion.div
                   className="mb-2 sm:mb-4 lg:mb-2"
                   animate={{
-                    y: [0, -5, 0], // Vertical float
-                    rotateX: [0, 5, 0], // Subtle X-axis rotation
-                    rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                    y: [0, -5, 0],
+                    rotateX: [0, 5, 0],
+                    rotateZ: [0, 2, 0],
                   }}
                   transition={{
                     duration: 3,
                     ease: "easeInOut" as Easing,
                     repeat: Infinity,
                     repeatType: "reverse",
-                    delay: index * 0.1, // Stagger the icon animation
+                    delay: index * 0.1,
                   }}
                 >
                   {React.createElement(reason.icon, { className: "h-6 w-6 sm:h-8 sm:w-8 lg:h-5 lg:w-5 text-primary mx-auto" })}

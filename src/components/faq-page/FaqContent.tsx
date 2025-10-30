@@ -18,22 +18,22 @@ const faqItems: FaqItem[] = [
   {
     question: "What payment methods do you accept?",
     answer:
-      "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers. We also offer installment plans through our financing partners.",
+      "We accept all major debit/credit cards (Visa, MasterCard), bank transfers, and mobile money options. We aim to provide convenient payment solutions for our Nigerian customers.",
   },
   {
-    question: "How long does shipping take?",
+    question: "How long does shipping take within Nigeria?",
     answer:
-      "Standard shipping typically takes 3-5 business days. Expedited shipping options are available at checkout for faster delivery, usually within 1-2 business days.",
+      "Standard shipping within Nigeria typically takes 3-7 business days, depending on your location. Expedited shipping options may be available for faster delivery in select cities.",
   },
   {
-    question: "What is your return policy?",
+    question: "What is your return policy for fashion items?",
     answer:
-      "We offer a 30-day hassle-free return policy for most products. Items must be in their original condition and packaging. Please refer to our full Returns & Exchanges policy for more details.",
+      "We offer a 7-day hassle-free return policy for most fashion items, provided they are in their original condition with tags attached. For thrift items, returns are accepted only if the item is significantly not as described. Please refer to our full Returns & Exchanges policy for more details.",
   },
   {
     question: "Do you offer international shipping?",
     answer:
-      "Yes, we ship to many international destinations. Shipping costs and delivery times vary by country. You can check if we ship to your location and estimate costs during checkout.",
+      "Currently, we focus on serving our Nigerian customers with nationwide delivery. We are exploring international shipping options for the future.",
   },
   {
     question: "How can I track my order?",
@@ -41,9 +41,14 @@ const faqItems: FaqItem[] = [
       "Once your order is shipped, you will receive a confirmation email with a tracking number. You can use this number on our website's 'Track Order' page or directly on the courier's website.",
   },
   {
-    question: "Do products come with a warranty?",
+    question: "Are your thrift items truly high-quality?",
     answer:
-      "All new products come with a manufacturer's warranty, typically for one year. Extended warranty options are also available for purchase on select items.",
+      "Yes! We pride ourselves on curating only premium luxury thrift items. Each piece undergoes a rigorous inspection process to ensure it meets our high standards for quality, condition, and style.",
+  },
+  {
+    question: "How do your fashion bundles work?",
+    answer:
+      "Our fashion bundles are carefully curated collections of complementary items (e.g., a top, a bottom, and an accessory) designed to create a complete, stylish outfit at an unbeatable price. They are perfect for refreshing your wardrobe effortlessly.",
   },
 ];
 

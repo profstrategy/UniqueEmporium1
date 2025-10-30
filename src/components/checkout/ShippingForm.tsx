@@ -13,7 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Zod schema for shipping information
 const shippingSchema = z.object({
   firstName: z.string().min(1, "First Name is required"),
   lastName: z.string().min(1, "Last Name is required"),
@@ -26,7 +25,7 @@ const shippingSchema = z.object({
   zipCode: z.string().min(1, "Zip Code is required"),
 });
 
-export type ShippingFormData = z.infer<typeof shippingSchema>; // Export type for use in Checkout page
+export type ShippingFormData = z.infer<typeof shippingSchema>;
 
 interface ShippingFormProps {
   onNext: (data: ShippingFormData) => void;
@@ -66,7 +65,6 @@ const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
   const selectedState = watch("state");
 
   const onSubmit = async (data: ShippingFormData) => {
-    // Simulate API call if needed, but for now just pass data to next step
     onNext(data);
   };
 

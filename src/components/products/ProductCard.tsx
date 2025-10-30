@@ -4,17 +4,17 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, Easing, RepeatType } from "framer-motion";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Cpu, MemoryStick, HardDrive, Loader2 } from "lucide-react";
+import { Star, Heart, ShoppingCart, ChevronLeft, ChevronRight, Scale, Shirt, Baby, Gem, Ruler, Palette, Tag, Loader2 } from "lucide-react"; // Updated icons
 import useEmblaCarousel from "embla-carousel-react";
 import FloatingTag from "@/components/common/FloatingTag.tsx";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
+import { useCompare } from "@/context/CompareContext.tsx";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface Product {
   id: string;
@@ -25,7 +25,7 @@ export interface Product {
   originalPrice?: number;
   discountPercentage?: number;
   rating: number;
-  reviewCount: number; // Renamed from 'reviews'
+  reviewCount: number;
   tag?: string;
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
@@ -50,11 +50,10 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const isMobile = useIsMobile();
   const { addToCart } = useCart();
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
-  const { addToCompare, removeFromCompare, isInComparison } = useCompare(); // Use CompareContext
+  const { addToCompare, removeFromCompare, isInComparison } = useCompare();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // State to track loading status of each image
   const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -75,7 +74,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
     };
   }, [emblaApi, onSelect]);
 
-  // Initialize image loading states when product changes
   useEffect(() => {
     const initialLoadingStates: Record<string, boolean> = {};
     product.images.forEach(image => {
@@ -89,11 +87,9 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   }, []);
 
   const handleImageError = useCallback((imageUrl: string) => {
-    // Even if there's an error, stop showing the skeleton
     setImageLoadingStates(prev => ({ ...prev, [imageUrl]: false }));
   }, []);
 
-  // Auto-scrolling logic for specs row on desktop hover
   useEffect(() => {
     let animationFrameId: number;
     let lastTimestamp: DOMHighResTimeStamp;
@@ -143,15 +139,15 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
     : 0;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click if it has one
+    e.stopPropagation();
     setIsAddingToCart(true);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
     addToCart(product);
     setIsAddingToCart(false);
   };
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click if it has one
+    e.stopPropagation();
     if (isFavorited(product.id)) {
       removeFavorite(product.id);
     } else {
@@ -160,7 +156,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   };
 
   const handleToggleCompare = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click if it has one
+    e.stopPropagation();
     if (isInComparison(product.id)) {
       removeFromCompare(product.id);
     } else {
@@ -169,7 +165,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   };
 
   const handleCardClick = () => {
-    // Only navigate if not on mobile, as mobile has dedicated buttons/links
     if (!isMobile) {
       navigate(`/products/${product.id}`);
     }
@@ -184,10 +179,10 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       initial={disableEntryAnimation ? null : "hidden"}
       whileInView={disableEntryAnimation ? null : "visible"}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative h-[420px] flex flex-col cursor-pointer" // Added cursor-pointer
+      className="relative h-[420px] flex flex-col cursor-pointer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={handleCardClick} // Added onClick to the entire card
+      onClick={handleCardClick}
       whileHover={{
         y: -8,
         boxShadow: "0 20px 30px rgba(0, 0, 0, 0.25)",
@@ -201,7 +196,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
         {/* Product Image Area */}
         <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
-          {/* The Link component is still here for semantic purposes and direct clicks */}
           <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
             <div className="embla h-full" ref={emblaRef}>
               <div className="embla__container flex h-full">
@@ -318,7 +312,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               <Scale className={cn("h-4 w-4", inComparison && "fill-primary text-primary")} />
             </Button>
           </div>
-        </div> {/* End of image area div */}
+        </div>
 
         <CardContent className="p-4 flex flex-col flex-grow text-left">
           {/* Category Text */}
@@ -327,7 +321,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </span>
 
           {/* Product Name */}
-          <Link to={`/products/${product.id}`} onClick={(e) => e.stopPropagation()}> {/* Added stopPropagation */}
+          <Link to={`/products/${product.id}`} onClick={(e) => e.stopPropagation()}>
             <h3 className="font-poppins font-semibold text-sm text-card-foreground line-clamp-2 mb-2 hover:text-primary transition-colors">
               {product.name}
             </h3>
@@ -338,7 +332,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             <p className="font-bold text-base text-primary">
               {product.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
             </p>
-            {/* Original price and discount for desktop - remains here, hidden on mobile */}
             <span className="hidden md:flex items-center gap-2">
               {product.originalPrice && product.price < product.originalPrice && (
                 <>
@@ -394,7 +387,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
             {/* Desktop-specific layout: View Details link and favorite icon */}
             <div className="hidden md:flex items-center justify-between">
-              <Link to={`/products/${product.id}`} className="inline-flex" onClick={(e) => e.stopPropagation()}> {/* Added stopPropagation */}
+              <Link to={`/products/${product.id}`} className="inline-flex" onClick={(e) => e.stopPropagation()}>
                 <span className="text-xs text-muted-foreground hover:underline">View Details</span>
               </Link>
               <Button

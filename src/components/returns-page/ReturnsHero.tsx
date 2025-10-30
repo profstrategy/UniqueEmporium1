@@ -22,10 +22,10 @@ const ReturnsHero = () => {
           Our Promise
         </Badge>
         <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Returns & Refunds Policy
+          Hassle-Free Returns & Refunds
         </h1>
         <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-          Understand our straightforward process for returns, exchanges, and refunds to ensure your peace of mind.
+          Understand our straightforward process for returns, exchanges, and refunds to ensure your peace of mind with every unique wear.
         </p>
       </motion.div>
     </section>

@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, DollarSign, Package, Clock, ShieldCheck, XCircle } from "lucide-react";
+import { RefreshCw, DollarSign, Package, Clock, ShieldCheck, XCircle, Tag } from "lucide-react"; // Added Tag icon
 
 interface PolicyInfo {
   icon: React.ElementType;
@@ -14,8 +14,8 @@ interface PolicyInfo {
 const policyInfos: PolicyInfo[] = [
   {
     icon: RefreshCw,
-    title: "30-Day Returns",
-    description: "Most products can be returned within 30 days of purchase for a full refund or exchange.",
+    title: "7-Day Returns",
+    description: "Most fashion items can be returned within 7 days of purchase for a full refund or exchange.",
   },
   {
     icon: DollarSign,
@@ -25,7 +25,7 @@ const policyInfos: PolicyInfo[] = [
   {
     icon: Package,
     title: "Original Condition",
-    description: "Items must be returned in their original packaging, unused, and with all accessories.",
+    description: "Items must be returned in their original packaging, unused, and with all tags attached.",
   },
   {
     icon: Clock,
@@ -33,14 +33,14 @@ const policyInfos: PolicyInfo[] = [
     description: "Refunds are typically processed within 5-7 business days after receiving the returned item.",
   },
   {
-    icon: ShieldCheck,
-    title: "Warranty Claims",
-    description: "Defective products beyond the return window may be covered by manufacturer warranty.",
+    icon: Tag,
+    title: "Thrift Item Policy",
+    description: "Thrift items are returnable only if significantly not as described. Please check descriptions carefully.",
   },
   {
     icon: XCircle,
     title: "Non-Returnable Items",
-    description: "Certain items like software, gift cards, and personalized products are non-returnable.",
+    description: "Certain items like personalized fashion, intimate wear, or final sale items are non-returnable.",
   },
 ];
 
@@ -76,16 +76,16 @@ const ReturnsPolicyCards = () => {
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(info.icon, { className: "h-full w-full" })}

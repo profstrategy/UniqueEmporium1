@@ -7,9 +7,9 @@ import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext.tsx";
 
 interface OrderSummaryCardProps {
-  vatRate?: number; // e.g., 0.075 for 7.5%
-  freeShippingThreshold?: number; // e.g., 500000 for ₦500,000
-  shippingCost?: number; // Base shipping cost if not free
+  vatRate?: number;
+  freeShippingThreshold?: number;
+  shippingCost?: number;
 }
 
 const fadeInUp = {
@@ -18,9 +18,9 @@ const fadeInUp = {
 };
 
 const OrderSummaryCard = ({
-  vatRate = 0.075,
-  freeShippingThreshold = 500000,
-  shippingCost = 5000, // Default shipping cost ₦5,000
+  vatRate = 0.075, // 7.5% VAT
+  freeShippingThreshold = 100000, // Free shipping over ₦100,000
+  shippingCost = 3500, // Base shipping cost ₦3,500
 }: OrderSummaryCardProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 

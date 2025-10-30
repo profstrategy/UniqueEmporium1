@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Heart, Scale, ChevronDown, Laptop, Tablet, Headphones, Home, Info, Mail, LayoutGrid } from "lucide-react";
+import { Menu, X, Search, Heart, Scale, ChevronDown, Shirt, Baby, Gem, ShoppingBag } from "lucide-react"; // Updated icons for fashion
 import Badge from "@/components/common/Badge.tsx";
 import CartIcon from "@/components/common/CartIcon.tsx";
 import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
@@ -14,7 +14,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { useCompare } from "@/context/CompareContext.tsx"; // Import useCompare
+import { useCompare } from "@/context/CompareContext.tsx";
+import UniqueEmporiumLogo3D from "@/components/logo/UniqueEmporiumLogo3D.tsx"; // Import new logo
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
@@ -22,12 +23,11 @@ interface HeaderProps {
 }
 
 const categories = [
-  { name: "Laptops", icon: Laptop, link: "/products?category=laptops" },
-  { name: "Tablets", icon: Tablet, link: "/products?category=tablets" },
-  { name: "Audio", icon: Headphones, link: "/products?category=audio" },
-  { name: "Monitors", icon: LayoutGrid, link: "/products?category=monitors" },
-  { name: "Accessories", icon: LayoutGrid, link: "/products?category=accessories" },
-  { name: "Smart Home", icon: Home, link: "/products?category=smart-home" },
+  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=shein-gowns" },
+  { name: "Vintage Shirts", icon: Shirt, link: "/products?category=vintage-shirts" },
+  { name: "Kids' Jeans", icon: Baby, link: "/products?category=kids-jeans" },
+  { name: "Luxury Thrift", icon: Gem, link: "/products?category=luxury-thrift" },
+  { name: "Fashion Bundles", icon: ShoppingBag, link: "/products?category=fashion-bundles" },
 ];
 
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
@@ -37,7 +37,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
-  const { totalCompareItems } = useCompare(); // Get totalCompareItems from CompareContext
+  const { totalCompareItems } = useCompare();
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -59,9 +59,9 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2" onClick={handleLogoClick}>
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-sm">
-              EP
+              UE
             </div>
-            <span className="font-poppins font-bold text-xl text-foreground">ElectroPro</span>
+            <span className="font-poppins font-bold text-xl text-foreground">Unique Emporium</span>
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -80,7 +80,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                 `text-foreground transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary"}`
               }
             >
-              Electronics
+              Shop All
             </NavLink>
 
             {/* Categories Dropdown (Desktop) */}
@@ -137,7 +137,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               <Button variant="ghost" size="icon">
                 <Scale className="h-5 w-5" />
               </Button>
-              <Badge count={totalCompareItems} variant="secondary" /> {/* Use totalCompareItems */}
+              <Badge count={totalCompareItems} variant="secondary" />
             </Link>
 
             <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
@@ -163,7 +163,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         favoriteCount={totalFavorites}
-        compareCount={totalCompareItems} // Pass totalCompareItems
+        compareCount={totalCompareItems}
         itemCount={totalItems}
       />
 

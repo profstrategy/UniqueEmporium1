@@ -20,10 +20,10 @@ const WarrantyCTA = () => {
       viewport={{ once: true, amount: 0.3 }}
     >
       <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
-        Need Assistance with Your Warranty?
+        Need Assistance with Your Unique Wear's Quality?
       </h2>
       <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
-        Our customer support team is ready to help you with any warranty-related questions or claims.
+        Our customer support team is ready to help you with any quality-related questions or concerns.
       </p>
       <Button asChild size="lg">
         <Link to="/contact">Contact Us</Link>

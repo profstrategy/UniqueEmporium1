@@ -22,14 +22,14 @@ const AboutStory = () => {
         >
           <Badge variant="outline" className="mb-4 text-sm">Our Story</Badge>
           <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-foreground">
-            From a Vision to a Digital Reality
+            From a Vision to a Fashion Reality
           </h2>
           <div className="space-y-4 text-base text-muted-foreground">
             <p>
-              ElectroPro began with a simple idea: to make cutting-edge technology accessible to everyone. Founded by a team of passionate tech enthusiasts, we set out to create a platform that not only offers the best products but also provides an exceptional shopping experience.
+              Unique Emporium began with a simple idea: to make luxury thrift and unique fashion accessible to everyone in Nigeria. Founded by a team of passionate fashion enthusiasts, we set out to create a platform that not only offers the best curated bundles but also provides an exceptional shopping experience.
             </p>
             <p>
-              Over the years, we've grown from a small startup to a trusted name in electronics retail. Our commitment to quality, customer satisfaction, and staying ahead of technological trends has been the driving force behind our success. We continuously strive to expand our curated selection, ensuring you always find the perfect device for your needs.
+              Over the years, we've grown from a small startup to a trusted name in online fashion retail. Our commitment to quality, customer satisfaction, and staying ahead of fashion trends has been the driving force behind our success. We continuously strive to expand our curated selection, ensuring you always find the perfect style to express your uniqueness.
             </p>
           </div>
         </motion.div>
@@ -41,7 +41,7 @@ const AboutStory = () => {
         >
           <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
             <img
-              src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // New image for About Story
+              src="https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Fashion-related image
               alt="Our Story"
               className="w-full h-full object-cover"
             />

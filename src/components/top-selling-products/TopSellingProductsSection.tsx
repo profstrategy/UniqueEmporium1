@@ -3,20 +3,20 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, TrendingUp, Shirt } from "lucide-react"; // Changed icon to Shirt
 import useEmblaCarousel from "embla-carousel-react";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
-import { mockProducts, ProductDetails } from "@/data/products.ts"; // Import mockProducts
-import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx"; // Import ProductCardSkeleton
+import { mockProducts, ProductDetails } from "@/data/products.ts";
+import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 
 // Hand-pick some products to represent "Top Selling"
 const topSellingProductIds = [
-  "zenbook-pro-14-oled",
-  "soundwave-noise-cancelling-headphones",
-  "gaming-beast-desktop-pc",
-  "powercharge-100w-gan-charger",
-  "galaxy-tab-s9-ultra",
-  "smartwatch-xtreme",
+  "shein-floral-maxi-gown",
+  "vintage-graphic-tee-90s",
+  "ladies-fashion-bundle-casual",
+  "kids-distressed-denim-jeans",
+  "luxury-thrift-silk-scarf",
+  "mens-fashion-bundle-streetwear",
 ];
 
 const getTopSellingProducts = (): Promise<Product[]> => {
@@ -26,7 +26,7 @@ const getTopSellingProducts = (): Promise<Product[]> => {
         .map(id => mockProducts.find(p => p.id === id))
         .filter((product): product is ProductDetails => product !== undefined);
       resolve(products);
-    }, 700); // Simulate API call delay
+    }, 700);
   });
 };
 
@@ -54,7 +54,7 @@ const TopSellingProductsSection = () => {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [productsToDisplay, setProductsToDisplay] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
@@ -77,7 +77,7 @@ const TopSellingProductsSection = () => {
   }, [emblaApi, onSelect]);
 
   if (productsToDisplay.length === 0 && !loading) {
-    return null; // Don't render if no top-selling products and not loading
+    return null;
   }
 
   return (
@@ -92,7 +92,7 @@ const TopSellingProductsSection = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-primary" /> Top Selling Products
+            <Shirt className="h-6 w-6 text-primary" /> Top Selling Styles
           </h2>
           <div className="flex gap-2">
             <Button variant="outline" size="icon" onClick={scrollPrev} disabled={!canScrollPrev || loading}>
@@ -108,7 +108,7 @@ const TopSellingProductsSection = () => {
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-2 sm:gap-4">
             {loading
-              ? Array.from({ length: 4 }).map((_, i) => ( // Show 4 skeletons while loading
+              ? Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="flex-shrink-0 w-[calc(50%-4px)] sm:w-[280px]">
                     <ProductCardSkeleton />
                   </div>

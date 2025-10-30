@@ -22,10 +22,10 @@ const ShippingHero = () => {
           Delivery Details
         </Badge>
         <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Shipping & Delivery
+          Nationwide Shipping & Delivery
         </h1>
         <p className="text-lg md:text-lg text-muted-foreground max-w-3xl mx-auto">
-          Everything you need to know about our shipping options, delivery times, and tracking your order.
+          Everything you need to know about our shipping options, delivery times, and tracking your unique fashion order within Nigeria.
         </p>
       </motion.div>
     </section>

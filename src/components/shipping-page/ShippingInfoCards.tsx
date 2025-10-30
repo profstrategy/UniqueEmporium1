@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Truck, Clock, Globe, Package, MapPin, ShieldCheck } from "lucide-react";
+import { Truck, Clock, Package, MapPin, ShieldCheck, Globe } from "lucide-react"; // Added Globe for clarity
 
 interface ShippingInfo {
   icon: React.ElementType;
@@ -14,33 +14,33 @@ interface ShippingInfo {
 const shippingInfos: ShippingInfo[] = [
   {
     icon: Truck,
-    title: "Fast & Reliable Shipping",
-    description: "We partner with leading carriers to ensure your order arrives quickly and safely.",
+    title: "Fast & Reliable Delivery",
+    description: "We partner with trusted logistics to ensure your fashion order arrives quickly and safely.",
   },
   {
     icon: Clock,
     title: "Estimated Delivery Times",
-    description: "Standard shipping: 3-5 business days. Expedited: 1-2 business days.",
+    description: "Standard shipping: 3-7 business days within Nigeria. Varies by location.",
   },
   {
     icon: Globe,
-    title: "International Shipping",
-    description: "We ship worldwide! Rates and times vary by destination. Check during checkout.",
+    title: "Nationwide Coverage",
+    description: "We deliver to all states and major cities across Nigeria.",
   },
   {
     icon: Package,
     title: "Order Tracking",
-    description: "Receive a tracking number via email once your order is dispatched.",
+    description: "Receive a tracking number via email once your fashion bundle is dispatched.",
   },
   {
     icon: MapPin,
     title: "Local Pickup Options",
-    description: "Select items are available for in-store pickup at our showroom.",
+    description: "Select items may be available for in-store pickup at our Lagos showroom.",
   },
   {
     icon: ShieldCheck,
     title: "Secure Packaging",
-    description: "All products are carefully packed to prevent damage during transit.",
+    description: "All unique wears are carefully packed to prevent damage during transit.",
   },
 ];
 
@@ -76,16 +76,16 @@ const ShippingInfoCards = () => {
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(info.icon, { className: "h-full w-full" })}

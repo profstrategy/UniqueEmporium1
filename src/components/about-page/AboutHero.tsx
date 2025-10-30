@@ -20,10 +20,10 @@ const AboutHero = () => {
       >
         <Badge variant="outline" className="mb-4 text-sm">Our Journey</Badge>
         <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Empowering Your Digital Life
+          Unveiling Your Unique Style
         </h1>
         <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          At ElectroPro, we believe in the power of technology to transform lives. We're dedicated to bringing you the latest innovations with unparalleled service.
+          At Unique Emporium, we believe in the power of fashion to express individuality. We're dedicated to bringing you curated luxury thrift and fashion bundles with unparalleled service.
         </p>
       </motion.div>
     </section>

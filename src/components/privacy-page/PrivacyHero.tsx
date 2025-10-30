@@ -25,7 +25,7 @@ const PrivacyHero = () => {
           Privacy Policy
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Understand how we collect, use, protect, and manage your personal information.
+          Understand how we collect, use, protect, and manage your personal information at Unique Emporium.
         </p>
       </motion.div>
     </section>

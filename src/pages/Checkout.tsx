@@ -7,17 +7,16 @@ import CheckoutProgress from "@/components/checkout/CheckoutProgress.tsx";
 import OrderSummaryCard from "@/components/checkout/OrderSummaryCard.tsx";
 import EmptyCartState from "@/components/checkout/EmptyCartState.tsx";
 import OrderPlacedState from "@/components/checkout/OrderPlacedState.tsx";
-import ShippingForm from "@/components/checkout/ShippingForm.tsx"; // Import ShippingForm
-import PaymentForm from "@/components/checkout/PaymentForm.tsx"; // Import PaymentForm
-import OrderReview from "@/components/checkout/OrderReview.tsx"; // Import OrderReview
+import ShippingForm from "@/components/checkout/ShippingForm.tsx";
+import PaymentForm from "@/components/checkout/PaymentForm.tsx";
+import OrderReview from "@/components/checkout/OrderReview.tsx";
 import { useCart } from "@/context/CartContext.tsx";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button"; // Added Button import
-import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
-import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
+import { Button } from "@/components/ui/button";
+import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
+import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx";
 
-// Use imported types for consistency
 interface OrderData {
   shipping: ShippingFormData | null;
   payment: PaymentFormData | null;
@@ -45,18 +44,17 @@ const Checkout = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [orderData, setOrderData] = useState<OrderData>({ shipping: null, payment: null });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
-  const [direction, setDirection] = useState(0); // 1 for next, -1 for back
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false); // State for OrderReview button
+  const [direction, setDirection] = useState(0);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
     if (cartItems.length === 0 && !isOrderPlaced) {
       // If cart becomes empty and order isn't placed, redirect or show empty state
-      // For now, we'll just show the empty state.
     }
   }, [cartItems, isOrderPlaced]);
 
-  const handleNextStep = (data: ShippingFormData | PaymentFormData) => { // Use imported types here
+  const handleNextStep = (data: ShippingFormData | PaymentFormData) => {
     setDirection(1);
     if (currentStep === 1) {
       setOrderData((prev) => ({ ...prev, shipping: data as ShippingFormData }));
@@ -74,11 +72,9 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
-    // Simulate API call for placing order
     toast.loading("Placing your order...", { id: "place-order-toast" });
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // In a real app, send orderData and cartItems to backend
     console.log("Order Data:", orderData, "Cart Items:", cartItems);
 
     toast.dismiss("place-order-toast");
@@ -86,10 +82,10 @@ const Checkout = () => {
       description: "You will receive an email confirmation shortly.",
     });
 
-    clearCart(); // Clear cart after successful order
+    clearCart();
     setIsOrderPlaced(true);
     setIsPlacingOrder(false);
-    window.scrollTo(0, 0); // Scroll to top after order is placed
+    window.scrollTo(0, 0);
   };
 
   if (cartItems.length === 0 && !isOrderPlaced) {
@@ -108,7 +104,6 @@ const Checkout = () => {
         return <PaymentForm onNext={handleNextStep} onPrevious={handlePreviousStep} initialData={orderData.payment} />;
       case 3:
         if (!orderData.shipping || !orderData.payment) {
-          // Fallback if somehow review step is reached without data
           return (
             <div className="text-center py-10">
               <p className="text-destructive">Error: Missing shipping or payment information.</p>
@@ -118,8 +113,8 @@ const Checkout = () => {
         }
         return (
           <OrderReview
-            shippingInfo={orderData.shipping!} // Add non-null assertion
-            paymentInfo={orderData.payment!}   // Add non-null assertion
+            shippingInfo={orderData.shipping!}
+            paymentInfo={orderData.payment!}
             onPrevious={handlePreviousStep}
             onPlaceOrder={handlePlaceOrder}
             isPlacingOrder={isPlacingOrder}
@@ -139,7 +134,7 @@ const Checkout = () => {
         {/* Left Column: Forms (2/3 width on desktop) */}
         <motion.div
           className="lg:col-span-2"
-          key={currentStep} // Key for AnimatePresence to detect component change
+          key={currentStep}
           custom={direction}
           variants={formTransitionVariants}
           initial="enter"

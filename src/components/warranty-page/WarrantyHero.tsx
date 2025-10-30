@@ -25,7 +25,7 @@ const WarrantyHero = () => {
           Warranty Information
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Understand the coverage and terms for your ElectroPro products, ensuring peace of mind with every purchase.
+          Understand the coverage and terms for your Unique Emporium purchases, ensuring peace of mind with every unique wear.
         </p>
       </motion.div>
     </section>

@@ -6,13 +6,13 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext.tsx";
-import { Product } from "@/components/products/ProductCard.tsx"; // Import Product interface
-import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx"; // Import ShippingFormData type
-import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx"; // Import PaymentFormData type
+import { Product } from "@/components/products/ProductCard.tsx";
+import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
+import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx";
 
 interface OrderReviewProps {
-  shippingInfo: ShippingFormData; // Use imported type
-  paymentInfo: PaymentFormData;   // Use imported type
+  shippingInfo: ShippingFormData;
+  paymentInfo: PaymentFormData;
   onPrevious: () => void;
   onPlaceOrder: () => void;
   isPlacingOrder: boolean;
@@ -21,9 +21,9 @@ interface OrderReviewProps {
 const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPlacingOrder }: OrderReviewProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 
-  const vatRate = 0.075;
-  const freeShippingThreshold = 500000;
-  const shippingCost = 5000;
+  const vatRate = 0.075; // 7.5% VAT
+  const freeShippingThreshold = 100000; // Free shipping over ₦100,000
+  const shippingCost = 3500; // Base shipping cost ₦3,500
 
   const subtotal = totalPrice;
   const vat = subtotal * vatRate;

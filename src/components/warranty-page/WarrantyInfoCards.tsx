@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { ShieldCheck, Calendar, Wrench, FileText, XCircle, Info } from "lucide-react";
+import { ShieldCheck, Calendar, Wrench, FileText, XCircle, Tag } from "lucide-react"; // Added Tag icon
 
 interface WarrantyInfo {
   icon: React.ElementType;
@@ -14,18 +14,18 @@ interface WarrantyInfo {
 const warrantyInfos: WarrantyInfo[] = [
   {
     icon: ShieldCheck,
-    title: "Standard Warranty",
-    description: "All new products come with a 1-year manufacturer's warranty against defects.",
+    title: "Quality Guarantee",
+    description: "All new fashion items come with a quality guarantee against manufacturing defects.",
   },
   {
     icon: Calendar,
-    title: "Extended Coverage",
-    description: "Optional extended warranty plans are available for purchase on select items.",
+    title: "Thrift Item Assurance",
+    description: "Thrift items are guaranteed to be as described and in excellent condition upon arrival.",
   },
   {
     icon: Wrench,
-    title: "Repair Services",
-    description: "We offer authorized repair services for products under warranty.",
+    title: "Care & Maintenance Tips",
+    description: "We provide guidance on how to care for your unique wears to ensure longevity.",
   },
   {
     icon: FileText,
@@ -35,12 +35,12 @@ const warrantyInfos: WarrantyInfo[] = [
   {
     icon: XCircle,
     title: "Exclusions Apply",
-    description: "Warranty does not cover accidental damage, misuse, or unauthorized repairs.",
+    description: "Warranty does not cover wear and tear, accidental damage, or misuse of fashion items.",
   },
   {
-    icon: Info,
+    icon: Tag,
     title: "Claim Process",
-    description: "Contact our support team with your proof of purchase to initiate a warranty claim.",
+    description: "Contact our support team with your proof of purchase to discuss any quality concerns.",
   },
 ];
 
@@ -76,16 +76,16 @@ const WarrantyInfoCards = () => {
               <motion.div
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
-                  y: [0, -5, 0], // Vertical float
-                  rotateX: [0, 5, 0], // Subtle X-axis rotation
-                  rotateZ: [0, 2, 0], // Subtle Z-axis rotation
+                  y: [0, -5, 0],
+                  rotateX: [0, 5, 0],
+                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,
                   ease: "easeInOut" as Easing,
                   repeat: Infinity,
                   repeatType: "reverse",
-                  delay: index * 0.1, // Stagger the icon animation
+                  delay: index * 0.1,
                 }}
               >
                 {React.createElement(info.icon, { className: "h-full w-full" })}

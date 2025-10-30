@@ -18,13 +18,9 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
-    // Simulate checkout process
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsCheckingOut(false);
-    // In a real app, you'd navigate to checkout page and clear cart there
-    // For now, just clear the cart and show a success message
     clearCart();
-    // toast.success("Checkout successful!", { description: "Your order has been placed." });
   };
 
   return (
@@ -119,7 +115,7 @@ const Cart = () => {
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
             <Button asChild className="w-full text-lg" disabled={cartItems.length === 0 || isCheckingOut}>
-              <Link to="/checkout"> {/* Link to checkout page */}
+              <Link to="/checkout">
                 {isCheckingOut ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...

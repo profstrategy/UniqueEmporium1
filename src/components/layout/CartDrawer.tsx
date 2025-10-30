@@ -18,14 +18,10 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
-    // Simulate checkout process
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsCheckingOut(false);
-    // In a real app, you'd navigate to checkout page and clear cart there
     onClose();
-    // For now, just clear the cart and show a success message
     clearCart();
-    // toast.success("Checkout successful!", { description: "Your order has been placed." });
   };
 
   return (
@@ -93,7 +89,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
             <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
           </div>
           <Button asChild className="w-full mb-2" disabled={cartItems.length === 0 || isCheckingOut}>
-            <Link to="/checkout"> {/* Link to checkout page */}
+            <Link to="/checkout">
               {isCheckingOut ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...

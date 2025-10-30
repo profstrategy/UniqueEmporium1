@@ -3,14 +3,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react"; // Changed icon to Lightbulb for recommendations
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"; // Changed icon to Sparkles for recommendations
 import useEmblaCarousel from "embla-carousel-react";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
-import { mockProducts, getProductById, ProductDetails as ProductDetailsType } from "@/data/products.ts"; // Import mockProducts and getProductById
-import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx"; // Import ProductCardSkeleton
+import { mockProducts, getProductById, ProductDetails as ProductDetailsType } from "@/data/products.ts";
+import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 
 interface RecommendedProductsSectionProps {
-  currentProductId: string; // New prop to receive the ID of the currently viewed product
+  currentProductId: string;
 }
 
 const fadeInUp = {
@@ -22,7 +22,7 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     loop: false,
-    dragFree: true, // Allows free dragging
+    dragFree: true,
     containScroll: "trimSnaps",
   });
 
@@ -37,7 +37,7 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   const onSelect = useCallback((emblaApi: any) => {
     setCanScrollPrev(emblaApi.canScrollPrev());
@@ -53,7 +53,7 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
 
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => { // Simulate loading delay
+    const timer = setTimeout(() => {
       const generateRecommendations = () => {
         const currentProduct = getProductById(currentProductId);
         if (!currentProduct) {
@@ -103,17 +103,16 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
           }
         });
 
-        // Limit to 10 items
         setRecommendedProducts(recommendations.slice(0, 10));
       };
       generateRecommendations();
       setLoading(false);
-    }, 600); // Simulate 600ms loading
+    }, 600);
     return () => clearTimeout(timer);
-  }, [currentProductId]); // Re-run when currentProductId changes
+  }, [currentProductId]);
 
   if (recommendedProducts.length === 0 && !loading) {
-    return null; // Don't render the section if no recommendations and not loading
+    return null;
   }
 
   return (
@@ -128,7 +127,7 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Lightbulb className="h-6 w-6 text-primary" /> Recommended for You
+            <Sparkles className="h-6 w-6 text-primary" /> Recommended for You
           </h2>
           <div className="flex gap-2">
             <Button variant="outline" size="icon" onClick={scrollPrev} disabled={!canScrollPrev || loading}>
@@ -144,7 +143,7 @@ const RecommendedProductsSection = ({ currentProductId }: RecommendedProductsSec
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-2 sm:gap-4">
             {loading
-              ? Array.from({ length: 4 }).map((_, i) => ( // Show 4 skeletons while loading
+              ? Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="flex-shrink-0 w-[calc(50%-4px)] sm:w-[280px]">
                     <ProductCardSkeleton />
                   </div>

@@ -19,21 +19,16 @@ import {
   ArrowUp,
   Loader2,
   CheckCircle2,
-  Laptop,
-  Tablet,
-  Headphones,
-  Home as HomeIcon, // Renamed to avoid conflict with Home page
-  LayoutGrid,
+  Shirt, Baby, Gem, ShoppingBag, // Updated icons for fashion
   Info,
 } from "lucide-react";
 
 const categories = [
-  { name: "Laptops", icon: Laptop, link: "/products?category=laptops" },
-  { name: "Tablets", icon: Tablet, link: "/products?category=tablets" },
-  { name: "Audio", icon: Headphones, link: "/products?category=audio" },
-  { name: "Monitors", icon: LayoutGrid, link: "/products?category=monitors" },
-  { name: "Accessories", icon: LayoutGrid, link: "/products?category=accessories" },
-  { name: "Smart Home", icon: HomeIcon, link: "/products?category=smart-home" },
+  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=shein-gowns" },
+  { name: "Vintage Shirts", icon: Shirt, link: "/products?category=vintage-shirts" },
+  { name: "Kids' Jeans", icon: Baby, link: "/products?category=kids-jeans" },
+  { name: "Luxury Thrift", icon: Gem, link: "/products?category=luxury-thrift" },
+  { name: "Fashion Bundles", icon: ShoppingBag, link: "/products?category=fashion-bundles" },
 ];
 
 const staggerContainer = {
@@ -63,8 +58,6 @@ const Footer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-
-  // Removed footerRef, isInView, and controls as they will be replaced by whileInView on the motion.div
 
   const handleScroll = useCallback(() => {
     if (window.scrollY > 300) {
@@ -104,29 +97,29 @@ const Footer = () => {
           className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 lg:grid-cols-4"
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible" // Changed from animate={controls} to whileInView
-          viewport={{ once: true, amount: 0.1 }} // Added viewport prop for automatic detection
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
         >
           {/* Column 1: Company Info */}
           <motion.div variants={fadeInUp}>
             <Link to="/" className="mb-4 flex items-center space-x-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary-foreground text-primary font-bold text-sm">
-                EP
+                UE
               </div>
-              <span className="font-poppins text-xl font-bold">ElectroPro</span>
+              <span className="font-poppins text-xl font-bold">Unique Emporium</span>
             </Link>
             <p className="mb-4 text-sm text-primary-foreground/80">
-              Your ultimate destination for cutting-edge electronics and unparalleled service.
+              Your ultimate destination for luxury thrift, fashion bundles, and unique wears.
             </p>
             <div className="space-y-2 text-sm text-primary-foreground/80">
               <p className="flex items-center">
-                <Mail className="mr-2 h-4 w-4" /> support@electropro.com
+                <Mail className="mr-2 h-4 w-4" /> support@uniqueemporium.com
               </p>
               <p className="flex items-center">
-                <Phone className="mr-2 h-4 w-4" /> +1 (555) 123-4567
+                <Phone className="mr-2 h-4 w-4" /> +234 (800) 123-4567
               </p>
               <p className="flex items-center">
-                <MapPin className="mr-2 h-4 w-4" /> 123 Tech Ave, Innovation City, TX
+                <MapPin className="mr-2 h-4 w-4" /> 456 Fashion Blvd, Lagos, Nigeria
               </p>
             </div>
           </motion.div>
@@ -148,7 +141,7 @@ const Footer = () => {
                   to="/products"
                   className="hover:text-primary-foreground/60 transition-colors"
                 >
-                  Electronics
+                  Shop All
                 </NavLink>
               </li>
               <li>
@@ -360,15 +353,15 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/20 pt-8 text-center text-sm text-primary-foreground/60 md:flex-row">
-          <p>&copy; {new Date().getFullYear()} ElectroPro. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Unique Emporium. All rights reserved.</p>
           <p>
             <a
-              href="#" // Updated href
+              href="https://www.dyad.sh/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary-foreground transition-colors"
             >
-              Built with ❤️ by [Web-Aura] {/* Updated text */}
+              Built with ❤️ by Dyad
             </a>
           </p>
         </div>

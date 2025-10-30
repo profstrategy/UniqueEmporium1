@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset, RotateCcw } from "lucide-react";
+import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset, RefreshCw, Gem } from "lucide-react"; // Updated icons
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { ProductDetails as ProductDetailsType } from "@/data/products.ts"; // Corrected import
+import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { toast } from "sonner"; // Using sonner directly
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -19,9 +19,9 @@ interface ProductInfoSectionProps {
 }
 
 const keyFeatures = [
-  { icon: Truck, title: "Fast Delivery", description: "Get it in 2-5 business days" },
-  { icon: ShieldCheck, title: "1 Year Warranty", description: "Manufacturer's guarantee" },
-  { icon: Headset, title: "24/7 Support", description: "Dedicated customer service" },
+  { icon: Truck, title: "Fast Nationwide Delivery", description: "Get it in 2-5 business days" },
+  { icon: RefreshCw, title: "Easy Returns", description: "Hassle-free policy" },
+  { icon: Gem, title: "Premium Quality", description: "Curated luxury thrift" },
 ];
 
 const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
@@ -36,7 +36,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
 
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
     addToCart(product, quantity);
     setIsAddingToCart(false);
   };
@@ -53,13 +53,12 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
     if (navigator.share) {
       navigator.share({
         title: product.name,
-        text: `Check out this amazing product: ${product.name} at ElectroPro!`,
+        text: `Check out this amazing fashion item: ${product.name} at Unique Emporium!`,
         url: window.location.href,
       })
       .then(() => toast.success("Product link shared!"))
       .catch((error) => toast.error(`Failed to share: ${error.message}`));
     } else {
-      // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href)
         .then(() => toast.success("Product link copied to clipboard!"))
         .catch(() => toast.error("Failed to copy link."));
@@ -219,15 +218,15 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
           <div className="text-sm text-muted-foreground space-y-2">
             <p className="flex items-center gap-2">
               <Truck className="h-4 w-4" />
-              Free shipping on orders over ₦500,000
+              Fast nationwide delivery available
             </p>
             <p className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4" />
-              Professional setup assistance available
+              <RefreshCw className="h-4 w-4" />
+              Easy returns & exchanges
             </p>
             <p className="flex items-center gap-2">
-              <RotateCcw className="h-4 w-4" />
-              1-year manufacturer warranty included
+              <Gem className="h-4 w-4" />
+              Curated premium quality
             </p>
           </div>
         </CardContent>

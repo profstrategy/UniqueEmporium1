@@ -20,10 +20,10 @@ const ContactHero = () => {
       >
         <Badge variant="outline" className="mb-4 text-sm">Get in Touch</Badge>
         <h1 className="font-poppins text-xl md:text-6xl font-bold mb-4 md:mb-6 text-foreground">
-          We're Here to Help
+          We're Here to Help You Shine
         </h1>
         <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Have questions, feedback, or need support? Reach out to us, and our dedicated team will assist you promptly.
+          Have questions about our collections, need styling advice, or require support? Reach out to us, and our dedicated team will assist you promptly.
         </p>
       </motion.div>
     </section>

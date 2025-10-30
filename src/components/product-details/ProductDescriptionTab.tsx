@@ -3,12 +3,12 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, Easing } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react"; // Added Sparkles icon
 
 interface ProductDescriptionTabProps {
   description: string;
   keyFeatures: string[];
-  applications: string;
+  styleNotes: string; // Changed 'applications' to 'styleNotes'
 }
 
 const textVariants = {
@@ -21,7 +21,7 @@ const paragraphVariants = {
   visible: { opacity: 1, y: 0, x: 0 },
 };
 
-const ProductDescriptionTab = ({ description, keyFeatures, applications }: ProductDescriptionTabProps) => {
+const ProductDescriptionTab = ({ description, keyFeatures, styleNotes }: ProductDescriptionTabProps) => {
   const paragraphs = description.split('\n').filter(p => p.trim() !== '');
 
   return (
@@ -31,7 +31,7 @@ const ProductDescriptionTab = ({ description, keyFeatures, applications }: Produ
           variants={textVariants}
           initial="hidden"
           animate="visible"
-          className="space-y-6 text-foreground leading-relaxed" // Changed text-muted-foreground to text-foreground
+          className="space-y-6 text-foreground leading-relaxed"
         >
           {paragraphs.map((paragraph, index) => (
             <motion.p key={`desc-p-${index}`} variants={paragraphVariants}>
@@ -41,12 +41,12 @@ const ProductDescriptionTab = ({ description, keyFeatures, applications }: Produ
 
           {keyFeatures && keyFeatures.length > 0 && (
             <div className="mt-6">
-              <motion.h3 className="font-poppins font-semibold text-lg text-foreground mb-3" variants={paragraphVariants}> {/* Added font-poppins */}
+              <motion.h3 className="font-poppins font-semibold text-lg text-foreground mb-3" variants={paragraphVariants}>
                 Key Features
               </motion.h3>
               <ul className="space-y-2">
                 {keyFeatures.map((feature, index) => (
-                  <motion.li key={`feature-${index}`} variants={paragraphVariants} className="flex items-start text-sm text-foreground"> {/* Added text-foreground */}
+                  <motion.li key={`feature-${index}`} variants={paragraphVariants} className="flex items-start text-sm text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-primary mr-2 flex-shrink-0 mt-1" />
                     <span>{feature}</span>
                   </motion.li>
@@ -55,13 +55,13 @@ const ProductDescriptionTab = ({ description, keyFeatures, applications }: Produ
             </div>
           )}
 
-          {applications && (
+          {styleNotes && (
             <div className="mt-6">
-              <motion.h3 className="font-poppins font-semibold text-lg text-foreground mb-3" variants={paragraphVariants}> {/* Added font-poppins */}
-                Applications
+              <motion.h3 className="font-poppins font-semibold text-lg text-foreground mb-3 flex items-center gap-2" variants={paragraphVariants}>
+                <Sparkles className="h-5 w-5 text-secondary" /> Style Notes
               </motion.h3>
               <motion.p variants={paragraphVariants}>
-                {applications}
+                {styleNotes}
               </motion.p>
             </div>
           )}

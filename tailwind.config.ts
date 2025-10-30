@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"], // Added Poppins font family
+        poppins: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -88,7 +88,7 @@ export default {
             height: "0",
           },
         },
-        float: { // Custom float keyframe
+        float: {
           "0%, 100%": { transform: "translateY(0) rotateX(0deg) rotateZ(0deg)" },
           "25%": { transform: "translateY(-3px) rotateX(2deg) rotateZ(1deg)" },
           "75%": { transform: "translateY(3px) rotateX(-2deg) rotateZ(-1deg)" },
@@ -97,7 +97,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        float: "float 3s ease-in-out infinite", // Custom float animation
+        float: "float 3s ease-in-out infinite",
       },
     },
   },
