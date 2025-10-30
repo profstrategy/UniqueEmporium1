@@ -7,11 +7,11 @@ import { Skeleton } from "@/components/ui/skeleton"; // Assuming shadcn Skeleton
 const ProductCardSkeleton = () => {
   return (
     <Card className="relative h-[340px] flex flex-col overflow-hidden rounded-2xl shadow-lg animate-pulse">
-      <div className="relative h-[200px] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+      <div className="relative h-[250px] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
         <Skeleton className="h-full w-full" />
       </div>
 
-      <CardContent className="p-4 flex flex-col flex-grow text-left">
+      <CardContent className="p-2 flex flex-col flex-grow text-left">
         <Skeleton className="h-3 w-1/3 mb-1" /> {/* Category */}
         <Skeleton className="h-5 w-2/3 mb-1" /> {/* Product Name */}
         <Skeleton className="h-4 w-1/4 mb-1" /> {/* Price */}

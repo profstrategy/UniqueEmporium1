@@ -138,7 +138,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
         )}
 
         {/* Product Image Area */}
-        <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
+        <div className="relative h-[250px] w-full overflow-hidden bg-gray-100">
           <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
             <div className="embla h-full" ref={emblaRef}>
               <div className="embla__container flex h-full">
@@ -249,7 +249,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           </div>
         </div>
 
-        <CardContent className="p-4 flex flex-col flex-grow text-left">
+        <CardContent className="p-2 flex flex-col flex-grow text-left">
           {/* Category Text */}
           <span className="text-[0.55rem] text-muted-foreground uppercase tracking-wide truncate mb-1">
             {product.category}
