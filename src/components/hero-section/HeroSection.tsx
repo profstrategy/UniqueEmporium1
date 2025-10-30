@@ -92,7 +92,7 @@ const HeroSection = () => {
           >
             <Button
               asChild
-              className="px-6 py-2 text-base md:px-8 md:py-3 md:text-lg"
+              className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg" // Reduced padding and text size for mobile
             >
               <Link to={heroItem.ctaLink1}>{heroItem.ctaText1}</Link>
             </Button>
