@@ -35,7 +35,6 @@ const HeroIntroBanner = () => {
         >
           Unique Emporium makes luxury fashion accessible, fast, and inspiring.
         </motion.p>
-        {/* Removed the paragraph about exploring collections */}
         <motion.p
           className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-6"
           variants={fadeInUp}
@@ -43,16 +42,7 @@ const HeroIntroBanner = () => {
           Choose Unique Emporium — where luxury meets everyday comfort.
         </motion.p>
 
-        <motion.div
-          className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12"
-          variants={fadeInUp}
-        >
-          <img
-            src="/my-banner.webp"
-            alt="Unique Emporium Fashion Banner"
-            className="w-full h-full object-cover object-center"
-          />
-        </motion.div>
+        {/* Removed the banner image from here */}
       </motion.div>
     </section>
   );

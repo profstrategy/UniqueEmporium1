@@ -121,6 +121,21 @@ const Index = () => {
         </motion.div>
       </section>
 
+      {/* Moved Banner Image */}
+      <motion.div
+        className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12 mb-12 px-4 sm:px-6 lg:px-8"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <img
+          src="/my-banner.webp"
+          alt="Unique Emporium Fashion Banner"
+          className="w-full h-full object-cover object-center"
+        />
+      </motion.div>
+
       {/* Top Selling Products Section (on Home Page) */}
       <motion.div
         className="mt-16"
