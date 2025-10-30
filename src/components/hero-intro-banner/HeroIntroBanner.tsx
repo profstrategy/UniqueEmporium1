@@ -29,20 +29,13 @@ const HeroIntroBanner = () => {
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <motion.p
-          className="text-sm md:text-lg lg:text-xl text-foreground leading-relaxed"
-          variants={fadeInUp}
-        >
-          Unique Emporium makes luxury fashion accessible, fast, and inspiring.
-        </motion.p>
+        {/* Removed the paragraph "Unique Emporium makes luxury fashion accessible, fast, and inspiring." */}
         <motion.p
           className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-6"
           variants={fadeInUp}
         >
           Choose Unique Emporium — where luxury meets everyday comfort.
         </motion.p>
-
-        {/* Removed the banner image from here */}
       </motion.div>
     </section>
   );
