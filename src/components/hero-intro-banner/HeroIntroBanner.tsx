@@ -35,13 +35,7 @@ const HeroIntroBanner = () => {
         >
           Unique Emporium makes luxury fashion accessible, fast, and inspiring.
         </motion.p>
-        <motion.p
-          className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-4"
-          variants={fadeInUp}
-        >
-          Explore the latest SHEIN gowns, vintage shirts, kids’ jeans, and curated fashion bundles with effortless navigation, smart
-          recommendations, and a transparent checkout.
-        </motion.p>
+        {/* Removed the paragraph about exploring collections */}
         <motion.p
           className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-6"
           variants={fadeInUp}

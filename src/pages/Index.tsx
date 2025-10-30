@@ -85,6 +85,13 @@ const Index = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
+          {/* Moved paragraph */}
+          <motion.p
+            className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-4 mb-8" // Adjusted margin-bottom
+            variants={fadeInUp}
+          >
+            Explore the latest SHEIN gowns, vintage shirts, kids’ jeans, and curated fashion bundles with effortless navigation, smart recommendations, and a transparent checkout.
+          </motion.p>
           <motion.h2
             className="font-poppins font-bold text-xl md:text-4xl text-foreground"
             variants={fadeInUp}
