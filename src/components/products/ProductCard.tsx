@@ -141,7 +141,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
             {product.images.length === 0 ? (
               <div className="flex h-full w-full items-center justify-center bg-muted">
-                <img src="/public/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
+                <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
               </div>
             ) : (
               <div className="embla h-full" ref={emblaRef}>
@@ -153,7 +153,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
                       )}
                       {imageStatus[index] === 'failed' ? (
                         <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                          <img src="/public/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
+                          <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
                         </div>
                       ) : (
                         <img
