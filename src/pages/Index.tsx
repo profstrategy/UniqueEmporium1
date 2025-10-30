@@ -77,7 +77,7 @@ const Index = () => {
 
       {/* Moved introductory text before CategoriesSection */}
       <motion.p
-        className="font-semibold text-base md:text-xl lg:text-2xl text-primary max-w-2xl mx-auto text-center mt-12 px-4 sm:px-6 lg:px-8"
+        className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-12 px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
