@@ -1,7 +1,6 @@
 "use client";
 
 import HeroSection from "@/components/hero-section/HeroSection.tsx";
-import HeroIntroBanner from "@/components/hero-intro-banner/HeroIntroBanner.tsx";
 import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
@@ -73,7 +72,6 @@ const Index = () => {
   return (
     <div className="relative min-h-screen w-full">
       <HeroSection />
-      <HeroIntroBanner />
 
       {/* Moved introductory text before CategoriesSection */}
       <motion.p
