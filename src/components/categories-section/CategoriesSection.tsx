@@ -5,6 +5,7 @@ import { motion, Easing } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Shirt, Baby, Gem, ShoppingBag, LucideIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils"; // Import cn for conditional classNames
 
 interface Category {
   name: string;
@@ -86,9 +87,12 @@ const CategoriesSection = () => {
   }, [isPaused, isMobile, scrollSpeed]);
 
   return (
-    <section className="relative py-[0.4rem] bg-gradient-to-b from-primary/10 to-primary/5"> {/* Updated background to a gradient */}
+    <section className="relative py-[0.4rem]"> {/* Removed gradient from section */}
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        className={cn(
+          "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
+          "p-6 rounded-xl bg-primary/5" // Added faint earthy background, padding, and rounded corners
+        )}
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
