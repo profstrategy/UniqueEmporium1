@@ -73,10 +73,10 @@ const HeroSection = () => {
             animate="visible"
             transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }}
           >
-            <h1 className="font-poppins text-base font-bold text-white/90 md:text-xl"> {/* Changed text-lg to text-base for mobile */}
+            <h1 className="font-poppins text-base font-bold text-white/90 md:text-3xl"> {/* Changed text-lg to text-base for mobile */}
               {heroItem.headline}
             </h1>
-            <h2 className="font-poppins text-xs text-white/80 md:text-base mt-2"> {/* Changed text-sm to text-xs for mobile */}
+            <h2 className="font-poppins text-xs text-white/80 md:text-lg mt-2"> {/* Changed text-sm to text-xs for mobile */}
               {heroItem.subHeadline}
             </h2>
           </motion.div>
