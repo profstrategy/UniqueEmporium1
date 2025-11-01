@@ -86,7 +86,7 @@ const CategoriesSection = () => {
   }, [isPaused, isMobile, scrollSpeed]);
 
   return (
-    <section className="py-[0.4rem] bg-primary"> {/* Updated background to bg-primary */}
+    <section className="py-[0.4rem] bg-primary/5"> {/* Updated background to bg-primary/5 */}
       <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         variants={staggerContainer}
