@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import Dialog components
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -19,7 +20,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false); // State to control the zoom dialog
-  const [imageStatus, setImageStatus] = useState<Record<string, 'loading' | 'loaded' | 'failed'>>({});
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -39,22 +39,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     };
   }, [emblaApi, onSelect]);
 
-  useEffect(() => {
-    const initialStatus: Record<string, 'loading' | 'loaded' | 'failed'> = {};
-    images.forEach(image => {
-      initialStatus[image] = 'loading';
-    });
-    setImageStatus(initialStatus);
-  }, [images]);
-
-  const handleImageLoad = useCallback((imageUrl: string) => {
-    setImageStatus(prev => ({ ...prev, [imageUrl]: 'loaded' }));
-  }, []);
-
-  const handleImageError = useCallback((imageUrl: string) => {
-    setImageStatus(prev => ({ ...prev, [imageUrl]: 'failed' }));
-  }, []);
-
   const handleImageClick = () => {
     setIsZoomed(true); // Open the dialog for zoom
   };
@@ -64,9 +48,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
       {/* Main Image Area */}
       <div className="relative h-[300px] sm:h-[400px] md:h-[500px] bg-muted flex items-center justify-center">
         {images.length === 0 ? (
-          <div className="flex h-full w-full items-center justify-center bg-muted">
-            <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
-          </div>
+          <ImageWithFallback src={undefined} alt={productName} containerClassName="h-full w-full" />
         ) : (
           <div
             className="embla h-full w-full relative cursor-pointer group"
@@ -76,23 +58,11 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
             <div className="embla__container flex h-full">
               {images.map((image, index) => (
                 <div className="embla__slide relative flex-none w-full h-full" key={index}>
-                  {imageStatus[image] === 'loading' && (
-                    <Skeleton className="absolute inset-0 h-full w-full" />
-                  )}
-                  {imageStatus[image] === 'failed' ? (
-                    <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                      <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
-                    </div>
-                  ) : (
-                    <img
-                      src={image}
-                      alt={`Product image ${index + 1} of ${productName}`}
-                      className="w-full h-full object-cover"
-                      style={{ opacity: imageStatus[image] === 'loaded' ? 1 : 0 }}
-                      onLoad={() => handleImageLoad(image)}
-                      onError={() => handleImageError(image)}
-                    />
-                  )}
+                  <ImageWithFallback
+                    src={image}
+                    alt={`Product image ${index + 1} of ${productName}`}
+                    containerClassName="h-full w-full"
+                  />
                 </div>
               ))}
             </div>
@@ -147,23 +117,12 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {imageStatus[image] === 'loading' && (
-                <Skeleton className="h-full w-full" />
-              )}
-              {imageStatus[image] === 'failed' ? (
-                <div className="flex h-full w-full items-center justify-center bg-muted">
-                  <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-8 w-8 object-contain opacity-20" />
-                </div>
-              ) : (
-                <img
-                  src={image}
-                  alt={`Thumbnail ${index + 1} of ${productName}`}
-                  className="w-full h-full object-contain"
-                  style={{ opacity: imageStatus[image] === 'loaded' ? 1 : 0 }}
-                  onLoad={() => handleImageLoad(image)}
-                  onError={() => handleImageError(image)}
-                />
-              )}
+              <ImageWithFallback
+                src={image}
+                alt={`Thumbnail ${index + 1} of ${productName}`}
+                containerClassName="h-full w-full"
+                fallbackLogoClassName="h-8 w-8"
+              />
             </motion.button>
           ))}
         </div>
@@ -172,16 +131,14 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
       {/* Zoom Dialog */}
       <Dialog open={isZoomed} onOpenChange={setIsZoomed}>
         <DialogContent className="max-w-4xl p-0 border-none bg-transparent">
-          {images.length > 0 && imageStatus[images[selectedIndex]] !== 'failed' ? (
-            <img
+          {images.length > 0 ? (
+            <ImageWithFallback
               src={images[selectedIndex]}
               alt={`Zoomed view of ${productName}`}
-              className="w-full h-full object-contain max-h-[90vh]"
+              containerClassName="w-full h-full max-h-[90vh]"
             />
           ) : (
-            <div className="flex h-[90vh] w-full items-center justify-center bg-muted">
-              <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
-            </div>
+            <ImageWithFallback src={undefined} alt={productName} containerClassName="h-[90vh] w-full" />
           )}
         </DialogContent>
       </Dialog>

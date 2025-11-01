@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Shirt, Baby, Gem, ShoppingBag, LucideIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils"; // Import cn for conditional classNames
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 interface Category {
   name: string;
@@ -134,10 +135,10 @@ const CategoriesSection = () => {
               <Link to={category.link} className="flex flex-col items-center">
                 {/* Image Container */}
                 <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden shadow-md mb-3 bg-white flex items-center justify-center">
-                  <img
+                  <ImageWithFallback
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-full object-cover"
+                    containerClassName="w-full h-full"
                   />
                 </div>
                 {/* Category Name */}

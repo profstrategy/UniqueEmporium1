@@ -14,6 +14,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { Skeleton } from "@/components/ui/skeleton";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 export interface Product {
   id: string;
@@ -50,8 +51,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const navigate = useNavigate();
 
-  const [imageStatus, setImageStatus] = useState<Record<number, 'loading' | 'loaded' | 'failed'>>({});
-
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
@@ -69,22 +68,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
-
-  useEffect(() => {
-    const initialStatus: Record<number, 'loading' | 'loaded' | 'failed'> = {};
-    product.images.forEach((_, index) => {
-      initialStatus[index] = 'loading';
-    });
-    setImageStatus(initialStatus);
-  }, [product.images]);
-
-  const handleImageLoad = useCallback((index: number) => {
-    setImageStatus(prev => ({ ...prev, [index]: 'loaded' }));
-  }, []);
-
-  const handleImageError = useCallback((index: number) => {
-    setImageStatus(prev => ({ ...prev, [index]: 'failed' }));
-  }, []);
 
   const discount = product.originalPrice && product.price < product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -140,31 +123,17 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
         <div className="relative h-[250px] w-full overflow-hidden bg-gray-100">
           <Link to={`/products/${product.id}`} className="absolute inset-0 z-0">
             {product.images.length === 0 ? (
-              <div className="flex h-full w-full items-center justify-center bg-muted">
-                <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
-              </div>
+              <ImageWithFallback src={undefined} alt={product.name} containerClassName="h-full w-full" />
             ) : (
               <div className="embla h-full" ref={emblaRef}>
                 <div className="embla__container flex h-full">
                   {product.images.map((image, index) => (
                     <div className="embla__slide relative flex-none w-full h-full" key={index}>
-                      {imageStatus[index] === 'loading' && (
-                        <Skeleton className="absolute inset-0 h-full w-full" />
-                      )}
-                      {imageStatus[index] === 'failed' ? (
-                        <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                          <img src="/unique-emporium-logo.png" alt="Unique Emporium Logo" className="h-[140px] w-[140px] object-contain opacity-20" />
-                        </div>
-                      ) : (
-                        <img
-                          src={image}
-                          alt={`${product.name} - Image ${index + 1}`}
-                          className="w-full h-full object-contain transition-opacity duration-300"
-                          style={{ opacity: imageStatus[index] === 'loaded' ? 1 : 0 }}
-                          onLoad={() => handleImageLoad(index)}
-                          onError={() => handleImageError(index)}
-                        />
-                      )}
+                      <ImageWithFallback
+                        src={image}
+                        alt={`${product.name} - Image ${index + 1}`}
+                        containerClassName="h-full w-full"
+                      />
                     </div>
                   ))}
                 </div>

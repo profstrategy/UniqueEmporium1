@@ -4,6 +4,7 @@ import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 interface TeamMember {
   name: string;
@@ -84,10 +85,10 @@ const AboutTeam = () => {
           <motion.div key={index} variants={fadeInUp}>
             <Card className="h-full flex flex-col rounded-2xl">
               <div className="relative h-52 w-full overflow-hidden rounded-t-2xl">
-                <img
+                <ImageWithFallback
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover"
+                  containerClassName="w-full h-full"
                 />
               </div>
               <CardContent className="p-6 text-left flex-grow">

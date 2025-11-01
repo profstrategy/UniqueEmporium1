@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
@@ -40,10 +41,10 @@ const AboutStory = () => {
           viewport={{ once: true, amount: 0.3 }}
         >
           <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
-            <img
+            <ImageWithFallback
               src="https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Fashion-related image
               alt="Our Story"
-              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
             />
           </div>
         </motion.div>
