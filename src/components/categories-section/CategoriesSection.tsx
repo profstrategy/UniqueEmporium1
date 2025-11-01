@@ -27,9 +27,6 @@ const categories: Category[] = [
   { name: "Others", icon: Gem, description: "Miscellaneous wholesale items", link: "/products?category=Others", image: undefined },
 ];
 
-// Duplicate categories to create a seamless loop effect for mobile auto-scrolling
-const loopedCategories = [...categories, ...categories];
-
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
@@ -52,57 +49,21 @@ const fadeInUp = {
 };
 
 const CategoriesSection = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const isMobile = useIsMobile();
-  const scrollSpeed = 1; // Adjust scroll speed as needed
-
-  useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement || !isMobile) { // Only auto-scroll if on mobile
-      return;
-    }
-
-    let animationFrameId: number;
-    let lastTimestamp: DOMHighResTimeStamp;
-
-    const scroll = (timestamp: DOMHighResTimeStamp) => {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const elapsed = timestamp - lastTimestamp;
-
-      if (elapsed > 16 && !isPaused) { // Only scroll if not paused
-        scrollElement.scrollLeft += scrollSpeed;
-        
-        const singleSetWidth = scrollElement.scrollWidth / 2; 
-
-        if (scrollElement.scrollLeft >= singleSetWidth) {
-          scrollElement.scrollLeft = 0;
-        }
-        lastTimestamp = timestamp;
-      }
-      animationFrameId = requestAnimationFrame(scroll);
-    };
-
-    animationFrameId = requestAnimationFrame(scroll);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isPaused, isMobile, scrollSpeed]);
+  // Removed auto-scrolling logic as it was tied to duplicated categories
+  // and is not desired for a single set of cards.
 
   return (
-    <section className="relative py-[0.4rem]"> {/* Removed gradient from section */}
+    <section className="relative py-[0.4rem]">
       <motion.div
         className={cn(
           "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-          "p-6 rounded-xl bg-primary/40" // Changed from bg-primary/5 to bg-primary/40
+          "p-6 rounded-xl bg-primary/40"
         )}
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
-        {/* Existing introductory text - DO NOT REMOVE OR EDIT */}
         <motion.h2
           className="font-poppins font-bold text-xl md:text-4xl text-foreground"
           variants={fadeInUp}
@@ -119,15 +80,12 @@ const CategoriesSection = () => {
         {/* Category Cards Container */}
         <motion.div
           className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 md:gap-4 no-scrollbar"
-          ref={scrollRef}
-          onMouseEnter={() => isMobile && setIsPaused(true)}
-          onMouseLeave={() => isMobile && setIsPaused(false)}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {loopedCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <motion.div
               key={`${category.name}-${index}`}
               variants={itemVariants}
@@ -139,7 +97,7 @@ const CategoriesSection = () => {
                 {/* Image Container */}
                 <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden shadow-md mb-3 bg-white flex items-center justify-center">
                   <ImageWithFallback
-                    src={category.image} // Now explicitly undefined
+                    src={category.image}
                     alt={category.name}
                     containerClassName="w-full h-full"
                   />
