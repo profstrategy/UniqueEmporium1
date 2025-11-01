@@ -86,7 +86,7 @@ const CategoriesSection = () => {
   }, [isPaused, isMobile, scrollSpeed]);
 
   return (
-    <section className="py-12 bg-gray-50"> {/* Updated background and padding */}
+    <section className="py-12 bg-gray-50">
       <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         variants={staggerContainer}
@@ -110,7 +110,7 @@ const CategoriesSection = () => {
 
         {/* Category Cards Container */}
         <motion.div
-          className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 md:gap-4 scrollbar-hide"
+          className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 md:gap-4 no-scrollbar"
           ref={scrollRef}
           onMouseEnter={() => isMobile && setIsPaused(true)}
           onMouseLeave={() => isMobile && setIsPaused(false)}
