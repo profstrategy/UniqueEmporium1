@@ -5,6 +5,7 @@ import { motion, Easing } from "framer-motion";
 import { ShieldCheck, Truck, Headset, DollarSign, RefreshCw, Award, Gem, Sparkles, HeartHandshake, Tag } from "lucide-react"; // Updated icons
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 interface Reason {
   icon: React.ElementType;
@@ -96,10 +97,10 @@ const WhyChooseUsSection = () => {
           className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12 mb-12"
           variants={fadeInUp}
         >
-          <img
+          <ImageWithFallback
             src="/my-banner.webp"
             alt="Unique Emporium Fashion Advantage"
-            className="w-full h-full object-cover object-center"
+            containerClassName="w-full h-full"
           />
         </motion.div>
 
@@ -110,10 +111,10 @@ const WhyChooseUsSection = () => {
             className="hidden lg:block relative h-96 rounded-xl overflow-hidden shadow-xl"
             variants={fadeInUp}
           >
-            <img
+            <ImageWithFallback
               src="https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Fashion-related image
               alt="Unique Emporium Advantage"
-              className="w-full h-full object-cover object-center"
+              containerClassName="w-full h-full"
             />
           </motion.div>
 
