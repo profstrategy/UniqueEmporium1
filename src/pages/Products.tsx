@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Shirt, Baby, Gem, ShoppingBag, SlidersHorizontal } from "lucide-react"; // Removed Scale icon
+import { Search, Shirt, Baby, Gem, ShoppingBag, SlidersHorizontal } from "lucide-react";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -17,11 +17,14 @@ const allProducts: ProductDetails[] = mockProducts;
 
 const categories = [
   { name: "All Categories", value: "all" },
+  { name: "Kids", value: "Kids", icon: Baby },
+  { name: "Kids Patpat", value: "Kids Patpat", icon: Baby },
+  { name: "Children Jeans", value: "Children Jeans", icon: Baby },
+  { name: "Children Shirts", value: "Children Shirts", icon: Baby },
+  { name: "Men Vintage Shirts", value: "Men Vintage Shirts", icon: Shirt },
+  { name: "Amazon Ladies", value: "Amazon Ladies", icon: ShoppingBag },
   { name: "SHEIN Gowns", value: "SHEIN Gowns", icon: Shirt },
-  { name: "Vintage Shirts", value: "Vintage Shirts", icon: Shirt },
-  { name: "Kids' Jeans", value: "Kids' Jeans", icon: Baby },
-  { name: "Luxury Thrift", value: "Luxury Thrift", icon: Gem },
-  { name: "Fashion Bundles", value: "Fashion Bundles", icon: ShoppingBag },
+  { name: "Others", value: "Others", icon: Gem },
 ];
 
 const sortOptions = [
@@ -61,17 +64,19 @@ const Products = () => {
   const [sortBy, setSortBy] = useState("default");
   const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false);
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // New state for initial load
 
   useEffect(() => {
     setCurrentQuery(initialQuery);
     setSelectedCategory(initialCategory);
-    setLoadingProducts(true);
-    const timer = setTimeout(() => {
-      setLoadingProducts(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, [initialQuery, initialCategory]);
+    // Simulate initial load delay only once
+    if (isInitialLoad) {
+      const timer = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [initialQuery, initialCategory, isInitialLoad]); // Added isInitialLoad to dependencies
 
   useEffect(() => {
     const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
@@ -90,14 +95,10 @@ const Products = () => {
       searchParams.set("category", value);
     }
     setSearchParams(searchParams);
-    setLoadingProducts(true);
-    setTimeout(() => setLoadingProducts(false), 800);
   };
 
   const handleSortByChange = (value: string) => {
     setSortBy(value);
-    setLoadingProducts(true);
-    setTimeout(() => setLoadingProducts(false), 800);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -108,8 +109,6 @@ const Products = () => {
       searchParams.delete("query");
     }
     setSearchParams(searchParams);
-    setLoadingProducts(true);
-    setTimeout(() => setLoadingProducts(false), 800);
   };
 
   const filterAndSortProducts = () => {
@@ -150,8 +149,6 @@ const Products = () => {
     setSortBy("default");
     setSearchParams({});
     setIsMobileFilterPanelOpen(false);
-    setLoadingProducts(true);
-    setTimeout(() => setLoadingProducts(false), 800);
   };
 
   const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
@@ -293,11 +290,11 @@ const Products = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="text-muted-foreground text-center mb-8"
       >
-        {loadingProducts ? "Loading products..." : `Showing ${displayedProducts.length} of ${allProducts.length} unique wears`}
+        {isInitialLoad ? "Loading products..." : `Showing ${displayedProducts.length} of ${allProducts.length} unique wears`}
       </motion.p>
 
       {/* Product Grid Display */}
-      {loadingProducts ? (
+      {isInitialLoad ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <ProductCardSkeleton key={i} />

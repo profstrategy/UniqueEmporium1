@@ -23,11 +23,14 @@ interface HeaderProps {
 }
 
 const categories = [
-  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=shein-gowns" },
-  { name: "Vintage Shirts", icon: Shirt, link: "/products?category=vintage-shirts" },
-  { name: "Kids' Jeans", icon: Baby, link: "/products?category=kids-jeans" },
-  { name: "Luxury Thrift", icon: Gem, link: "/products?category=luxury-thrift" },
-  { name: "Fashion Bundles", icon: ShoppingBag, link: "/products?category=fashion-bundles" },
+  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
+  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
+  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
+  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
+  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
+  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
+  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
+  { name: "Others", icon: Gem, link: "/products?category=Others" },
 ];
 
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {

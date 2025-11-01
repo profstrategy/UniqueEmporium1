@@ -17,11 +17,14 @@ interface Category {
 }
 
 const categories: Category[] = [
-  { name: "SHEIN Gowns", icon: Shirt, description: "Elegant & trendy dresses", link: "/products?category=shein-gowns", image: undefined },
-  { name: "Vintage Shirts", icon: Shirt, description: "Unique retro styles", link: "/products?category=vintage-shirts", image: undefined },
-  { name: "Kids' Jeans", icon: Baby, description: "Durable & stylish denim for kids", link: "/products?category=kids-jeans", image: undefined },
-  { name: "Luxury Thrift", icon: Gem, description: "High-end pre-loved fashion", link: "/products?category=luxury-thrift", image: undefined },
-  { name: "Fashion Bundles", icon: ShoppingBag, description: "Curated outfits & collections", link: "/products?category=fashion-bundles", image: undefined },
+  { name: "Kids", icon: Baby, description: "Wholesale kids' fashion", link: "/products?category=Kids", image: undefined },
+  { name: "Kids Patpat", icon: Baby, description: "Patpat brand kids' wear", link: "/products?category=Kids Patpat", image: undefined },
+  { name: "Children Jeans", icon: Baby, description: "Bulk children's denim", link: "/products?category=Children Jeans", image: undefined },
+  { name: "Children Shirts", icon: Baby, description: "Wholesale kids' tops", link: "/products?category=Children Shirts", image: undefined },
+  { name: "Men Vintage Shirts", icon: Shirt, description: "Bulk vintage shirts for men", link: "/products?category=Men Vintage Shirts", image: undefined },
+  { name: "Amazon Ladies", icon: ShoppingBag, description: "Bulk Amazon ladies' wear", link: "/products?category=Amazon Ladies", image: undefined },
+  { name: "SHEIN Gowns", icon: Shirt, description: "Wholesale SHEIN dresses", link: "/products?category=SHEIN Gowns", image: undefined },
+  { name: "Others", icon: Gem, description: "Miscellaneous wholesale items", link: "/products?category=Others", image: undefined },
 ];
 
 // Duplicate categories to create a seamless loop effect for mobile auto-scrolling

@@ -29,6 +29,7 @@ export interface Product {
   tag?: string;
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
+  minOrderQuantity: number; // Added minOrderQuantity
 }
 
 interface ProductCardProps {
@@ -77,7 +78,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
     e.stopPropagation();
     setIsAddingToCart(true);
     await new Promise(resolve => setTimeout(resolve, 500));
-    addToCart(product);
+    addToCart(product, product.minOrderQuantity); // Add minOrderQuantity
     setIsAddingToCart(false);
   };
 
@@ -207,11 +208,16 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               >
                 <Button className="text-sm font-medium" onClick={handleAddToCart} disabled={isAddingToCart}>
                   {isAddingToCart ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Adding {product.minOrderQuantity}
+                    </>
                   ) : (
-                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    <>
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Add {product.minOrderQuantity} to Cart
+                    </>
                   )}
-                  {isAddingToCart ? "Adding..." : "Add to Cart"}
                 </Button>
               </motion.div>
             )}
@@ -262,6 +268,11 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               )}
             </span>
           </div>
+
+          {/* MOQ Display */}
+          <p className="text-xs text-muted-foreground font-medium mb-1">
+            MOQ: {product.minOrderQuantity} pcs
+          </p>
 
           {/* Limited Stock Message */}
           {product.limitedStock && (

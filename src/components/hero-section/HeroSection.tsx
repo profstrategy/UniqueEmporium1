@@ -13,9 +13,9 @@ interface HeroItem {
 }
 
 const heroItem: HeroItem = {
-  headline: "Unveil Your Uniqueness — Luxury Meets Everyday Comfort",
-  subHeadline: "Nigeria’s futuristic fashion hub for SHEIN gowns, vintage shirts, kids’ jeans, and luxury thrift collections. Bold. Timeless. Truly you.",
-  ctaText1: "Shop the Collection",
+  headline: "Unique Emporium | Nigeria’s #1 Wholesale Fashion Hub",
+  subHeadline: "Shop SHEIN gowns, kidswear, and vintage shirts in bulk at unbeatable wholesale prices. Designed for resellers and fashion entrepreneurs across Nigeria.",
+  ctaText1: "Order in Bulk Now",
   ctaLink1: "/products",
 };
 

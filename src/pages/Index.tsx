@@ -13,6 +13,7 @@ import RecentlyViewedProductsSection from "@/components/product-details/Recently
 import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx";
 import React, { useEffect, useState, useRef } from "react";
 import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 // Select specific products from mockProducts to be featured
 const featuredProductIds = [
@@ -80,7 +81,7 @@ const Index = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
       >
-        Choose Unique Emporium — where luxury meets everyday comfort.
+        Luxury Wholesale Fashion for Smart Resellers
       </motion.p>
 
       <CategoriesSection />
@@ -138,10 +139,10 @@ const Index = () => {
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <img
+        <ImageWithFallback
           src="/my-banner.webp"
           alt="Unique Emporium Fashion Banner"
-          className="w-full h-full object-cover object-center"
+          containerClassName="w-full h-full"
         />
       </motion.div>
 

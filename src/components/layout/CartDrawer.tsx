@@ -49,6 +49,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       <p className="text-sm text-muted-foreground">
                         ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                       </p>
+                      <p className="text-xs text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -56,7 +57,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       variant="outline"
                       size="icon"
                       className="h-7 w-7"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity - item.minOrderQuantity)} // Decrement by MOQ
+                      disabled={item.quantity <= item.minOrderQuantity}
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -65,7 +67,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       variant="outline"
                       size="icon"
                       className="h-7 w-7"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity + item.minOrderQuantity)} // Increment by MOQ
                     >
                       <Plus className="h-4 w-4" />
                     </Button>

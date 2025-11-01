@@ -65,6 +65,7 @@ const Cart = () => {
                     <div>
                       <h2 className="font-semibold text-xl">{item.name}</h2>
                       <p className="text-muted-foreground">₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })} each</p>
+                      <p className="text-sm text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
                     </div>
                   </div>
                   <div className="flex items-center gap-4 w-full sm:w-auto justify-between">
@@ -73,7 +74,8 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity - item.minOrderQuantity)} // Decrement by MOQ
+                        disabled={item.quantity <= item.minOrderQuantity}
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
@@ -82,7 +84,7 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity + item.minOrderQuantity)} // Increment by MOQ
                       >
                         <Plus className="h-4 w-4" />
                       </Button>

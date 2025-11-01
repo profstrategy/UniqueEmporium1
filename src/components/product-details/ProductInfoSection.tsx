@@ -25,19 +25,19 @@ const keyFeatures = [
 ];
 
 const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(product.minOrderQuantity); // Initialize with minOrderQuantity
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addToCart } = useCart();
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
 
   const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) => Math.max(1, prev + amount));
+    setQuantity((prev) => Math.max(product.minOrderQuantity, prev + amount * product.minOrderQuantity)); // Increment/decrement by MOQ
   };
 
   const handleAddToCart = async () => {
     setIsAddingToCart(true);
     await new Promise(resolve => setTimeout(resolve, 500));
-    addToCart(product, quantity);
+    addToCart(product, quantity); // Add the current quantity
     setIsAddingToCart(false);
   };
 
@@ -125,6 +125,14 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         )}
       </div>
 
+      {/* MOQ and Wholesale Info */}
+      <p className="text-sm text-foreground font-semibold">
+        MOQ: {product.minOrderQuantity} pcs
+      </p>
+      <p className="text-sm text-muted-foreground italic">
+        Sold in bundles only. Minimum order applies.
+      </p>
+
       {product.limitedStock && (
         <motion.p
           className="text-sm text-red-500 font-medium flex items-center"
@@ -145,14 +153,14 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         <CardContent className="p-0 space-y-6">
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">
-            <Label htmlFor="quantity" className="text-base">Quantity:</Label>
+            <Label htmlFor="quantity" className="text-base">Quantity (in multiples of {product.minOrderQuantity}):</Label>
             <div className="flex items-center border rounded-md">
               <Button
                 variant="outline"
                 size="icon"
                 className="h-10 w-10 rounded-r-none"
                 onClick={() => handleQuantityChange(-1)}
-                disabled={quantity <= 1}
+                disabled={quantity <= product.minOrderQuantity}
               >
                 <Minus className="h-4 w-4" />
               </Button>
@@ -160,9 +168,17 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 id="quantity"
                 type="number"
                 value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                onChange={(e) => {
+                  const newValue = Number(e.target.value);
+                  if (!isNaN(newValue) && newValue >= product.minOrderQuantity && newValue % product.minOrderQuantity === 0) {
+                    setQuantity(newValue);
+                  } else if (newValue < product.minOrderQuantity) {
+                    setQuantity(product.minOrderQuantity);
+                  }
+                }}
                 className="w-16 text-center border-y-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                min={1}
+                min={product.minOrderQuantity}
+                step={product.minOrderQuantity}
               />
               <Button
                 variant="outline"
@@ -188,7 +204,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+                  <ShoppingCart className="mr-2 h-5 w-5" /> Add {quantity} to Cart
                 </>
               )}
             </Button>

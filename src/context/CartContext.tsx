@@ -30,20 +30,23 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const isMobile = useIsMobile();
 
-  const addToCart = useCallback((product: Product, quantityToAdd: number = 1) => {
+  const addToCart = useCallback((product: Product, quantityToAdd: number = product.minOrderQuantity) => {
+    // Ensure quantityToAdd is a multiple of minOrderQuantity
+    const actualQuantityToAdd = Math.max(product.minOrderQuantity, Math.ceil(quantityToAdd / product.minOrderQuantity) * product.minOrderQuantity);
+
     setCartItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex((item) => item.id === product.id);
 
       if (existingItemIndex > -1) {
         const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantityToAdd;
-        toast.success(`${quantityToAdd} x ${product.name} added to cart!`, {
+        updatedItems[existingItemIndex].quantity += actualQuantityToAdd;
+        toast.success(`${actualQuantityToAdd} x ${product.name} added to cart!`, {
           description: `Current quantity: ${updatedItems[existingItemIndex].quantity}`,
         });
         return updatedItems;
       } else {
-        toast.success(`${quantityToAdd} x ${product.name} added to cart!`);
-        return [...prevItems, { ...product, quantity: quantityToAdd }];
+        toast.success(`${actualQuantityToAdd} x ${product.name} added to cart!`);
+        return [...prevItems, { ...product, quantity: actualQuantityToAdd }];
       }
     });
 
@@ -63,13 +66,29 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
     });
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
+  const updateQuantity = useCallback((productId: string, newQuantity: number) => {
     setCartItems((prevItems) => {
-      if (quantity <= 0) {
+      const itemToUpdate = prevItems.find((item) => item.id === productId);
+      if (!itemToUpdate) return prevItems;
+
+      const minOrderQuantity = itemToUpdate.minOrderQuantity;
+      let updatedQuantity = newQuantity;
+
+      // Ensure newQuantity is a multiple of minOrderQuantity
+      if (newQuantity % minOrderQuantity !== 0) {
+        updatedQuantity = Math.ceil(newQuantity / minOrderQuantity) * minOrderQuantity;
+      }
+
+      // Ensure quantity is not less than minOrderQuantity (unless it's 0 for removal)
+      if (updatedQuantity < minOrderQuantity && updatedQuantity !== 0) {
+        updatedQuantity = minOrderQuantity;
+      }
+
+      if (updatedQuantity <= 0) {
         return prevItems.filter((item) => item.id !== productId);
       }
       return prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item,
+        item.id === productId ? { ...item, quantity: updatedQuantity } : item,
       );
     });
   }, []);

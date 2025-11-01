@@ -1,5 +1,20 @@
 import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag, Sun, Watch, Glasses } from "lucide-react"; // Updated icons for fashion
-import { Product } from "@/components/products/ProductCard.tsx";
+
+export interface Product {
+  id: string;
+  name: string;
+  category: string;
+  images: string[];
+  price: number;
+  originalPrice?: number;
+  discountPercentage?: number;
+  rating: number;
+  reviewCount: number;
+  tag?: string;
+  tagVariant?: "default" | "secondary" | "destructive" | "outline";
+  limitedStock?: boolean;
+  minOrderQuantity: number; // Added minOrderQuantity
+}
 
 export interface ProductDetails extends Product {
   fullDescription: string;
@@ -40,6 +55,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "New Arrival",
     tagVariant: "default",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Step out in style with this elegant SHEIN floral maxi gown. Crafted from lightweight, breathable fabric, it features a flattering silhouette and vibrant floral print, perfect for any occasion. Its comfortable fit and chic design make it a must-have for your wardrobe.`,
     keyFeatures: [
       "Flowy, breathable fabric for ultimate comfort",
@@ -78,7 +94,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "vintage-graphic-tee-90s",
     name: "Vintage 90s Graphic T-Shirt",
-    category: "Vintage Shirts",
+    category: "Men Vintage Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -92,6 +108,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Thrift Find",
     tagVariant: "secondary",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Relive the 90s with this authentic vintage graphic t-shirt. Each piece is hand-picked for its unique design and excellent condition, offering a sustainable and stylish addition to your wardrobe. Soft, worn-in cotton ensures maximum comfort.`,
     keyFeatures: [
       "Authentic 90s vintage design",
@@ -129,7 +146,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "kids-distressed-denim-jeans",
     name: "Kids' Stylish Distressed Denim Jeans",
-    category: "Kids' Jeans",
+    category: "Children Jeans", // Updated category
     images: [
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -143,6 +160,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Kids' Fashion",
     tagVariant: "destructive",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Durable and stylish distressed denim jeans for kids. Made from soft, flexible denim, these jeans are perfect for active children, offering both comfort and a trendy look. Features an adjustable waistband for a perfect fit.`,
     keyFeatures: [
       "Soft and flexible denim for active kids",
@@ -180,7 +198,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "ladies-fashion-bundle-casual",
     name: "Ladies' Casual Chic Fashion Bundle",
-    category: "Fashion Bundles",
+    category: "Amazon Ladies", // Updated category
     images: [
       "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -194,6 +212,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Best Seller",
     tagVariant: "destructive",
     limitedStock: false,
+    minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Elevate your everyday style with our Ladies' Casual Chic Fashion Bundle. This curated collection includes a stylish top, comfortable jeans, and a versatile accessory, all designed to create effortless and fashionable outfits. Perfect for the modern Nigerian woman.`,
     keyFeatures: [
       "Curated 3-piece outfit for effortless styling",
@@ -231,7 +250,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "luxury-thrift-silk-scarf",
     name: "Luxury Thrift Silk Scarf (Designer)",
-    category: "Luxury Thrift",
+    category: "Others", // Updated category
     images: [
       "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -245,6 +264,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Premium Thrift",
     tagVariant: "destructive",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Discover a touch of luxury with this exquisite pre-loved silk scarf from a renowned designer. Each scarf is carefully inspected to ensure excellent condition, offering a sustainable way to own high-end fashion. Perfect for adding a sophisticated flair to any outfit.`,
     keyFeatures: [
       "Authentic designer silk scarf",
@@ -295,6 +315,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Trendy",
     tagVariant: "default",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `A playful and chic SHEIN mini dress featuring a delicate ruffle hem. Made from a comfortable, slightly stretchy fabric, this dress is perfect for a casual day out or a fun evening with friends. Its vibrant color and flattering cut will make you stand out.`,
     keyFeatures: [
       "Stylish ruffle hem design",
@@ -333,7 +354,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "vintage-denim-jacket",
     name: "Classic Vintage Denim Jacket",
-    category: "Vintage Shirts", // Broad category for vintage apparel
+    category: "Men Vintage Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1543076447-2159f93a34ee?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1543076447-2159f93a34ee?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -347,6 +368,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Timeless",
     tagVariant: "secondary",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `A timeless classic, this vintage denim jacket is a wardrobe essential. Each piece is hand-selected for its quality and authentic vintage appeal, offering a unique and durable outer layer. Perfect for all seasons and effortlessly stylish.`,
     keyFeatures: [
       "Authentic vintage denim, unique wash",
@@ -384,7 +406,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "kids-graphic-hoodie",
     name: "Kids' Fun Graphic Hoodie",
-    category: "Kids' Jeans", // Broad category for kids' apparel
+    category: "Children Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -398,6 +420,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Cozy",
     tagVariant: "secondary",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Keep your little ones warm and stylish with this fun graphic hoodie. Made from soft, fleece-lined cotton, it's perfect for cooler days and playful adventures. Features a vibrant graphic print and a comfortable fit.`,
     keyFeatures: [
       "Soft, fleece-lined cotton for warmth",
@@ -435,7 +458,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "mens-fashion-bundle-streetwear",
     name: "Men's Urban Streetwear Fashion Bundle",
-    category: "Fashion Bundles",
+    category: "Men Vintage Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -449,6 +472,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Trending",
     tagVariant: "destructive",
     limitedStock: false,
+    minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Curated for the modern man, our Urban Streetwear Fashion Bundle offers a complete look with a stylish tee, comfortable joggers, and a trendy cap. All pieces are selected for their quality, comfort, and contemporary design, perfect for making a statement.`,
     keyFeatures: [
       "Complete 3-piece streetwear outfit",
@@ -486,7 +510,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "kids-fashion-bundle-playtime",
     name: "Kids' Playtime Essentials Fashion Bundle",
-    category: "Fashion Bundles",
+    category: "Kids", // Updated category
     images: [
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -500,6 +524,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Kids' Value",
     tagVariant: "secondary",
     limitedStock: false,
+    minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Our Kids' Playtime Essentials Fashion Bundle is perfect for active little ones. This bundle includes durable t-shirts, comfortable shorts/leggings, and a fun accessory, all designed for maximum comfort and freedom of movement during play.`,
     keyFeatures: [
       "3-piece bundle for everyday play",
@@ -552,6 +577,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Summer Essential",
     tagVariant: "default",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Embrace the sunshine with this light and airy SHEIN midi dress. Featuring a flattering A-line cut and breathable fabric, it's perfect for warm weather. The vibrant print adds a touch of playful elegance to your summer wardrobe.`,
     keyFeatures: [
       "Lightweight and breathable fabric",
@@ -590,7 +616,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "vintage-leather-crossbody-bag",
     name: "Vintage Leather Crossbody Bag",
-    category: "Luxury Thrift",
+    category: "Others", // Updated category
     images: [
       "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -604,6 +630,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Timeless Accessory",
     tagVariant: "destructive",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `A beautifully preserved vintage leather crossbody bag, perfect for adding a touch of classic elegance to any outfit. Crafted from genuine leather, this bag features a durable construction and a timeless design that never goes out of style.`,
     keyFeatures: [
       "Genuine vintage leather material",
@@ -640,7 +667,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "kids-graphic-tshirt-pack",
     name: "Kids' 3-Pack Graphic T-Shirts",
-    category: "Kids' Jeans", // Broad category for kids' apparel
+    category: "Children Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -654,6 +681,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Value Pack",
     tagVariant: "secondary",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `A fantastic value pack of three graphic t-shirts for kids. Made from soft, durable cotton, these shirts feature fun and colorful prints, perfect for everyday wear and play. An essential addition to any child's wardrobe.`,
     keyFeatures: [
       "Pack of 3 unique graphic t-shirts",
@@ -691,7 +719,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "mens-casual-linen-shirt",
     name: "Men's Casual Linen Blend Shirt",
-    category: "Vintage Shirts", // Can fit here for casual/men's tops
+    category: "Men Vintage Shirts", // Updated category
     images: [
       "https://images.unsplash.com/photo-1607345366928-199ea26756c7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1607345366928-199ea26756c7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -705,6 +733,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Breathable",
     tagVariant: "default",
     limitedStock: false,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Stay cool and stylish with this men's casual linen blend shirt. Perfect for warm Nigerian weather, its breathable fabric and relaxed fit offer ultimate comfort. Ideal for both casual outings and semi-formal events.`,
     keyFeatures: [
       "Lightweight and breathable linen blend",
@@ -742,7 +771,7 @@ export const mockProducts: ProductDetails[] = [
   {
     id: "luxury-thrift-designer-sunglasses",
     name: "Luxury Thrift Designer Sunglasses",
-    category: "Luxury Thrift",
+    category: "Others", // Updated category
     images: [
       "https://images.unsplash.com/photo-1508349937151-22b68f72d38c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1508349937151-22b68f72d38c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D",
@@ -756,6 +785,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Exclusive",
     tagVariant: "destructive",
     limitedStock: true,
+    minOrderQuantity: 10, // MOQ
     fullDescription: `Elevate your style with these pre-loved designer sunglasses. Each pair is authenticated and carefully inspected to ensure excellent condition, offering a sustainable way to own high-end eyewear. Protect your eyes in style.`,
     keyFeatures: [
       "Authentic designer eyewear",
@@ -817,6 +847,7 @@ export const getRandomProducts = (count: number, excludeId?: string): Product[] 
     tag: p.tag,
     tagVariant: p.tagVariant,
     limitedStock: p.limitedStock,
+    minOrderQuantity: p.minOrderQuantity, // Include minOrderQuantity
     // Removed specs from here
   }));
 };

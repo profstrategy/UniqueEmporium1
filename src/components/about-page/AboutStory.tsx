@@ -21,16 +21,16 @@ const AboutStory = () => {
           viewport={{ once: true, amount: 0.3 }}
           className="text-center md:text-left"
         >
-          <Badge variant="outline" className="mb-4 text-sm">Our Story</Badge>
+          <Badge variant="outline" className="mb-4 text-sm">Our Mission</Badge>
           <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-foreground">
-            From a Vision to a Fashion Reality
+            Empowering Resellers Across Nigeria
           </h2>
           <div className="space-y-4 text-base text-muted-foreground">
             <p>
-              Unique Emporium began with a simple idea: to make luxury thrift and unique fashion accessible to everyone in Nigeria. Founded by a team of passionate fashion enthusiasts, we set out to create a platform that not only offers the best curated bundles but also provides an exceptional shopping experience.
+              At Unique Emporium, we help resellers and boutique owners access high-quality fashion in bulk. From SHEIN gowns to vintage shirts, kidswear, and more, every collection is carefully curated for profit and prestige.
             </p>
             <p>
-              Over the years, we've grown from a small startup to a trusted name in online fashion retail. Our commitment to quality, customer satisfaction, and staying ahead of fashion trends has been the driving force behind our success. We continuously strive to expand our curated selection, ensuring you always find the perfect style to express your uniqueness.
+              Our mission is to be Nigeria's most trusted wholesale fashion hub, providing a seamless and profitable sourcing experience for fashion entrepreneurs. We are committed to offering diverse, trendy, and high-quality inventory that helps your business thrive.
             </p>
           </div>
         </motion.div>
