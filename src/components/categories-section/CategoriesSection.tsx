@@ -52,8 +52,8 @@ const fadeInUp = {
 
 const CategoriesSection = () => {
   const isMobile = useIsMobile();
-  const autoplayOptions = useRef({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true });
-  const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true, containScroll: "trimSnaps" }, [
+  const autoplayOptions = useRef({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true });
+  const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true }, [ // Removed containScroll: "trimSnaps"
     Autoplay(autoplayOptions.current),
   ]);
 
