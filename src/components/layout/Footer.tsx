@@ -358,12 +358,12 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} Unique Emporium. All rights reserved.</p>
           <p>
             <a
-              href="https://www.dyad.sh/"
+              href="https://www.web-aura.com/" // Assuming Web-Aura has a website
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary-foreground transition-colors"
             >
-              Built with ❤️ by Dyad
+              Built with ❤️ by Web-Aura
             </a>
           </p>
         </div>
