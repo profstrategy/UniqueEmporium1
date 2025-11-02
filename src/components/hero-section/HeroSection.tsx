@@ -47,11 +47,7 @@ const ctaFloatVariants = {
   tap: { scale: 0.95 },
 };
 
-interface HeroSectionProps {
-  onScrollToFeatured: () => void;
-}
-
-const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
+const HeroSection = () => {
   return (
     <section
       className="relative flex w-full flex-col justify-center overflow-hidden bg-black text-white h-[30vh] md:h-[50vh] lg:h-[60vh]"
@@ -95,10 +91,10 @@ const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
             whileTap="tap"
           >
             <Button
-              onClick={onScrollToFeatured} // Changed to onClick and removed asChild Link
+              asChild
               className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg w-full" // Ensure button still takes full width of its *constrained* parent
             >
-              {heroItem.ctaText1}
+              <Link to={heroItem.ctaLink1}>{heroItem.ctaText1}</Link>
             </Button>
           </motion.div>
         </div>

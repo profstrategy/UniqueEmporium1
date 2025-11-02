@@ -72,7 +72,7 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen w-full">
-      <HeroSection onScrollToFeatured={scrollToFeaturedProducts} />
+      <HeroSection />
 
       {/* Moved introductory text before CategoriesSection */}
       <motion.p
@@ -115,7 +115,7 @@ const Index = () => {
             Discover our most popular SHEIN gowns, vintage shirts, and fashion bundles
           </motion.p>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 md:gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5">
             {loadingFeatured
               ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
               : featuredProducts.map((product) => (
