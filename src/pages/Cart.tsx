@@ -64,7 +64,7 @@ const Cart = () => {
                     <img src={item.images[0]} alt={item.name} className="h-20 w-20 object-contain rounded-md border" />
                     <div>
                       <h2 className="font-semibold text-xl">{item.name}</h2>
-                      <p className="text-muted-foreground">₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })} each</p>
+                      <p className="text-muted-foreground">₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc</p> {/* Display unit price */}
                       <p className="text-sm text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
                     </div>
                   </div>
@@ -89,7 +89,7 @@ const Cart = () => {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="font-bold text-2xl">₦{(item.quantity * item.price).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p>
+                    <p className="font-bold text-2xl">₦{(item.quantity * item.unitPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p> {/* Use unitPrice */}
                     <Button
                       variant="ghost"
                       size="icon"

@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface CartItem extends Product {
   quantity: number;
+  unitPrice: number; // Added unitPrice to the interface
 }
 
 interface CartContextType {
@@ -33,6 +34,7 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
   const addToCart = useCallback((product: Product, quantityToAdd: number = product.minOrderQuantity) => {
     // Ensure quantityToAdd is a multiple of minOrderQuantity
     const actualQuantityToAdd = Math.max(product.minOrderQuantity, Math.ceil(quantityToAdd / product.minOrderQuantity) * product.minOrderQuantity);
+    const unitPrice = product.price / product.minOrderQuantity; // Calculate unit price here
 
     setCartItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex((item) => item.id === product.id);
@@ -46,7 +48,7 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
         return updatedItems;
       } else {
         toast.success(`${actualQuantityToAdd} x ${product.name} added to cart!`);
-        return [...prevItems, { ...product, quantity: actualQuantityToAdd }];
+        return [...prevItems, { ...product, quantity: actualQuantityToAdd, unitPrice }]; // Store unitPrice
       }
     });
 
@@ -99,7 +101,7 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
   }, []);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0); // Use unitPrice for total calculation
 
   return (
     <CartContext.Provider

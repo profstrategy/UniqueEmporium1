@@ -24,7 +24,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
   const vatRate = 0;
   const freeShippingThreshold = 100000;
 
-  const subtotal = totalPrice;
+  const subtotal = totalPrice; // totalPrice from useCart now correctly reflects unit prices * quantity
   const vat = subtotal * vatRate;
 
   let calculatedShipping = 0;
@@ -121,10 +121,10 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
                 <div className="flex-grow">
                   <p className="font-medium text-foreground">{item.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {item.quantity} x {formatCurrency(item.price)}
-                  </p>
+                    {item.quantity} x {formatCurrency(item.unitPrice)} / pc
+                  </p> {/* Display unit price */}
                 </div>
-                <p className="font-semibold text-foreground">{formatCurrency(item.quantity * item.price)}</p>
+                <p className="font-semibold text-foreground">{formatCurrency(item.quantity * item.unitPrice)}</p> {/* Use unitPrice */}
               </div>
             ))}
           </div>

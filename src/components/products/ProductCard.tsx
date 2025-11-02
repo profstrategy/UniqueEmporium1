@@ -21,8 +21,8 @@ export interface Product {
   name: string;
   category: string;
   images: string[];
-  price: number;
-  originalPrice?: number;
+  price: number; // This is the price for the MOQ
+  originalPrice?: number; // This is also the original price for the MOQ
   discountPercentage?: number;
   rating: number;
   reviewCount: number;
@@ -69,6 +69,9 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  const unitPrice = product.price / product.minOrderQuantity;
+  const originalUnitPrice = product.originalPrice ? product.originalPrice / product.minOrderQuantity : undefined;
 
   const discount = product.originalPrice && product.price < product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -271,7 +274,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
 
           {/* MOQ Display */}
           <p className="text-xs text-muted-foreground font-medium mb-1">
-            MOQ: {product.minOrderQuantity} pcs
+            MOQ: {product.minOrderQuantity} pcs ({unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc)
           </p>
 
           {/* Limited Stock Message */}
@@ -293,7 +296,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               {product.originalPrice && product.price < product.originalPrice && (
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-gray-400 line-through">
-                    {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+                    {originalUnitPrice?.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
                   </p>
                   {discount > 0 && (
                     <Badge variant="destructive" className="text-xs font-medium px-1.5 py-0.5">

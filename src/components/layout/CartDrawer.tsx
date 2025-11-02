@@ -47,8 +47,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                     <div>
                       <p className="font-medium">{item.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        ₦{item.price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
-                      </p>
+                        ₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc
+                      </p> {/* Display unit price */}
                       <p className="text-xs text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
                     </div>
                   </div>

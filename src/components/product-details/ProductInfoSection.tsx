@@ -74,6 +74,10 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
   };
 
+  const unitPrice = product.price / product.minOrderQuantity;
+  const originalUnitPrice = product.originalPrice ? product.originalPrice / product.minOrderQuantity : undefined;
+
+
   return (
     <div className="space-y-6">
       {product.tag && (
@@ -127,8 +131,13 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
 
       {/* MOQ and Wholesale Info */}
       <p className="text-sm text-foreground font-semibold">
-        MOQ: {product.minOrderQuantity} pcs
+        MOQ: {product.minOrderQuantity} pcs ({formatCurrency(unitPrice)}/pc)
       </p>
+      {product.originalPrice && product.price < product.originalPrice && (
+        <p className="text-xs text-muted-foreground italic">
+          Original unit price: {formatCurrency(originalUnitPrice!)}/pc
+        </p>
+      )}
       <p className="text-sm text-muted-foreground italic">
         Sold in bundles only. Minimum order applies.
       </p>
