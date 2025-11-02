@@ -9,7 +9,7 @@ import { useCart } from "@/context/CartContext.tsx";
 interface OrderSummaryCardProps {
   vatRate?: number;
   freeShippingThreshold?: number;
-  shippingCost?: number;
+  deliveryMethod?: string; // New prop for delivery method
 }
 
 const fadeInUp = {
@@ -18,15 +18,31 @@ const fadeInUp = {
 };
 
 const OrderSummaryCard = ({
-  vatRate = 0, // Changed VAT rate to 0
-  freeShippingThreshold = 100000, // Free shipping over ₦100,000
-  shippingCost = 3500, // Base shipping cost ₦3,500
+  vatRate = 0,
+  freeShippingThreshold = 100000,
+  deliveryMethod, // Destructure new prop
 }: OrderSummaryCardProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 
   const subtotal = totalPrice;
-  const vat = subtotal * vatRate; // This will now be 0
-  const calculatedShipping = subtotal >= freeShippingThreshold ? 0 : shippingCost;
+  const vat = subtotal * vatRate;
+
+  let calculatedShipping = 0;
+  let shippingDisplay = "TBD"; // To be determined
+
+  if (deliveryMethod === "pickup") {
+    calculatedShipping = 0;
+    shippingDisplay = "Free (Pick-up)";
+  } else if (deliveryMethod === "dispatch-rider" || deliveryMethod === "pack-delivery") {
+    // For these methods, we show a nominal ₦1 and clarify that actual fees are negotiated.
+    calculatedShipping = 1; // Nominal charge for calculation, actual is negotiated
+    shippingDisplay = "₦1 (Driver handles fees)";
+  } else {
+    // Default or if no method selected yet (e.g., before ShippingForm is filled)
+    calculatedShipping = subtotal >= freeShippingThreshold ? 0 : 3500; // Fallback to old logic
+    shippingDisplay = calculatedShipping === 0 ? "Free" : "Calculated at next step";
+  }
+
   const total = subtotal + vat + calculatedShipping;
 
   const formatCurrency = (amount: number) => {
@@ -46,11 +62,10 @@ const OrderSummaryCard = ({
             <span className="text-muted-foreground">Items ({totalItems})</span>
             <span className="font-medium text-foreground">{formatCurrency(subtotal)}</span>
           </div>
-          {/* Removed VAT display */}
           <div className="flex justify-between">
             <span className="text-muted-foreground">Shipping</span>
             <span className="font-medium text-foreground">
-              {calculatedShipping === 0 ? "Free" : formatCurrency(calculatedShipping)}
+              {shippingDisplay}
             </span>
           </div>
         </CardContent>
@@ -62,6 +77,11 @@ const OrderSummaryCard = ({
           <p className="text-sm text-muted-foreground font-normal mt-2">
             Prices are final — no VAT or hidden charges.
           </p>
+          {(deliveryMethod === "dispatch-rider" || deliveryMethod === "pack-delivery") && (
+            <p className="text-xs text-primary font-medium mt-2">
+              *Actual delivery fees for Dispatch/Pack Delivery are negotiated directly with the driver.
+            </p>
+          )}
         </CardFooter>
       </Card>
     </motion.div>

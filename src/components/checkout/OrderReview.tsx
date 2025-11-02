@@ -4,7 +4,7 @@ import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Loader2, ShoppingBag } from "lucide-react";
+import { CheckCircle2, Loader2, ShoppingBag, Package } from "lucide-react"; // Added Package icon
 import { useCart } from "@/context/CartContext.tsx";
 import { Product } from "@/components/products/ProductCard.tsx";
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
@@ -21,17 +21,48 @@ interface OrderReviewProps {
 const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPlacingOrder }: OrderReviewProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 
-  const vatRate = 0; // Changed VAT rate to 0
-  const freeShippingThreshold = 100000; // Free shipping over ₦100,000
-  const shippingCost = 3500; // Base shipping cost ₦3,500
+  const vatRate = 0;
+  const freeShippingThreshold = 100000;
 
   const subtotal = totalPrice;
-  const vat = subtotal * vatRate; // This will now be 0
-  const calculatedShipping = subtotal >= freeShippingThreshold ? 0 : shippingCost;
+  const vat = subtotal * vatRate;
+
+  let calculatedShipping = 0;
+  let shippingDisplay = "";
+
+  switch (shippingInfo.deliveryMethod) {
+    case "pickup":
+      calculatedShipping = 0;
+      shippingDisplay = "Free (Pick-up)";
+      break;
+    case "dispatch-rider":
+      calculatedShipping = 1; // Nominal charge
+      shippingDisplay = "₦1 (Driver handles fees)";
+      break;
+    case "pack-delivery":
+      calculatedShipping = 1; // Nominal charge
+      shippingDisplay = "₦1 (Driver handles fees)";
+      break;
+    default:
+      // Fallback if deliveryMethod is somehow not set (shouldn't happen with Zod enum)
+      calculatedShipping = subtotal >= freeShippingThreshold ? 0 : 3500;
+      shippingDisplay = calculatedShipping === 0 ? "Free" : "₦" + calculatedShipping.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+      break;
+  }
+
   const total = subtotal + vat + calculatedShipping;
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
+  };
+
+  const getDeliveryMethodLabel = (method: ShippingFormData['deliveryMethod']) => {
+    switch (method) {
+      case "pickup": return "Pick-up (Free)";
+      case "dispatch-rider": return "Dispatch Rider (@ ₦1)";
+      case "pack-delivery": return "Pack Delivery (@ ₦1)";
+      default: return "Unknown";
+    }
   };
 
   return (
@@ -53,6 +84,19 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
             <p>Phone: {shippingInfo.phone}</p>
             <p>Email: {shippingInfo.email}</p>
           </div>
+        </div>
+
+        {/* Delivery Method */}
+        <div>
+          <h3 className="font-semibold text-lg mb-3 text-foreground flex items-center gap-2">
+            <Package className="h-5 w-5" /> Delivery Method
+          </h3>
+          <p className="text-muted-foreground text-sm">{getDeliveryMethodLabel(shippingInfo.deliveryMethod)}</p>
+          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "pack-delivery") && (
+            <p className="text-xs text-primary font-medium mt-2">
+              *Actual delivery fees are negotiated directly with the driver.
+            </p>
+          )}
         </div>
 
         {/* Payment Method */}
@@ -92,11 +136,10 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
             <span className="text-muted-foreground">Subtotal</span>
             <span className="font-medium text-foreground">{formatCurrency(subtotal)}</span>
           </div>
-          {/* Removed VAT display */}
           <div className="flex justify-between">
             <span className="text-muted-foreground">Shipping</span>
             <span className="font-medium text-foreground">
-              {calculatedShipping === 0 ? "Free" : formatCurrency(calculatedShipping)}
+              {shippingDisplay}
             </span>
           </div>
           <div className="flex justify-between text-lg font-bold pt-2 border-t mt-3">
@@ -106,6 +149,11 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
           <p className="text-sm text-muted-foreground font-normal mt-2">
             Prices are final — no VAT or hidden charges.
           </p>
+          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "pack-delivery") && (
+            <p className="text-xs text-primary font-medium mt-2">
+              *Actual delivery fees for Dispatch/Pack Delivery are negotiated directly with the driver.
+            </p>
+          )}
         </div>
       </CardContent>
       <CardFooter>

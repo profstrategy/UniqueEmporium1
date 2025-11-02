@@ -146,7 +146,7 @@ const Checkout = () => {
 
         {/* Right Column: Order Summary (1/3 width on desktop, fixed) */}
         <div className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
-          <OrderSummaryCard />
+          <OrderSummaryCard deliveryMethod={orderData.shipping?.deliveryMethod} />
         </div>
       </div>
     </div>
