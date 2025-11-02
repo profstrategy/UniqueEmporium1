@@ -254,12 +254,12 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           {/* Price Display (Unit Price) */}
           <div className="flex items-center gap-2 mb-1">
             <p className="font-bold text-base text-primary">
-              {unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
+              {unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
             </p>
             {originalUnitPrice && unitPrice < originalUnitPrice && (
               <>
                 <p className="text-xs text-gray-400 line-through">
-                  {originalUnitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
+                  {originalUnitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                 </p>
                 {discount > 0 && (
                   <Badge variant="destructive" className="text-xs md:text-sm font-medium px-1.5 py-0.5">
@@ -294,7 +294,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               {originalUnitPrice && unitPrice < originalUnitPrice && (
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-gray-400 line-through">
-                    {originalUnitPrice?.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
+                    {originalUnitPrice?.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                   </p>
                   {discount > 0 && (
                     <Badge variant="destructive" className="text-xs font-medium px-1.5 py-0.5">
