@@ -77,7 +77,7 @@ const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
             animate="visible"
             transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }}
           >
-            <h1 className="font-poppins text-xl font-bold text-secondary md:text-4xl"> {/* Changed text-base to text-xl and md:text-3xl to md:text-4xl */}
+            <h1 className="font-poppins text-xl font-bold text-white md:text-4xl"> {/* Changed text-secondary to text-white */}
               {heroItem.headline}
             </h1>
             <h2 className="font-poppins text-xs text-white/80 md:text-lg mt-2">
