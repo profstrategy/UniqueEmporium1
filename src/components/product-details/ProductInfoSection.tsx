@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset, RefreshCw, Gem } from "lucide-react"; // Updated icons
+import { Star, Heart, ShoppingCart, Share2, Plus, Minus, Loader2, Truck, ShieldCheck, Headset, RefreshCw, Gem, XCircle } from "lucide-react"; // Updated icons
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ProductDetails as ProductDetailsType } from "@/data/products.ts";
@@ -20,7 +20,7 @@ interface ProductInfoSectionProps {
 
 const keyFeatures = [
   { icon: Truck, title: "Fast Nationwide Delivery", description: "Get it in 2-5 business days" },
-  { icon: RefreshCw, title: "Easy Returns", description: "Hassle-free policy" },
+  { icon: XCircle, title: "Final Sale Policy", description: "No returns, exchanges, or refunds" }, // Updated policy
   { icon: Gem, title: "Premium Quality", description: "Curated luxury thrift" },
 ];
 
@@ -237,8 +237,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               Fast nationwide delivery available
             </p>
             <p className="flex items-center gap-2">
-              <RefreshCw className="h-4 w-4" />
-              Easy returns & exchanges
+              <XCircle className="h-4 w-4 text-destructive" /> {/* Updated icon and color */}
+              Final Sale Policy: No returns, exchanges, or refunds
             </p>
             <p className="flex items-center gap-2">
               <Gem className="h-4 w-4" />
@@ -258,7 +258,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
             animate={{ opacity: 1, y: 0, x: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" as Easing }}
           >
-            <feature.icon className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+            {React.createElement(feature.icon, { className: cn("h-6 w-6 flex-shrink-0 mt-1", feature.icon === XCircle ? "text-destructive" : "text-primary") })}
             <div>
               <h3 className="font-semibold text-sm text-foreground">{feature.title}</h3>
               <p className="text-xs text-muted-foreground">{feature.description}</p>
