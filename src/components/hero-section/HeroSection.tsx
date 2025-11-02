@@ -52,6 +52,8 @@ const ctaFloatVariants = {
 };
 
 const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
+  const headlineParts = heroItem.headline.split("#1");
+
   return (
     <section
       className="relative flex w-full flex-col justify-center overflow-hidden bg-black text-white h-[30vh] md:h-[50vh] lg:h-[60vh]"
@@ -77,8 +79,10 @@ const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
             animate="visible"
             transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" as Easing }}
           >
-            <h1 className="font-poppins text-xl font-bold text-white md:text-4xl"> {/* Changed text-secondary to text-white */}
-              {heroItem.headline}
+            <h1 className="font-poppins text-xl font-bold text-white md:text-4xl">
+              {headlineParts[0]}
+              <span className="text-primary">#1</span>
+              {headlineParts[1]}
             </h1>
             <h2 className="font-poppins text-xs text-white/80 md:text-lg mt-2">
               {heroItem.subHeadline}
