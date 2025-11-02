@@ -27,9 +27,6 @@ const categories: Category[] = [
   { name: "Others", icon: Gem, description: "Miscellaneous wholesale items", link: "/products?category=Others", image: undefined },
 ];
 
-// Duplicate categories to create a seamless loop effect for mobile auto-scrolling
-const loopedCategories = [...categories, ...categories];
-
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
@@ -56,6 +53,9 @@ const CategoriesSection = () => {
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
   const scrollSpeed = 1; // Adjust scroll speed as needed
+
+  // Conditionally create the list of categories to display
+  const categoriesToDisplay = isMobile ? [...categories, ...categories] : categories;
 
   useEffect(() => {
     const scrollElement = scrollRef.current;
@@ -127,7 +127,7 @@ const CategoriesSection = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {loopedCategories.map((category, index) => (
+          {categoriesToDisplay.map((category, index) => (
             <motion.div
               key={`${category.name}-${index}`}
               variants={itemVariants}
