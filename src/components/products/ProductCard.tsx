@@ -73,8 +73,8 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   const unitPrice = product.price / product.minOrderQuantity;
   const originalUnitPrice = product.originalPrice ? product.originalPrice / product.minOrderQuantity : undefined;
 
-  const discount = product.originalPrice && product.price < product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const discount = originalUnitPrice && unitPrice < originalUnitPrice
+    ? Math.round(((originalUnitPrice - unitPrice) / originalUnitPrice) * 100)
     : 0;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -251,30 +251,28 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             </h3>
           </Link>
 
-          {/* Price Display (Main Price always visible, Original Price/Discount hidden on mobile) */}
+          {/* Price Display (Unit Price) */}
           <div className="flex items-center gap-2 mb-1">
             <p className="font-bold text-base text-primary">
-              {product.price.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
+              {unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
             </p>
-            <span className="hidden md:flex items-center gap-2">
-              {product.originalPrice && product.price < product.originalPrice && (
-                <>
-                  <p className="text-xs text-gray-400 line-through">
-                    {product.originalPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
-                  </p>
-                  {discount > 0 && (
-                    <Badge variant="destructive" className="text-xs md:text-sm font-medium px-1.5 py-0.5">
-                      -{discount}%
-                    </Badge>
-                  )}
-                </>
-              )}
-            </span>
+            {originalUnitPrice && unitPrice < originalUnitPrice && (
+              <>
+                <p className="text-xs text-gray-400 line-through">
+                  {originalUnitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
+                </p>
+                {discount > 0 && (
+                  <Badge variant="destructive" className="text-xs md:text-sm font-medium px-1.5 py-0.5">
+                    -{discount}%
+                  </Badge>
+                )}
+              </>
+            )}
           </div>
 
           {/* MOQ Display */}
           <p className="text-xs text-muted-foreground font-medium mb-1">
-            MOQ: {product.minOrderQuantity} pcs ({unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc)
+            MOQ: {product.minOrderQuantity} pcs
           </p>
 
           {/* Limited Stock Message */}
@@ -293,7 +291,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <div className="mt-auto pt-2">
             {/* Mobile-specific layout: original price, discount, and favorite icon */}
             <div className="flex items-center justify-between md:hidden">
-              {product.originalPrice && product.price < product.originalPrice && (
+              {originalUnitPrice && unitPrice < originalUnitPrice && (
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-gray-400 line-through">
                     {originalUnitPrice?.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}/pc
