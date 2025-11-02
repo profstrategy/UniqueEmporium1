@@ -256,8 +256,9 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
             <p className="font-bold text-base text-primary">
               {unitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
             </p>
+            {/* This span will only be visible on desktop (md and up) */}
             {originalUnitPrice && unitPrice < originalUnitPrice && (
-              <>
+              <span className="hidden md:flex items-center gap-2">
                 <p className="text-xs text-gray-400 line-through">
                   {originalUnitPrice.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })}
                 </p>
@@ -266,7 +267,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
                     -{discount}%
                   </Badge>
                 )}
-              </>
+              </span>
             )}
           </div>
 
