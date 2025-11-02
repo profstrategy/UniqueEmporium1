@@ -12,6 +12,10 @@ interface HeroItem {
   ctaLink1: string;
 }
 
+interface HeroSectionProps {
+  onScrollToFeatured: () => void; // New prop for scrolling
+}
+
 const heroItem: HeroItem = {
   headline: "Unique Emporium | Nigeria’s #1 Wholesale Fashion Hub",
   subHeadline: "Shop SHEIN gowns, kidswear, and vintage shirts in bulk at unbeatable wholesale prices. Designed for resellers and fashion entrepreneurs across Nigeria.",
@@ -47,7 +51,7 @@ const ctaFloatVariants = {
   tap: { scale: 0.95 },
 };
 
-const HeroSection = () => {
+const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
   return (
     <section
       className="relative flex w-full flex-col justify-center overflow-hidden bg-black text-white h-[30vh] md:h-[50vh] lg:h-[60vh]"
@@ -91,10 +95,10 @@ const HeroSection = () => {
             whileTap="tap"
           >
             <Button
-              asChild
-              className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg w-full" // Ensure button still takes full width of its *constrained* parent
+              onClick={onScrollToFeatured} // Call the scroll function
+              className="px-4 py-1.5 text-sm md:px-8 md:py-3 md:text-lg w-full"
             >
-              <Link to={heroItem.ctaLink1}>{heroItem.ctaText1}</Link>
+              {heroItem.ctaText1}
             </Button>
           </motion.div>
         </div>
