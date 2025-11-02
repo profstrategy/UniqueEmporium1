@@ -138,11 +138,11 @@
 @layer utilities {
   @screen md {
     .md\:text-white-override {
-      color: white !important; /* Override transparent color */
+      color: hsl(var(--primary)) !important; /* Override with primary color */
       background: none !important; /* Explicitly remove background */
       -webkit-background-clip: unset !important; /* Disable text clipping */
       background-clip: unset !important; /* Disable text clipping */
-      text-shadow: none !important; /* Remove shadow for cleaner white text */
+      text-shadow: none !important; /* Remove shadow for cleaner text */
     }
   }
 }
