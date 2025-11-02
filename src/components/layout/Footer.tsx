@@ -355,7 +355,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/20 pt-8 text-center text-sm text-primary-foreground/60 md:flex-row">
-          <p>&copy; {new Date().getFullYear()} Unique Emporium. All rights reserved.</p>
+          <p>&copy; 2019-2025 Unique Emporium. All rights reserved.</p>
           <p>
             <a
               href="https://www.web-aura.com/" // Assuming Web-Aura has a website
