@@ -121,7 +121,7 @@ const Footer = () => {
                 <Phone className="mr-2 h-4 w-4" /> +234 (906) 554-5572
               </p>
               <p className="flex items-center">
-                <MapPin className="mr-2 h-4 w-4" /> No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria
+                <MapPin className="mr-2 h-6 w-6" /> No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria
               </p>
             </div>
           </motion.div>
