@@ -31,7 +31,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
 
   const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) => Math.max(product.minOrderQuantity, prev + amount * product.minOrderQuantity)); // Increment/decrement by MOQ
+    setQuantity((prev) => Math.max(product.minOrderQuantity, prev + amount)); // Increment/decrement by 1
   };
 
   const handleAddToCart = async () => {
@@ -162,7 +162,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         <CardContent className="p-0 space-y-6">
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">
-            <Label htmlFor="quantity" className="text-base">Quantity (in multiples of {product.minOrderQuantity}):</Label>
+            <Label htmlFor="quantity" className="text-base">Quantity:</Label>
             <div className="flex items-center border rounded-md">
               <Button
                 variant="outline"
@@ -179,7 +179,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 value={quantity}
                 onChange={(e) => {
                   const newValue = Number(e.target.value);
-                  if (!isNaN(newValue) && newValue >= product.minOrderQuantity && newValue % product.minOrderQuantity === 0) {
+                  if (!isNaN(newValue) && newValue >= product.minOrderQuantity) {
                     setQuantity(newValue);
                   } else if (newValue < product.minOrderQuantity) {
                     setQuantity(product.minOrderQuantity);
@@ -187,7 +187,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 }}
                 className="w-16 text-center border-y-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
                 min={product.minOrderQuantity}
-                step={product.minOrderQuantity}
+                step={1}
               />
               <Button
                 variant="outline"

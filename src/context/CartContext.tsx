@@ -32,8 +32,8 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
   const isMobile = useIsMobile();
 
   const addToCart = useCallback((product: Product, quantityToAdd: number = product.minOrderQuantity) => {
-    // Ensure quantityToAdd is a multiple of minOrderQuantity
-    const actualQuantityToAdd = Math.max(product.minOrderQuantity, Math.ceil(quantityToAdd / product.minOrderQuantity) * product.minOrderQuantity);
+    // Ensure quantityToAdd is at least minOrderQuantity
+    const actualQuantityToAdd = Math.max(product.minOrderQuantity, quantityToAdd);
     const unitPrice = product.price / product.minOrderQuantity; // Calculate unit price here
 
     setCartItems((prevItems) => {
@@ -74,23 +74,19 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
       if (!itemToUpdate) return prevItems;
 
       const minOrderQuantity = itemToUpdate.minOrderQuantity;
-      let updatedQuantity = newQuantity;
+      let finalQuantity = newQuantity;
 
-      // Ensure newQuantity is a multiple of minOrderQuantity
-      if (newQuantity % minOrderQuantity !== 0) {
-        updatedQuantity = Math.ceil(newQuantity / minOrderQuantity) * minOrderQuantity;
-      }
-
-      // Ensure quantity is not less than minOrderQuantity (unless it's 0 for removal)
-      if (updatedQuantity < minOrderQuantity && updatedQuantity !== 0) {
-        updatedQuantity = minOrderQuantity;
-      }
-
-      if (updatedQuantity <= 0) {
+      if (newQuantity <= 0) {
+        // Remove item if quantity is 0 or less
         return prevItems.filter((item) => item.id !== productId);
+      } else if (newQuantity < minOrderQuantity) {
+        // Snap back to minOrderQuantity if it goes below
+        finalQuantity = minOrderQuantity;
       }
+      // Otherwise, accept newQuantity as is
+
       return prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity: updatedQuantity } : item,
+        item.id === productId ? { ...item, quantity: finalQuantity } : item,
       );
     });
   }, []);

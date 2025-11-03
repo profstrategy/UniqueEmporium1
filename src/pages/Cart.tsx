@@ -74,7 +74,7 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity - item.minOrderQuantity)} // Decrement by MOQ
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)} // Decrement by 1
                         disabled={item.quantity <= item.minOrderQuantity}
                       >
                         <Minus className="h-4 w-4" />
@@ -84,7 +84,7 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity + item.minOrderQuantity)} // Increment by MOQ
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)} // Increment by 1
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
