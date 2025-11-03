@@ -4,12 +4,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail } from "lucide-react";
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, User, LogIn, UserPlus, LogOut, Settings } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
+import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -33,10 +34,17 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
   const navigate = useNavigate();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
+  const { user, signOut } = useAuth(); // Use user and signOut from AuthContext
 
   const handleLinkClick = (path: string) => {
     onClose();
     navigate(path);
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    onClose();
+    navigate("/");
   };
 
   const menuVariants = {
@@ -47,8 +55,8 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col">
-        <SheetHeader className="flex items-center justify-center py-4"> {/* Center the logo */}
-          <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
+        <SheetHeader className="flex items-center justify-center py-4">
+          <UniqueEmporiumLogo className="h-[100px]" />
         </SheetHeader>
         <motion.nav
           className="flex flex-col space-y-4 py-4 overflow-y-auto"
@@ -89,6 +97,28 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
               <ShoppingBag className="mr-2 h-5 w-5" /> Cart
               <Badge count={totalItems} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
             </Button>
+          </div>
+
+          <div className="border-t border-border pt-4">
+            {user ? (
+              <>
+                <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/account")}>
+                  <User className="mr-2 h-5 w-5" /> My Account
+                </Button>
+                <Button variant="ghost" className="justify-start text-base text-destructive hover:bg-destructive/10" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-5 w-5" /> Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/auth/login")}>
+                  <LogIn className="mr-2 h-5 w-5" /> Login
+                </Button>
+                <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/auth/signup")}>
+                  <UserPlus className="mr-2 h-5 w-5" /> Sign Up
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="border-t border-border pt-4">

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag } from "lucide-react";
+import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LogOut } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import CartIcon from "@/components/common/CartIcon.tsx";
 import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
@@ -14,8 +14,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 import UniqueEmporiumLogo3D from "@/components/logo/UniqueEmporiumLogo3D.tsx";
-import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
+import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
@@ -40,6 +41,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
+  const { user, signOut } = useAuth(); // Use user and signOut from AuthContext
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -54,13 +56,18 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
     navigate(link);
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={handleLogoClick}>
-            <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
+            <UniqueEmporiumLogo className="h-[100px]" />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -133,6 +140,42 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             </Link>
 
             <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
+
+            {/* User Account Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48 p-2">
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/account" className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-md p-2">
+                        <User className="h-4 w-4" /> My Account
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-md p-2 text-destructive">
+                      <LogOut className="h-4 w-4" /> Logout
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth/login" className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-md p-2">
+                        <LogIn className="h-4 w-4" /> Login
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth/signup" className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-md p-2">
+                        <UserPlus className="mr-2 h-4 w-4" /> Sign Up
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Mobile Menu Button */}
             <Button

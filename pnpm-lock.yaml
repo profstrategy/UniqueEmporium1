@@ -101,6 +101,9 @@ importers:
       '@react-three/fiber':
         specifier: ^9.3.0
         version: 9.3.0(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.180.0)
+      '@supabase/supabase-js':
+        specifier: ^2.78.0
+        version: 2.78.0
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.74.4(react@18.3.1)
@@ -1292,6 +1295,28 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@supabase/auth-js@2.78.0':
+    resolution: {integrity: sha512-cXDtu1U0LeZj/xfnFoV7yCze37TcbNo8FCxy1FpqhMbB9u9QxxDSW6pA5gm/07Ei7m260Lof4CZx67Cu6DPeig==}
+
+  '@supabase/functions-js@2.78.0':
+    resolution: {integrity: sha512-t1jOvArBsOINyqaRee1xJ3gryXLvkBzqnKfi6q3YRzzhJbGS6eXz0pXR5fqmJeB01fLC+1njpf3YhMszdPEF7g==}
+
+  '@supabase/node-fetch@2.6.15':
+    resolution: {integrity: sha512-1ibVeYUacxWYi9i0cf5efil6adJ9WRyZBLivgjs+AUpewx1F3xPi7gLgaASI2SmIQxPoCEjAsLAzKPgMJVgOUQ==}
+    engines: {node: 4.x || >=6.0.0}
+
+  '@supabase/postgrest-js@2.78.0':
+    resolution: {integrity: sha512-AwhpYlSvJ+PSnPmIK8sHj7NGDyDENYfQGKrMtpVIEzQA2ApUjgpUGxzXWN4Z0wEtLQsvv7g4y9HVad9Hzo1TNA==}
+
+  '@supabase/realtime-js@2.78.0':
+    resolution: {integrity: sha512-rCs1zmLe7of7hj4s7G9z8rTqzWuNVtmwDr3FiCRCJFawEoa+RQO1xpZGbdeuVvVmKDyVN6b542Okci+117y/LQ==}
+
+  '@supabase/storage-js@2.78.0':
+    resolution: {integrity: sha512-n17P0JbjHOlxqJpkaGFOn97i3EusEKPEbWOpuk1r4t00Wg06B8Z4GUiq0O0n1vUpjiMgJUkLIMuBVp+bEgunzQ==}
+
+  '@supabase/supabase-js@2.78.0':
+    resolution: {integrity: sha512-xYMRNBFmKp2m1gMuwcp/gr/HlfZKqjye1Ib8kJe29XJNsgwsfO/f8skxnWiscFKTlkOKLuBexNgl5L8dzGt6vA==}
+
   '@swc/core-darwin-arm64@1.11.21':
     resolution: {integrity: sha512-v6gjw9YFWvKulCw3ZA1dY+LGMafYzJksm1mD4UZFZ9b36CyHFowYVYug1ajYRIRqEvvfIhHUNV660zTLoVFR8g==}
     engines: {node: '>=10'}
@@ -1425,6 +1450,9 @@ packages:
   '@types/offscreencanvas@2019.7.3':
     resolution: {integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==}
 
+  '@types/phoenix@1.6.6':
+    resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
+
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
 
@@ -1457,6 +1485,9 @@ packages:
 
   '@types/webxr@0.5.23':
     resolution: {integrity: sha512-GPe4AsfOSpqWd3xA/0gwoKod13ChcfV67trvxaW2krUbgb9gxQjnCx8zGshzMl8LSHZlNH5gQ8LNScsDuc7nGQ==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@typescript-eslint/eslint-plugin@8.30.1':
     resolution: {integrity: sha512-v+VWphxMjn+1t48/jO4t950D6KR8JaJuNXzi33Ve6P8sEmPr5k6CEXjdGwT6+LodVnEa91EQCtwjWNUCPweo+Q==}
@@ -2585,6 +2616,9 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
+  tr46@0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
   troika-three-text@0.52.4:
     resolution: {integrity: sha512-V50EwcYGruV5rUZ9F4aNsrytGdKcXKALjEtQXIOBfhVoZU9VAqZNIoGQ3TMiooVqFAbR1w15T+f+8gkzoFzawg==}
     peerDependencies:
@@ -2728,6 +2762,12 @@ packages:
   webgl-sdf-generator@1.1.1:
     resolution: {integrity: sha512-9Z0JcMTFxeE+b2x1LJTdnaT8rT8aEp7MVxkNwoycNmJWwPdzoXzMh0BjJSh/AEFP+KPYZUli814h8bJZFIZ2jA==}
 
+  webidl-conversions@3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+
+  whatwg-url@5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
+
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -2744,6 +2784,18 @@ packages:
   wrap-ansi@8.1.0:
     resolution: {integrity: sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==}
     engines: {node: '>=12'}
+
+  ws@8.18.3:
+    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   yaml@2.7.1:
     resolution: {integrity: sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==}
@@ -3811,6 +3863,53 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.40.0':
     optional: true
 
+  '@supabase/auth-js@2.78.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      tslib: 2.8.1
+
+  '@supabase/functions-js@2.78.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      tslib: 2.8.1
+
+  '@supabase/node-fetch@2.6.15':
+    dependencies:
+      whatwg-url: 5.0.0
+
+  '@supabase/postgrest-js@2.78.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      tslib: 2.8.1
+
+  '@supabase/realtime-js@2.78.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      '@types/phoenix': 1.6.6
+      '@types/ws': 8.18.1
+      tslib: 2.8.1
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@supabase/storage-js@2.78.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      tslib: 2.8.1
+
+  '@supabase/supabase-js@2.78.0':
+    dependencies:
+      '@supabase/auth-js': 2.78.0
+      '@supabase/functions-js': 2.78.0
+      '@supabase/node-fetch': 2.6.15
+      '@supabase/postgrest-js': 2.78.0
+      '@supabase/realtime-js': 2.78.0
+      '@supabase/storage-js': 2.78.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@swc/core-darwin-arm64@1.11.21':
     optional: true
 
@@ -3916,6 +4015,8 @@ snapshots:
 
   '@types/offscreencanvas@2019.7.3': {}
 
+  '@types/phoenix@1.6.6': {}
+
   '@types/prop-types@15.7.14': {}
 
   '@types/react-dom@18.3.6(@types/react@18.3.20)':
@@ -3950,6 +4051,10 @@ snapshots:
   '@types/trusted-types@2.0.7': {}
 
   '@types/webxr@0.5.23': {}
+
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 22.14.1
 
   '@typescript-eslint/eslint-plugin@8.30.1(@typescript-eslint/parser@8.30.1(eslint@9.24.0(jiti@1.21.7))(typescript@5.8.3))(eslint@9.24.0(jiti@1.21.7))(typescript@5.8.3)':
     dependencies:
@@ -5096,6 +5201,8 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
+  tr46@0.0.3: {}
+
   troika-three-text@0.52.4(three@0.180.0):
     dependencies:
       bidi-js: 1.0.3
@@ -5221,6 +5328,13 @@ snapshots:
 
   webgl-sdf-generator@1.1.1: {}
 
+  webidl-conversions@3.0.1: {}
+
+  whatwg-url@5.0.0:
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
+
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
@@ -5238,6 +5352,8 @@ snapshots:
       ansi-styles: 6.2.1
       string-width: 5.1.2
       strip-ansi: 7.1.0
+
+  ws@8.18.3: {}
 
   yaml@2.7.1: {}
 
