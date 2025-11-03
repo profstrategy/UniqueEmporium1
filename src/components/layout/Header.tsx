@@ -37,7 +37,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(); // This now returns true for mobile and tablet
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
 
@@ -63,8 +63,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6">
+          {/* Desktop Navigation Links (hidden on mobile/tablet, visible on large screens) */}
+          <nav className="hidden lg:flex items-center space-x-6">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -134,8 +134,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
             <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
 
-            {/* Account Dashboard Link (Hidden on mobile) */}
-            {!isMobile && (
+            {/* Account Dashboard Link (Hidden on mobile/tablet, visible on large screens) */}
+            {!isMobile && ( // isMobile is now true for screens < 1024px
               <Link to="/account" className="relative">
                 <Button variant="ghost" size="icon">
                   <User className="h-5 w-5" />
@@ -143,11 +143,11 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               </Link>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button (visible on mobile/tablet, hidden on large screens) */}
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="lg:hidden" // Hidden on large screens
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
