@@ -4,12 +4,18 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail } from "lucide-react";
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List } from "lucide-react"; // Added List icon
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"; // Added Accordion imports
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -47,8 +53,8 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col">
-        <SheetHeader className="flex items-center justify-center py-4"> {/* Center the logo */}
-          <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
+        <SheetHeader className="flex items-center justify-center py-4">
+          <UniqueEmporiumLogo className="h-[100px]" />
         </SheetHeader>
         <motion.nav
           className="flex flex-col space-y-4 py-4 overflow-y-auto"
@@ -63,21 +69,32 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             <ShoppingBag className="mr-2 h-5 w-5" /> Shop All
           </Button>
 
+          {/* Categories Accordion */}
           <div className="border-t border-border pt-4">
-            <h3 className="mb-3 px-4 text-sm font-semibold text-muted-foreground">Categories</h3>
-            <div className="grid grid-cols-2 gap-2 px-2">
-              {categories.map((category) => (
-                <Button
-                  key={category.name}
-                  variant="ghost"
-                  className="flex flex-col h-auto py-3 justify-center items-center text-center text-sm"
-                  onClick={() => handleLinkClick(category.link)}
-                >
-                  <category.icon className="h-5 w-5 mb-1" />
-                  {category.name}
-                </Button>
-              ))}
-            </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="categories" className="border-b-0"> {/* Removed bottom border */}
+                <AccordionTrigger className="flex items-center justify-between px-4 py-2 text-base font-semibold text-foreground hover:no-underline">
+                  <div className="flex items-center">
+                    <List className="mr-2 h-5 w-5" /> Categories
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pb-0"> {/* Removed default padding-bottom */}
+                  <div className="grid grid-cols-2 gap-2 px-2">
+                    {categories.map((category) => (
+                      <Button
+                        key={category.name}
+                        variant="ghost"
+                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-sm"
+                        onClick={() => handleLinkClick(category.link)}
+                      >
+                        <category.icon className="h-5 w-5 mb-1" />
+                        {category.name}
+                      </Button>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
 
           <div className="border-t border-border pt-4">
