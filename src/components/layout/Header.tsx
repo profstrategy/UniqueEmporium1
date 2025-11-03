@@ -14,7 +14,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import UniqueEmporiumLogo3D from "@/components/logo/UniqueEmporiumLogo3D.tsx";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
 
 interface HeaderProps {
@@ -26,7 +25,7 @@ const categories = [
   { name: "Kids", icon: Baby, link: "/products?category=Kids" },
   { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
   { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
-  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Jeans" },
+  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
   { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
   { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
   { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
