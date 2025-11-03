@@ -61,7 +61,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col">
+      <SheetContent side="left" className="w-[80vw] max-w-sm flex flex-col bg-secondary text-secondary-foreground">
         <SheetHeader className="flex items-center justify-center py-4">
           <UniqueEmporiumLogo className="h-[100px]" />
         </SheetHeader>
