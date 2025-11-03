@@ -57,23 +57,23 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           <UniqueEmporiumLogo className="h-[100px]" />
         </SheetHeader>
         <motion.nav
-          className="flex flex-col space-y-4 py-4 overflow-y-auto"
+          className="flex flex-col space-y-1 py-2 overflow-y-auto" // Changed space-y-4 to space-y-1 and py-4 to py-2
           initial="hidden"
           animate="visible"
           variants={menuVariants}
         >
-          <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/")}>
+          <Button variant="ghost" className="justify-start text-base py-1" onClick={() => handleLinkClick("/")}>
             <Info className="mr-2 h-5 w-5" /> Home
           </Button>
-          <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/products")}>
+          <Button variant="ghost" className="justify-start text-base py-1" onClick={() => handleLinkClick("/products")}>
             <ShoppingBag className="mr-2 h-5 w-5" /> Shop All
           </Button>
 
           {/* Categories Accordion */}
-          <div className="border-t border-border pt-2">
+          <div> {/* Removed border-t border-border pt-2 */}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="categories" className="border-b-0">
-                <AccordionTrigger className="flex items-center justify-between px-4 py-2 text-base font-semibold text-foreground hover:no-underline">
+                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline"> {/* Changed py-2 to py-1 */}
                   <div className="flex items-center">
                     <List className="mr-2 h-5 w-5" /> Categories
                   </div>
@@ -98,22 +98,22 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           </div>
 
           {/* Favorites and Cart buttons - now stacked vertically */}
-          <div className="border-t border-border pt-4 flex flex-col space-y-2"> {/* Added flex flex-col space-y-2 */}
-            <Button variant="ghost" className="justify-start text-base relative w-full" onClick={() => handleLinkClick("/favorites")}> {/* Added w-full */}
+          <div className="flex flex-col space-y-1"> {/* Removed border-t border-border pt-4, changed space-y-2 to space-y-1 */}
+            <Button variant="ghost" className="justify-start text-base relative w-full py-1" onClick={() => handleLinkClick("/favorites")}>
               <Heart className="mr-2 h-5 w-5" /> Favorites
               <Badge count={totalFavorites} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
             </Button>
-            <Button variant="ghost" className="justify-start text-base relative w-full" onClick={() => handleLinkClick("/cart")}> {/* Added w-full */}
+            <Button variant="ghost" className="justify-start text-base relative w-full py-1" onClick={() => handleLinkClick("/cart")}>
               <ShoppingBag className="mr-2 h-5 w-5" /> Cart
               <Badge count={totalItems} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
             </Button>
           </div>
 
-          <div className="border-t border-border pt-4">
-            <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/about")}>
+          <div> {/* Removed border-t border-border pt-4 */}
+            <Button variant="ghost" className="justify-start text-base py-1" onClick={() => handleLinkClick("/about")}>
               <Info className="mr-2 h-5 w-5" /> About Us
             </Button>
-            <Button variant="ghost" className="justify-start text-base" onClick={() => handleLinkClick("/contact")}>
+            <Button variant="ghost" className="justify-start text-base py-1" onClick={() => handleLinkClick("/contact")}>
               <Mail className="mr-2 h-5 w-5" /> Contact
             </Button>
           </div>
