@@ -97,13 +97,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
                         <item.icon className="mr-2 h-4 w-4" /> {item.name}
                       </Button>
                     ))}
-                    <Button
-                      variant="ghost"
-                      className="justify-start text-sm py-1 text-destructive hover:bg-destructive/10"
-                      onClick={handleLogout}
-                    >
-                      <LogOut className="mr-2 h-4 w-4" /> Logout
-                    </Button>
+                    {/* Removed the duplicate Logout button from here */}
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -165,7 +159,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             <Mail className="mr-2 h-5 w-5" /> Contact
           </Button>
 
-          {/* 9. Logout */}
+          {/* 9. Logout (top-level) */}
           <Button
             variant="ghost"
             className="justify-start text-base py-1 text-destructive hover:bg-destructive/10"
