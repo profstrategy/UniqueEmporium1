@@ -40,10 +40,10 @@ const CheckoutProgress = ({ currentStep, totalSteps = 3 }: CheckoutProgressProps
             className={cn(
               "relative flex items-center justify-center h-8 w-8 rounded-full border-2",
               isActive
-                ? "border-primary bg-primary text-primary-foreground"
+                ? "border-primary bg-primary text-white" // Active step: white text
                 : isCompleted
-                  ? "border-primary bg-primary/20 text-primary"
-                  : "border-muted-foreground text-muted-foreground",
+                  ? "border-primary bg-primary/20 text-white" // Completed step: white text
+                  : "border-muted-foreground text-white", // Inactive step: white text
             )}
             variants={stepVariants}
           >
