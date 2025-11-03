@@ -82,9 +82,9 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransf
           <div className="bg-muted/30 rounded-lg p-6 border border-border">
             <p className="font-semibold text-lg text-foreground">Please make your payment to:</p>
             <ul className="mt-3 space-y-1 text-muted-foreground text-sm">
-              <li><strong>Bank Name:</strong> Zenith Bank</li>
-              <li><strong>Account Name:</strong> Unique Emporium</li>
-              <li><strong>Account Number:</strong> 0123456789</li>
+              <li><strong>Bank Name:</strong> Opay</li>
+              <li><strong>Account Name:</strong> Hashim Aishat Omowunmi</li>
+              <li><strong>Account Number:</strong> 9039144261</li>
             </ul>
 
             <p className="mt-4 text-xs text-muted-foreground">
