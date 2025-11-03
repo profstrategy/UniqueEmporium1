@@ -66,7 +66,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           <UniqueEmporiumLogo className="h-[130px]" />
         </SheetHeader>
         <motion.nav
-          className="flex flex-col space-y-1 py-2 overflow-y-auto"
+          className="flex flex-col space-y-1 py-0 overflow-y-auto"
           initial="hidden"
           animate="visible"
           variants={menuVariants}
