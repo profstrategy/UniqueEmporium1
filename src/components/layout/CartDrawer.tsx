@@ -57,7 +57,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       variant="outline"
                       size="icon"
                       className="h-7 w-7"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)} // Decrement by 1
+                      onClick={() => updateQuantity(item.id, item.quantity - item.minOrderQuantity)}
                       disabled={item.quantity <= item.minOrderQuantity}
                     >
                       <Minus className="h-4 w-4" />
@@ -67,7 +67,7 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       variant="outline"
                       size="icon"
                       className="h-7 w-7"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)} // Increment by 1
+                      onClick={() => updateQuantity(item.id, item.quantity + item.minOrderQuantity)}
                     >
                       <Plus className="h-4 w-4" />
                     </Button>

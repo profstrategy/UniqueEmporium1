@@ -31,7 +31,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
 
   const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) => Math.max(product.minOrderQuantity, prev + amount)); // Increment/decrement by 1
+    setQuantity((prev) => Math.max(product.minOrderQuantity, prev + amount));
   };
 
   const handleAddToCart = async () => {
@@ -168,7 +168,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 variant="outline"
                 size="icon"
                 className="h-10 w-10 rounded-r-none"
-                onClick={() => handleQuantityChange(-1)}
+                onClick={() => handleQuantityChange(-product.minOrderQuantity)}
                 disabled={quantity <= product.minOrderQuantity}
               >
                 <Minus className="h-4 w-4" />
@@ -187,13 +187,13 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 }}
                 className="w-16 text-center border-y-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
                 min={product.minOrderQuantity}
-                step={1}
+                step={product.minOrderQuantity}
               />
               <Button
                 variant="outline"
                 size="icon"
                 className="h-10 w-10 rounded-l-none"
-                onClick={() => handleQuantityChange(1)}
+                onClick={() => handleQuantityChange(product.minOrderQuantity)}
               >
                 <Plus className="h-4 w-4" />
               </Button>

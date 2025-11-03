@@ -73,17 +73,15 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
       const itemToUpdate = prevItems.find((item) => item.id === productId);
       if (!itemToUpdate) return prevItems;
 
-      const minOrderQuantity = itemToUpdate.minOrderQuantity;
-      let finalQuantity = newQuantity;
-
-      if (newQuantity <= 0) {
-        // Remove item if quantity is 0 or less
-        return prevItems.filter((item) => item.id !== productId);
-      } else if (newQuantity < minOrderQuantity) {
-        // Snap back to minOrderQuantity if it goes below
-        finalQuantity = minOrderQuantity;
+      // Ensure new quantity is a multiple of minOrderQuantity and at least minOrderQuantity
+      let finalQuantity = Math.max(itemToUpdate.minOrderQuantity, newQuantity);
+      if (finalQuantity % itemToUpdate.minOrderQuantity !== 0) {
+        finalQuantity = Math.ceil(finalQuantity / itemToUpdate.minOrderQuantity) * itemToUpdate.minOrderQuantity;
       }
-      // Otherwise, accept newQuantity as is
+
+      if (finalQuantity <= 0) {
+        return prevItems.filter((item) => item.id !== productId);
+      }
 
       return prevItems.map((item) =>
         item.id === productId ? { ...item, quantity: finalQuantity } : item,
