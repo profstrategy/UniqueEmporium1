@@ -4,21 +4,21 @@ import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Loader2, ShoppingBag, Package } from "lucide-react"; // Added Package icon
+import { CheckCircle2, Loader2, ShoppingBag, Package, Banknote } from "lucide-react"; // Added Banknote icon
 import { useCart } from "@/context/CartContext.tsx";
 import { Product } from "@/components/products/ProductCard.tsx";
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
-import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx";
+import type { BankTransferFormData } from "@/components/checkout/BankTransferPaymentForm.tsx"; // New import
 
 interface OrderReviewProps {
   shippingInfo: ShippingFormData;
-  paymentInfo: PaymentFormData;
+  bankTransferInfo: BankTransferFormData; // Changed from 'paymentInfo'
   onPrevious: () => void;
   onPlaceOrder: () => void;
   isPlacingOrder: boolean;
 }
 
-const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPlacingOrder }: OrderReviewProps) => {
+const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder, isPlacingOrder }: OrderReviewProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 
   const vatRate = 0;
@@ -39,7 +39,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
       calculatedShipping = 1; // Nominal charge
       shippingDisplay = "₦1 (Driver handles fees)";
       break;
-    case "park-delivery": // Corrected here
+    case "park-delivery":
       calculatedShipping = 1; // Nominal charge
       shippingDisplay = "₦1 (Driver handles fees)";
       break;
@@ -60,7 +60,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
     switch (method) {
       case "pickup": return "Pick-up (Free)";
       case "dispatch-rider": return "Dispatch Rider (@ ₦1)";
-      case "park-delivery": return "Park Delivery (@ ₦1)"; // Corrected here
+      case "park-delivery": return "Park Delivery (@ ₦1)";
       default: return "Unknown";
     }
   };
@@ -92,20 +92,27 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
             <Package className="h-5 w-5" /> Delivery Method
           </h3>
           <p className="text-muted-foreground text-sm">{getDeliveryMethodLabel(shippingInfo.deliveryMethod)}</p>
-          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && ( // Corrected here
+          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && (
             <p className="text-xs text-primary font-medium mt-2">
               *Actual delivery fees are negotiated directly with the driver.
             </p>
           )}
         </div>
 
-        {/* Payment Method */}
+        {/* Payment Method (Bank Transfer) */}
         <div>
-          <h3 className="font-semibold text-lg mb-3 text-foreground">Payment Method</h3>
+          <h3 className="font-semibold text-lg mb-3 text-foreground flex items-center gap-2">
+            <Banknote className="h-5 w-5" /> Payment Method
+          </h3>
           <div className="text-muted-foreground space-y-1 text-sm">
-            <p>Card Holder: {paymentInfo.cardName}</p>
-            <p>Card Number: **** **** **** {paymentInfo.cardNumber.slice(-4)}</p>
-            <p>Expiry Date: {paymentInfo.expiryDate}</p>
+            <p>Bank Transfer to Unique Emporium (Zenith Bank)</p>
+            <p>Account Number: 0123456789</p>
+            {bankTransferInfo.receiptFile && (
+              <p>Receipt Uploaded: <span className="font-medium text-foreground">{bankTransferInfo.receiptFile.name}</span></p>
+            )}
+            {!bankTransferInfo.receiptFile && (
+              <p className="text-destructive">No receipt uploaded. Please go back to upload.</p>
+            )}
           </div>
         </div>
 
@@ -149,7 +156,7 @@ const OrderReview = ({ shippingInfo, paymentInfo, onPrevious, onPlaceOrder, isPl
           <p className="text-sm text-muted-foreground font-normal mt-2">
             Prices are final — no VAT or hidden charges.
           </p>
-          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && ( // Corrected here
+          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && (
             <p className="text-xs text-primary font-medium mt-2">
               *Actual delivery fees for Dispatch/Park Delivery are negotiated directly with the driver.
             </p>

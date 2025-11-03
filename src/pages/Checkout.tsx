@@ -8,18 +8,18 @@ import OrderSummaryCard from "@/components/checkout/OrderSummaryCard.tsx";
 import EmptyCartState from "@/components/checkout/EmptyCartState.tsx";
 import OrderPlacedState from "@/components/checkout/OrderPlacedState.tsx";
 import ShippingForm from "@/components/checkout/ShippingForm.tsx";
-import PaymentForm from "@/components/checkout/PaymentForm.tsx";
+import BankTransferPaymentForm from "@/components/checkout/BankTransferPaymentForm.tsx"; // New import
 import OrderReview from "@/components/checkout/OrderReview.tsx";
 import { useCart } from "@/context/CartContext.tsx";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
-import type { PaymentFormData } from "@/components/checkout/PaymentForm.tsx";
+import type { BankTransferFormData } from "@/components/checkout/BankTransferPaymentForm.tsx"; // New import
 
 interface OrderData {
   shipping: ShippingFormData | null;
-  payment: PaymentFormData | null;
+  bankTransfer: BankTransferFormData | null; // Changed from 'payment' to 'bankTransfer'
 }
 
 const formTransitionVariants = {
@@ -42,7 +42,7 @@ const formTransitionVariants = {
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
-  const [orderData, setOrderData] = useState<OrderData>({ shipping: null, payment: null });
+  const [orderData, setOrderData] = useState<OrderData>({ shipping: null, bankTransfer: null }); // Updated state
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [direction, setDirection] = useState(0);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -54,13 +54,13 @@ const Checkout = () => {
     }
   }, [cartItems, isOrderPlaced]);
 
-  const handleNextStep = (data: ShippingFormData | PaymentFormData) => {
+  const handleNextStep = (data: ShippingFormData | BankTransferFormData) => { // Updated type
     setDirection(1);
     if (currentStep === 1) {
       setOrderData((prev) => ({ ...prev, shipping: data as ShippingFormData }));
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      setOrderData((prev) => ({ ...prev, payment: data as PaymentFormData }));
+      setOrderData((prev) => ({ ...prev, bankTransfer: data as BankTransferFormData })); // Updated state key
       setCurrentStep(3);
     }
   };
@@ -101,9 +101,9 @@ const Checkout = () => {
       case 1:
         return <ShippingForm onNext={handleNextStep} initialData={orderData.shipping} />;
       case 2:
-        return <PaymentForm onNext={handleNextStep} onPrevious={handlePreviousStep} initialData={orderData.payment} />;
+        return <BankTransferPaymentForm onNext={handleNextStep} onPrevious={handlePreviousStep} initialData={orderData.bankTransfer} />; // Using new component
       case 3:
-        if (!orderData.shipping || !orderData.payment) {
+        if (!orderData.shipping || !orderData.bankTransfer) { // Updated check
           return (
             <div className="text-center py-10">
               <p className="text-destructive">Error: Missing shipping or payment information.</p>
@@ -114,7 +114,7 @@ const Checkout = () => {
         return (
           <OrderReview
             shippingInfo={orderData.shipping!}
-            paymentInfo={orderData.payment!}
+            bankTransferInfo={orderData.bankTransfer!} // Updated prop name
             onPrevious={handlePreviousStep}
             onPlaceOrder={handlePlaceOrder}
             isPlacingOrder={isPlacingOrder}
