@@ -34,15 +34,15 @@ const DashboardHome = () => {
 
   return (
     <motion.div
-      className="space-y-8"
+      className="space-y-8" // Keep space-y-8 for spacing between major sections
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
     >
-      <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}> {/* Adjusted text size for mobile */}
+      <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2" variants={fadeInUp}> {/* Added mb-2 here */}
         Welcome, Fashionista!
       </motion.h1>
-      <motion.p className="text-sm md:text-lg text-muted-foreground" variants={fadeInUp}> {/* Adjusted text size for mobile */}
+      <motion.p className="text-sm md:text-lg text-muted-foreground" variants={fadeInUp}>
         Here's a quick overview of your Unique Emporium account.
       </motion.p>
 
