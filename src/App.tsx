@@ -28,6 +28,14 @@ const Terms = lazy(() => import("./pages/Terms.tsx"));
 const Checkout = lazy(() => import("./pages/Checkout.tsx"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails.tsx"));
 
+// Account Dashboard Pages
+const Account = lazy(() => import("./pages/Account.tsx"));
+const DashboardHome = lazy(() => import("./pages/account/DashboardHome.tsx"));
+const ProfilePage = lazy(() => import("./pages/account/ProfilePage.tsx"));
+const OrderHistoryPage = lazy(() => import("./pages/account/OrderHistoryPage.tsx"));
+const PaymentReceiptsPage = lazy(() => import("./pages/account/PaymentReceiptsPage.tsx"));
+
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -62,6 +70,13 @@ const App = () => {
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/checkout" element={<Checkout />} />
+                    {/* Account Dashboard Routes */}
+                    <Route path="/account" element={<Account />}>
+                      <Route index element={<DashboardHome />} /> {/* Default route for /account */}
+                      <Route path="profile" element={<ProfilePage />} />
+                      <Route path="orders" element={<OrderHistoryPage />} />
+                      <Route path="receipts" element={<PaymentReceiptsPage />} />
+                    </Route>
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
