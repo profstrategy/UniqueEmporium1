@@ -5,15 +5,15 @@ import { motion, Easing } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Shirt, Baby, Gem, ShoppingBag, LucideIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
-import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
+import { cn } from "@/lib/utils"; // Import cn for conditional classNames
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
 
 interface Category {
   name: string;
   icon: LucideIcon;
   description: string;
   link: string;
-  image: string | undefined;
+  image: string | undefined; // Changed type to allow undefined
 }
 
 const categories: Category[] = [
@@ -32,7 +32,7 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.07,
+      staggerChildren: 0.07, // Adjusted stagger for individual cards
       delayChildren: 0.2,
     },
   },
@@ -52,13 +52,14 @@ const CategoriesSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
-  const scrollSpeed = 1;
+  const scrollSpeed = 1; // Adjust scroll speed as needed
 
-  const categoriesToDisplay = [...categories, ...categories];
+  // Conditionally create the list of categories to display
+  const categoriesToDisplay = isMobile ? [...categories, ...categories] : categories;
 
   useEffect(() => {
     const scrollElement = scrollRef.current;
-    if (!scrollElement || !isMobile) {
+    if (!scrollElement || !isMobile) { // Only auto-scroll if on mobile
       return;
     }
 
@@ -69,7 +70,7 @@ const CategoriesSection = () => {
       if (!lastTimestamp) lastTimestamp = timestamp;
       const elapsed = timestamp - lastTimestamp;
 
-      if (elapsed > 16 && !isPaused) {
+      if (elapsed > 16 && !isPaused) { // Only scroll if not paused
         scrollElement.scrollLeft += scrollSpeed;
         
         const singleSetWidth = scrollElement.scrollWidth / 2; 
@@ -90,17 +91,18 @@ const CategoriesSection = () => {
   }, [isPaused, isMobile, scrollSpeed]);
 
   return (
-    <section className="relative py-[0.4rem]">
+    <section className="relative py-[0.4rem]"> {/* Removed gradient from section */}
       <motion.div
         className={cn(
           "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-          "p-6 rounded-xl bg-primary/40"
+          "p-6 rounded-xl bg-primary/40" // Changed from bg-primary/5 to bg-primary/40
         )}
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
       >
+        {/* Existing introductory text - DO NOT REMOVE OR EDIT */}
         <motion.h2
           className="font-poppins font-bold text-xl md:text-4xl text-foreground"
           variants={fadeInUp}
@@ -114,11 +116,12 @@ const CategoriesSection = () => {
           Find the perfect style to express your uniqueness
         </motion.p>
 
+        {/* Category Cards Container */}
         <motion.div
-          className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 no-scrollbar"
+          className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 md:gap-4 no-scrollbar"
           ref={scrollRef}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          onMouseEnter={() => isMobile && setIsPaused(true)}
+          onMouseLeave={() => isMobile && setIsPaused(false)}
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -128,18 +131,20 @@ const CategoriesSection = () => {
             <motion.div
               key={`${category.name}-${index}`}
               variants={itemVariants}
-              className="flex flex-col items-center cursor-pointer min-w-[120px]"
+              className="flex flex-col items-center cursor-pointer min-w-[120px] md:min-w-0"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
               <Link to={category.link} className="flex flex-col items-center">
+                {/* Image Container */}
                 <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden shadow-md mb-3 bg-white flex items-center justify-center">
                   <ImageWithFallback
-                    src={category.image}
+                    src={category.image} // Now explicitly undefined
                     alt={category.name}
                     containerClassName="w-full h-full"
                   />
                 </div>
+                {/* Category Name */}
                 <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 text-center mt-2 leading-tight">
                   {category.name.split(' ').map((word, i) => (
                     <React.Fragment key={i}>
