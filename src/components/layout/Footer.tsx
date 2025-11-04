@@ -16,7 +16,6 @@ import {
   Instagram,
   Linkedin,
   Youtube,
-  ArrowUp,
   Loader2,
   CheckCircle2,
   Shirt, Baby, Gem, ShoppingBag,
@@ -62,24 +61,9 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  // Removed showScrollToTop state
 
-  const handleScroll = useCallback(() => {
-    if (window.scrollY > 300) {
-      setShowScrollToTop(true);
-    } else {
-      setShowScrollToTop(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Removed handleScroll and scrollToTop functions
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -369,24 +353,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Scroll-to-Top Button */}
-      <AnimatePresence>
-        {showScrollToTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-50 rounded-full bg-accent p-3 shadow-lg text-accent-foreground hover:bg-accent/90"
-            aria-label="Scroll to top"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <ArrowUp className="h-6 w-6" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Removed Scroll-to-Top Button */}
     </footer>
   );
 };
