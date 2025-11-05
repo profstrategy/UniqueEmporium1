@@ -43,7 +43,7 @@ const FloatingWhatsApp = () => {
     <div
       className={cn(
         "fixed bottom-8 right-8 z-50 flex items-end",
-        isMobile ? "flex-col-reverse" : "flex-row justify-end" // Stack vertically on mobile, horizontally on desktop
+        isMobile ? "flex-col" : "flex-row justify-end" // Changed to flex-col for mobile
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -53,7 +53,7 @@ const FloatingWhatsApp = () => {
         {isOpen && (
           <motion.div
             className={cn(
-              "relative w-72 md:w-80 p-4 md:p-6 rounded-xl shadow-2xl", // Reverted width
+              "relative w-72 md:w-80 p-4 md:p-6 rounded-xl shadow-2xl",
               "bg-secondary/20 backdrop-blur-md border border-secondary/50",
               "flex flex-col space-y-4 text-secondary-foreground",
               isMobile ? "mb-4" : "mr-4" // Conditional margin for spacing
