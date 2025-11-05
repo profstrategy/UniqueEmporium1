@@ -138,7 +138,11 @@ export const mockAdminOrders: AdminOrder[] = [
 ];
 
 // --- Admin Products Data (Using existing mockProducts) ---
-export const mockAdminProducts = mockProducts;
+// Ensure mockProducts from products.ts now includes the 'status' field
+export const mockAdminProducts = mockProducts.map(product => ({
+  ...product,
+  status: product.status || "active" // Ensure status is set, default to active
+}));
 
 // --- Admin Categories Data ---
 export interface AdminCategory {

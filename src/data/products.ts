@@ -15,6 +15,7 @@ export interface Product {
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
   minOrderQuantity: number; // Added minOrderQuantity
+  status: "active" | "inactive"; // Added status field
 }
 
 export interface ProductDetails extends Product {
@@ -75,6 +76,7 @@ export const mockProducts: ProductDetails[] = [
     tagVariant: "default",
     limitedStock: true,
     minOrderQuantity: 10, // MOQ
+    status: "active", // Default status
     fullDescription: `Step out in style with this elegant SHEIN floral maxi gown. Crafted from lightweight, breathable fabric, it features a flattering silhouette and vibrant floral print, perfect for any occasion. Its comfortable fit and chic design make it a must-have for your wardrobe.`,
     keyFeatures: [
       "Flowy, breathable fabric for ultimate comfort",
@@ -126,6 +128,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Thrift Find",
     tagVariant: "secondary",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Relive the 90s with this authentic vintage graphic t-shirt. Each piece is hand-picked for its unique design and excellent condition, offering a sustainable and stylish addition to your wardrobe. Soft, worn-in cotton ensures maximum comfort.`,
     keyFeatures: [
@@ -177,6 +180,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Kids' Fashion",
     tagVariant: "destructive",
     limitedStock: true,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Durable and stylish distressed denim jeans for kids. Made from soft, flexible denim, these jeans are perfect for active children, offering both comfort and a trendy look. Features an adjustable waistband for a perfect fit.`,
     keyFeatures: [
@@ -228,6 +232,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Best Seller",
     tagVariant: "destructive",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Elevate your everyday style with our Ladies' Casual Chic Fashion Bundle. This curated collection includes a stylish top, comfortable jeans, and a versatile accessory, all designed to create effortless and fashionable outfits. Perfect for the modern Nigerian woman.`,
     keyFeatures: [
@@ -279,6 +284,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Premium Thrift",
     tagVariant: "destructive",
     limitedStock: true,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Discover a touch of luxury with this exquisite pre-loved silk scarf from a renowned designer. Each scarf is carefully inspected to ensure excellent condition, offering a sustainable way to own high-end fashion. Perfect for adding a sophisticated flair to any outfit.`,
     keyFeatures: [
@@ -329,6 +335,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Trendy",
     tagVariant: "default",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `A playful and chic SHEIN mini dress featuring a delicate ruffle hem. Made from a comfortable, slightly stretchy fabric, this dress is perfect for a casual day out or a fun evening with friends. Its vibrant color and flattering cut will make you stand out.`,
     keyFeatures: [
@@ -381,6 +388,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Timeless",
     tagVariant: "secondary",
     limitedStock: true,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `A timeless classic, this vintage denim jacket is a wardrobe essential. Each piece is hand-selected for its quality and authentic vintage appeal, offering a unique and durable outer layer. Perfect for all seasons and effortlessly stylish.`,
     keyFeatures: [
@@ -432,6 +440,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Cozy",
     tagVariant: "secondary",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Keep your little ones warm and stylish with this fun graphic hoodie. Made from soft, fleece-lined cotton, it's perfect for cooler days and playful adventures. Features a vibrant graphic print and a comfortable fit.`,
     keyFeatures: [
@@ -483,6 +492,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Trending",
     tagVariant: "destructive",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Curated for the modern man, our Urban Streetwear Fashion Bundle offers a complete look with a stylish tee, comfortable joggers, and a trendy cap. All pieces are selected for their quality, comfort, and contemporary design, perfect for making a statement.`,
     keyFeatures: [
@@ -534,6 +544,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Kids' Value",
     tagVariant: "secondary",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 5, // MOQ for bundles
     fullDescription: `Our Kids' Playtime Essentials Fashion Bundle is perfect for active little ones. This bundle includes durable t-shirts, comfortable shorts/leggings, and a fun accessory, all designed for maximum comfort and freedom of movement during play.`,
     keyFeatures: [
@@ -586,6 +597,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Summer Essential",
     tagVariant: "default",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Embrace the sunshine with this light and airy SHEIN midi dress. Featuring a flattering A-line cut and breathable fabric, it's perfect for warm weather. The vibrant print adds a touch of playful elegance to your summer wardrobe.`,
     keyFeatures: [
@@ -638,6 +650,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Timeless Accessory",
     tagVariant: "destructive",
     limitedStock: true,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `A beautifully preserved vintage leather crossbody bag, perfect for adding a touch of classic elegance to any outfit. Crafted from genuine leather, this bag features a durable construction and a timeless design that never goes out of style.`,
     keyFeatures: [
@@ -669,7 +682,7 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev23", author: "Uche M.", rating: 5, date: "2024-08-03", title: "Stunning bag!", comment: "The leather is beautiful and it's in fantastic condition for a vintage piece. Very happy!", isVerifiedBuyer: true },
       { id: "rev24", author: "Bisi O.", rating: 4, date: "2024-07-31", title: "Great quality", comment: "A bit smaller than I expected, but the quality is undeniable. Love the vintage feel.", isVerifiedBuyer: false },
     ],
-    relatedProducts: [ID_MAP["luxury-thrift-silk-scarf"], ID_MAP["vintage-denim-jacket"]],
+    relatedProducts: [ID_MAP["luxury-thrift-silk-scarf"], ID_MAP["vintage-leather-crossbody-bag"]],
   },
   {
     id: ID_MAP["kids-graphic-tshirt-pack"],
@@ -688,6 +701,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Value Pack",
     tagVariant: "secondary",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `A fantastic value pack of three graphic t-shirts for kids. Made from soft, durable cotton, these shirts feature fun and colorful prints, perfect for everyday wear and play. An essential addition to any child's wardrobe.`,
     keyFeatures: [
@@ -739,6 +753,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Breathable",
     tagVariant: "default",
     limitedStock: false,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Stay cool and stylish with this men's casual linen blend shirt. Perfect for warm Nigerian weather, its breathable fabric and relaxed fit offer ultimate comfort. Ideal for both casual outings and semi-formal events.`,
     keyFeatures: [
@@ -790,6 +805,7 @@ export const mockProducts: ProductDetails[] = [
     tag: "Exclusive",
     tagVariant: "destructive",
     limitedStock: true,
+    status: "active", // Default status
     minOrderQuantity: 10, // MOQ
     fullDescription: `Elevate your style with these pre-loved designer sunglasses. Each pair is authenticated and carefully inspected to ensure excellent condition, offering a sustainable way to own high-end eyewear. Protect your eyes in style.`,
     keyFeatures: [
@@ -852,6 +868,7 @@ export const getRandomProducts = (count: number, excludeId?: string): Product[] 
     tagVariant: p.tagVariant,
     limitedStock: p.limitedStock,
     minOrderQuantity: p.minOrderQuantity, // Include minOrderQuantity
+    status: p.status, // Include status
     // Removed specs from here
   }));
 };
