@@ -72,7 +72,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           variants={menuVariants}
         >
           {/* 1. Home */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/")}>
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/")}>
             <Home className="mr-2 h-5 w-5" /> Home
           </Button>
 
@@ -80,7 +80,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           <div>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="account" className="border-b-0">
-                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline hover:text-primary">
+                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline">
                   <div className="flex items-center">
                     <User className="mr-2 h-5 w-5" /> My Account
                   </div>
@@ -91,7 +91,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
                       <Button
                         key={item.name}
                         variant="ghost"
-                        className="justify-start text-sm py-1 text-foreground hover:text-primary hover:bg-primary/10"
+                        className="justify-start text-sm py-1 text-foreground hover:bg-primary/10"
                         onClick={() => handleLinkClick(item.path)}
                       >
                         <item.icon className="mr-2 h-4 w-4" /> {item.name}
@@ -107,7 +107,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           <div>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="categories" className="border-b-0">
-                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline hover:text-primary">
+                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline">
                   <div className="flex items-center">
                     <List className="mr-2 h-5 w-5" /> Categories
                   </div>
@@ -118,7 +118,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
                       <Button
                         key={category.name}
                         variant="ghost"
-                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-sm text-foreground hover:text-primary hover:bg-primary/10"
+                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-sm text-foreground hover:bg-primary/10"
                         onClick={() => handleLinkClick(category.link)}
                       >
                         <category.icon className="h-5 w-5 mb-1" />
@@ -132,41 +132,41 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           </div>
 
           {/* 4. Shop All */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/products")}>
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/products")}>
             <ShoppingBag className="mr-2 h-5 w-5" /> Shop All
           </Button>
 
           {/* 5. Favorites */}
-          <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/favorites")}>
+          <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/favorites")}>
             <Heart className="mr-2 h-5 w-5" /> Favorites
             <Badge count={totalFavorites} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
           </Button>
 
           {/* 6. Cart */}
-          <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/cart")}>
+          <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/cart")}>
             <ShoppingBag className="mr-2 h-5 w-5" /> Cart
             <Badge count={totalItems} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
           </Button>
 
           {/* 7. About Us */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/about")}>
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/about")}>
             <Info className="mr-2 h-5 w-5" /> About Us
           </Button>
 
           {/* 8. Contact */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/contact")}>
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/contact")}>
             <Mail className="mr-2 h-5 w-5" /> Contact
           </Button>
 
           {/* Temporary Admin Link */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/admin")}>
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/10" onClick={() => handleLinkClick("/admin")}>
             <LayoutDashboard className="mr-2 h-5 w-5" /> Admin Dashboard
           </Button>
 
           {/* 9. Logout (top-level) */}
           <Button
             variant="ghost"
-            className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10"
+            className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/10"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-5 w-5" /> Logout
