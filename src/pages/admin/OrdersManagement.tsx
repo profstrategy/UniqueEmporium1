@@ -183,12 +183,15 @@ const OrdersManagement = () => {
       initial="hidden"
       animate="visible"
     >
-      <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
-        Orders Management
-      </motion.h1>
-      <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
-        Manage all customer orders and their statuses.
-      </motion.p>
+      {/* New wrapper div for the heading and paragraph with reduced spacing */}
+      <div className="space-y-2">
+        <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+          Orders Management
+        </motion.h1>
+        <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+          Manage all customer orders and their statuses.
+        </motion.p>
+      </div>
 
       <Card className="rounded-xl shadow-sm">
         <CardHeader>
