@@ -27,7 +27,7 @@ const reasons: Reason[] = [
   {
     icon: Truck,
     title: "Flexible Delivery Options",
-    description: "Pick-up, Dispatch Rider, or Pack Delivery available nationwide.",
+    description: "Pick-up, Dispatch Rider, or Park Delivery available nationwide.",
   },
   {
     icon: XCircle, // Changed icon to XCircle
