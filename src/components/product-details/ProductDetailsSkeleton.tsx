@@ -24,8 +24,7 @@ const ProductDetailsSkeleton = () => {
                 ))}
               </div>
             </Card>
-            {/* 3D Viewer Skeleton */}
-            <Skeleton className="w-full h-72 lg:h-96 rounded-xl" />
+            {/* Removed 3D Viewer Skeleton */}
           </div>
 
           {/* Product Info & Actions Skeleton */}

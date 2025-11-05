@@ -116,7 +116,6 @@ const ProductDetails = () => {
               images={product.images}
               productName={product.name}
             />
-            {/* Removed 3D Viewer: {product.modelPath && <Product3DViewer modelPath={product.modelPath} productName={product.name} />} */}
           </motion.div>
 
           {/* Product Info & Actions */}
