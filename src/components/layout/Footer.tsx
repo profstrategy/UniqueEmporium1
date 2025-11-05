@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { motion, AnimatePresence, Easing, useInView, useAnimation } from "framer-motion";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
-  ChevronDown,
   Mail,
   Phone,
   MapPin,
@@ -19,21 +17,9 @@ import {
   Loader2,
   CheckCircle2,
   Shirt, Baby, Gem, ShoppingBag,
-  Info,
 } from "lucide-react";
-import { FaTiktok } from "react-icons/fa"; // Import FaTiktok from react-icons/fa
-import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
-
-const categories = [
-  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
-  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
-  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
-  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
-  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
-  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
-  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
-  { name: "Others", icon: Gem, link: "/products?category=Others" },
-];
+import { FaTiktok, FaTelegram } from "react-icons/fa"; // Import FaTelegram from react-icons/fa
+import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -51,19 +37,10 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
 };
 
-const categoryListVariants = {
-  hidden: { height: 0, opacity: 0, transition: { duration: 0.2 } },
-  visible: { height: "auto", opacity: 1, transition: { duration: 0.3 } },
-};
-
 const Footer = () => {
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  // Removed showScrollToTop state
-
-  // Removed handleScroll and scrollToTop functions
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +69,7 @@ const Footer = () => {
           {/* Column 1: Company Info */}
           <motion.div variants={fadeInUp}>
             <Link to="/" className="mb-4 flex items-center">
-              <UniqueEmporiumLogo className="h-[110px]" /> {/* Updated height to 110px */}
+              <UniqueEmporiumLogo className="h-[110px]" />
             </Link>
             <p className="mb-4 text-sm text-primary-foreground/80">
               Your ultimate destination for luxury thrift, fashion bundles, and unique wears.
@@ -219,7 +196,7 @@ const Footer = () => {
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <FaTiktok className="h-6 w-6" /> {/* Replaced Sparkles with FaTiktok */}
+                <FaTiktok className="h-6 w-6" />
               </motion.a>
               <motion.a
                 href="https://www.instagram.com/unique_emporium1/"
@@ -230,6 +207,16 @@ const Footer = () => {
                 whileTap={{ scale: 0.9 }}
               >
                 <Instagram className="h-6 w-6" />
+              </motion.a>
+              <motion.a
+                href="https://t.me/+hmN1ID2WHJdjZGRk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <FaTelegram className="h-6 w-6" />
               </motion.a>
               <motion.a
                 href="#"
@@ -260,7 +247,7 @@ const Footer = () => {
           <p>&copy; 2019-2025 Unique Emporium. All rights reserved.</p>
           <p>
             <a
-              href="https://www.web-aura.com/" // Assuming Web-Aura has a website
+              href="https://www.web-aura.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary-foreground transition-colors"
@@ -270,8 +257,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-
-      {/* Removed Scroll-to-Top Button */}
     </footer>
   );
 };
