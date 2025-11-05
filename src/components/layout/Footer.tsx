@@ -222,7 +222,7 @@ const Footer = () => {
                 <Sparkles className="h-6 w-6" /> {/* Reverted to Sparkles */}
               </motion.a>
               <motion.a
-                href="#"
+                href="https://www.instagram.com/unique_emporium1/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
