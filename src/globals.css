@@ -139,7 +139,7 @@
     transform: translateY(-8px) scale(1);
   }
   40% { /* Fall down and slightly squash */
-    transform: translateY(0) scale(1.05, 0.95);
+    transform: translateY(0) scale(1.12, 0.88); /* Adjusted for more squashiness */
   }
   60% { /* Rebound slightly */
     transform: translateY(-4px) scale(1);
