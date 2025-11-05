@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User } from "lucide-react";
+import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard } from "lucide-react"; // Added LayoutDashboard
 import Badge from "@/components/common/Badge.tsx";
 import CartIcon from "@/components/common/CartIcon.tsx";
 import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
@@ -115,6 +115,15 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               }
             >
               Contact
+            </NavLink>
+            {/* Temporary Admin Link */}
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `text-foreground transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary"}`
+              }
+            >
+              Admin
             </NavLink>
           </nav>
 

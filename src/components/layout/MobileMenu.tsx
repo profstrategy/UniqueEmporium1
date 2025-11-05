@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home } from "lucide-react"; // Import Home icon
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard } from "lucide-react"; // Import Home and LayoutDashboard icon
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
@@ -156,6 +156,11 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           {/* 8. Contact */}
           <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/contact")}>
             <Mail className="mr-2 h-5 w-5" /> Contact
+          </Button>
+
+          {/* Temporary Admin Link */}
+          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:text-primary hover:bg-primary/10" onClick={() => handleLinkClick("/admin")}>
+            <LayoutDashboard className="mr-2 h-5 w-5" /> Admin Dashboard
           </Button>
 
           {/* 9. Logout (top-level) */}
