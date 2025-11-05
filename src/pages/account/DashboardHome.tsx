@@ -40,8 +40,8 @@ const DashboardHome = () => {
       animate="visible"
     >
       {/* Wrapper for the welcome text block with conditional bottom padding */}
-      <div className="pb-[0.3rem] md:pb-0">
-        <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2" variants={fadeInUp}>
+      <div className="space-y-2">
+        <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Welcome, Fashionista!
         </motion.h1>
         <motion.p className="text-sm md:text-lg text-muted-foreground" variants={fadeInUp}>

@@ -42,8 +42,10 @@ const PaymentReceiptsPage = () => {
       initial="hidden"
       animate="visible"
     >
-      <h1 className="text-3xl font-bold text-foreground">Payment Receipts</h1>
-      <p className="text-muted-foreground text-lg">View your uploaded payment receipts and their status.</p>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-foreground">Payment Receipts</h1>
+        <p className="text-muted-foreground text-lg">View your uploaded payment receipts and their status.</p>
+      </div>
 
       <Card className="rounded-xl shadow-sm">
         <CardHeader>

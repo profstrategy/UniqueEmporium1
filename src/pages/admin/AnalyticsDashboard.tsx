@@ -90,12 +90,14 @@ const AnalyticsDashboard = () => {
       initial="hidden"
       animate="visible"
     >
-      <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
-        Analytics Dashboard
-      </motion.h1>
-      <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
-        Insights into your store's performance.
-      </motion.p>
+      <div className="space-y-2">
+        <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+          Analytics Dashboard
+        </motion.h1>
+        <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+          Insights into your store's performance.
+        </motion.p>
+      </div>
 
       {/* Filter and Summary Cards */}
       <div className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">

@@ -21,12 +21,14 @@ const FaqHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Got Questions?
         </Badge>
-        <h1 className="font-poppins text-3xl md:text-6xl font-bold mb-4 md:mb-6 text-foreground">
-          Frequently Asked Fashion Questions
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Find quick answers to the most common questions about our unique collections, services, and policies.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-3xl md:text-6xl font-bold text-foreground">
+            Frequently Asked Fashion Questions
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Find quick answers to the most common questions about our unique collections, services, and policies.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

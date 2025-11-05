@@ -21,12 +21,14 @@ const ReturnsHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Our Promise
         </Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Hassle-Free Returns & Refunds
-        </h1>
-        <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-          Understand our straightforward process for returns, exchanges, and refunds to ensure your peace of mind with every unique wear.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-2xl md:text-6xl font-bold text-foreground">
+            Hassle-Free Returns & Refunds
+          </h1>
+          <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
+            Understand our straightforward process for returns, exchanges, and refunds to ensure your peace of mind with every unique wear.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

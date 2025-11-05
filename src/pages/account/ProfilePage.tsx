@@ -69,8 +69,10 @@ const ProfilePage = () => {
       initial="hidden"
       animate="visible"
     >
-      <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
-      <p className="text-muted-foreground text-lg">Manage your personal details and password.</p>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
+        <p className="text-muted-foreground text-lg">Manage your personal details and password.</p>
+      </div>
 
       <Card className="rounded-xl shadow-sm">
         <CardHeader>

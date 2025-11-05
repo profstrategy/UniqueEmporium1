@@ -19,12 +19,14 @@ const AboutHero = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <Badge variant="outline" className="mb-4 text-sm">Our Journey</Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Unveiling Your Unique Style
-        </h1>
-        <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          At Unique Emporium, we believe in the power of fashion to express individuality. We're dedicated to bringing you curated luxury thrift and fashion bundles with unparalleled service.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-2xl md:text-6xl font-bold text-foreground">
+            Unveiling Your Unique Style
+          </h1>
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            At Unique Emporium, we believe in the power of fashion to express individuality. We're dedicated to bringing you curated luxury thrift and fashion bundles with unparalleled service.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

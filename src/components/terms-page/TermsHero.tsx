@@ -21,12 +21,14 @@ const TermsHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Our Policies
         </Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Terms of Service
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Please read our terms and conditions carefully before using Unique Emporium's services.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-2xl md:text-6xl font-bold text-foreground">
+            Terms of Service
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Please read our terms and conditions carefully before using Unique Emporium's services.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

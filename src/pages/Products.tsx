@@ -163,18 +163,20 @@ const Products = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="text-center mb-8"
       >
-        <motion.h1
-          className="font-poppins text-3xl md:text-4xl font-bold text-foreground mb-2"
-          variants={fadeInUp}
-        >
-          Our Unique Collections
-        </motion.h1>
-        <motion.p
-          className="text-lg text-muted-foreground max-w-2xl mx-auto"
-          variants={fadeInUp}
-        >
-          Explore our extensive collection of luxury thrift, fashion bundles, and unique wears.
-        </motion.p>
+        <div className="space-y-2">
+          <motion.h1
+            className="font-poppins text-3xl md:text-4xl font-bold text-foreground"
+            variants={fadeInUp}
+          >
+            Our Unique Collections
+          </motion.h1>
+          <motion.p
+            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            variants={fadeInUp}
+          >
+            Explore our extensive collection of luxury thrift, fashion bundles, and unique wears.
+          </motion.p>
+        </div>
       </motion.div>
 
       {/* Filters and Search Section */}

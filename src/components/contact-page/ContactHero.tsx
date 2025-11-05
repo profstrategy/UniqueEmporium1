@@ -19,12 +19,14 @@ const ContactHero = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <Badge variant="outline" className="mb-4 text-sm">Get in Touch</Badge>
-        <h1 className="font-poppins text-xl md:text-6xl font-bold mb-4 md:mb-6 text-foreground">
-          We're Here to Help You Shine
-        </h1>
-        <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Have questions about our collections, need styling advice, or require support? Reach out to us, and our dedicated team will assist you promptly.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-xl md:text-6xl font-bold text-foreground">
+            We're Here to Help You Shine
+          </h1>
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Have questions about our collections, need styling advice, or require support? Reach out to us, and our dedicated team will assist you promptly.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

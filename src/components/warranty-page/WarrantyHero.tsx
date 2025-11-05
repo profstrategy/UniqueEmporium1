@@ -21,12 +21,14 @@ const WarrantyHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Our Commitment
         </Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Warranty Information
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Understand the coverage and terms for your Unique Emporium purchases, ensuring peace of mind with every unique wear.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-2xl md:text-6xl font-bold text-foreground">
+            Warranty Information
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Understand the coverage and terms for your Unique Emporium purchases, ensuring peace of mind with every unique wear.
+          </p>
+        </div>
       </motion.div>
     </section>
   );

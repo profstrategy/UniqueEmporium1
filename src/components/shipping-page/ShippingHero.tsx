@@ -21,12 +21,14 @@ const ShippingHero = () => {
         <Badge variant="outline" className="mb-4 text-sm rounded-md">
           Delivery Details
         </Badge>
-        <h1 className="font-poppins text-2xl md:text-6xl font-bold mb-6 text-foreground">
-          Nationwide Shipping & Delivery
-        </h1>
-        <p className="text-lg md:text-lg text-muted-foreground max-w-3xl mx-auto">
-          Everything you need to know about our shipping options, delivery times, and tracking your unique fashion order within Nigeria.
-        </p>
+        <div className="space-y-2">
+          <h1 className="font-poppins text-2xl md:text-6xl font-bold text-foreground">
+            Nationwide Shipping & Delivery
+          </h1>
+          <p className="text-lg md:text-lg text-muted-foreground max-w-3xl mx-auto">
+            Everything you need to know about our shipping options, delivery times, and tracking your unique fashion order within Nigeria.
+          </p>
+        </div>
       </motion.div>
     </section>
   );
