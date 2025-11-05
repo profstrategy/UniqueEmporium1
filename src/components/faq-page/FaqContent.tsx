@@ -70,7 +70,7 @@ const fadeInUp = {
 
 const FaqContent = () => {
   return (
-    <section className="py-12 md:py-16 px-4 max-w-4xl mx-auto">
+    <section className="py-12 md:py-16 px-4 max-w-4xl">
       <motion.h2
         className="font-poppins text-2xl md:text-3xl font-bold text-left mb-8 text-foreground"
         variants={fadeInUp}
