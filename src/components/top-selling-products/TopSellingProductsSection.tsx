@@ -11,13 +11,13 @@ import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 
 // Hand-pick some products to represent "Top Selling"
 const topSellingProductIds = [
-  "shein-floral-maxi-gown",
-  "vintage-graphic-tee-90s",
-  "ladies-fashion-bundle-casual",
-  "kids-distressed-denim-jeans",
-  "luxury-thrift-silk-scarf",
-  "mens-fashion-bundle-streetwear",
-];
+  mockProducts.find(p => p.name === "SHEIN Elegant Floral Maxi Gown")?.id || "",
+  mockProducts.find(p => p.name === "Vintage 90s Graphic T-Shirt")?.id || "",
+  mockProducts.find(p => p.name === "Ladies' Casual Chic Fashion Bundle")?.id || "",
+  mockProducts.find(p => p.name === "Kids' Stylish Distressed Denim Jeans")?.id || "",
+  mockProducts.find(p => p.name === "Luxury Thrift Silk Scarf (Designer)")?.id || "",
+  mockProducts.find(p => p.name === "Men's Urban Streetwear Fashion Bundle")?.id || "",
+].filter(id => id !== "");
 
 const getTopSellingProducts = (): Promise<Product[]> => {
   return new Promise((resolve) => {

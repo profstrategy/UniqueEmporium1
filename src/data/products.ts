@@ -1,4 +1,5 @@
 import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag, Sun, Watch, Glasses } from "lucide-react"; // Updated icons for fashion
+import { generateProductId } from "@/utils/id-generator.ts"; // Import ID generator
 
 export interface Product {
   id: string;
@@ -36,9 +37,28 @@ export interface ProductDetails extends Product {
   relatedProducts: string[];
 }
 
+// --- Generate new IDs for mapping ---
+const ID_MAP = {
+  "shein-floral-maxi-gown": generateProductId("shein-gowns"),
+  "vintage-graphic-tee-90s": generateProductId("men-vintage-shirts"),
+  "kids-distressed-denim-jeans": generateProductId("children-jeans"),
+  "ladies-fashion-bundle-casual": generateProductId("amazon-ladies"),
+  "luxury-thrift-silk-scarf": generateProductId("others"),
+  "shein-ruffle-mini-dress": generateProductId("shein-gowns"),
+  "vintage-denim-jacket": generateProductId("men-vintage-shirts"),
+  "kids-graphic-hoodie": generateProductId("children-shirts"),
+  "mens-fashion-bundle-streetwear": generateProductId("men-vintage-shirts"),
+  "kids-fashion-bundle-playtime": generateProductId("kids"),
+  "shein-summer-midi-dress": generateProductId("shein-gowns"),
+  "vintage-leather-crossbody-bag": generateProductId("others"),
+  "kids-graphic-tshirt-pack": generateProductId("children-shirts"),
+  "mens-casual-linen-shirt": generateProductId("men-vintage-shirts"),
+  "luxury-thrift-designer-sunglasses": generateProductId("others"),
+};
+
 export const mockProducts: ProductDetails[] = [
   {
-    id: "shein-floral-maxi-gown",
+    id: ID_MAP["shein-floral-maxi-gown"],
     name: "SHEIN Elegant Floral Maxi Gown",
     category: "SHEIN Gowns",
     images: [
@@ -87,10 +107,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev1", author: "Aisha O.", rating: 5, date: "2024-07-20", title: "Absolutely beautiful!", comment: "The gown is even prettier in person. So comfortable and perfect for Nigerian weather.", isVerifiedBuyer: true },
       { id: "rev2", author: "Funke A.", rating: 4, date: "2024-07-15", title: "Great value", comment: "Love the print and the fit. A bit long for me, but easily altered.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["shein-ruffle-mini-dress", "ladies-fashion-bundle-casual"],
+    relatedProducts: [ID_MAP["shein-ruffle-mini-dress"], ID_MAP["ladies-fashion-bundle-casual"]],
   },
   {
-    id: "vintage-graphic-tee-90s",
+    id: ID_MAP["vintage-graphic-tee-90s"],
     name: "Vintage 90s Graphic T-Shirt",
     category: "Men Vintage Shirts", // Updated category
     images: [
@@ -138,10 +158,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev3", author: "Chinedu E.", rating: 5, date: "2024-07-18", title: "Love my new vintage tee!", comment: "The graphic is amazing, and it feels so soft. Exactly as described.", isVerifiedBuyer: true },
       { id: "rev4", author: "Ngozi I.", rating: 4, date: "2024-07-10", title: "Great find", comment: "Unique design, good quality. A little faded, but that's part of the charm!", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["vintage-denim-jacket", "mens-fashion-bundle-streetwear"],
+    relatedProducts: [ID_MAP["vintage-denim-jacket"], ID_MAP["mens-fashion-bundle-streetwear"]],
   },
   {
-    id: "kids-distressed-denim-jeans",
+    id: ID_MAP["kids-distressed-denim-jeans"],
     name: "Kids' Stylish Distressed Denim Jeans",
     category: "Children Jeans", // Updated category
     images: [
@@ -189,10 +209,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev5", author: "Blessing N.", rating: 5, date: "2024-07-22", title: "My son loves them!", comment: "Great quality and super stylish. They fit perfectly and he can move around easily.", isVerifiedBuyer: true },
       { id: "rev6", author: "Tunde O.", rating: 4, date: "2024-07-19", title: "Good, but a bit pricey", comment: "Nice jeans, but I wish they were a bit more affordable. Still, happy with the purchase.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["kids-graphic-hoodie", "kids-fashion-bundle-playtime"],
+    relatedProducts: [ID_MAP["kids-graphic-hoodie"], ID_MAP["kids-fashion-bundle-playtime"]],
   },
   {
-    id: "ladies-fashion-bundle-casual",
+    id: ID_MAP["ladies-fashion-bundle-casual"],
     name: "Ladies' Casual Chic Fashion Bundle",
     category: "Amazon Ladies", // Updated category
     images: [
@@ -240,10 +260,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev7", author: "Amaka J.", rating: 5, date: "2024-07-25", title: "Love this bundle!", comment: "All the pieces are beautiful and fit well. Such a great deal for the price.", isVerifiedBuyer: true },
       { id: "rev8", author: "Chioma K.", rating: 4, date: "2024-07-20", title: "Good quality", comment: "Happy with the purchase, though the necklace was a bit different than expected.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["shein-floral-maxi-gown", "luxury-thrift-silk-scarf"],
+    relatedProducts: [ID_MAP["shein-floral-maxi-gown"], ID_MAP["luxury-thrift-silk-scarf"]],
   },
   {
-    id: "luxury-thrift-silk-scarf",
+    id: ID_MAP["luxury-thrift-silk-scarf"],
     name: "Luxury Thrift Silk Scarf (Designer)",
     category: "Others", // Updated category
     images: [
@@ -290,10 +310,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev9", author: "Fatima G.", rating: 5, date: "2024-07-28", title: "Stunning quality!", comment: "The scarf is absolutely gorgeous and feels so luxurious. Looks brand new!", isVerifiedBuyer: true },
       { id: "rev10", author: "Kemi L.", rating: 5, date: "2024-07-26", title: "My new favorite accessory", comment: "Adds so much elegance to my outfits. Very happy with this thrift find.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    relatedProducts: [ID_MAP["shein-floral-maxi-gown"], ID_MAP["ladies-fashion-bundle-casual"]],
   },
   {
-    id: "shein-ruffle-mini-dress",
+    id: ID_MAP["shein-ruffle-mini-dress"],
     name: "SHEIN Ruffle Hem Mini Dress",
     category: "SHEIN Gowns",
     images: [
@@ -342,10 +362,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev11", author: "Adaobi C.", rating: 4, date: "2024-07-10", title: "Cute and comfy!", comment: "Love this dress, it's perfect for summer. The ruffles are a nice touch.", isVerifiedBuyer: true },
       { id: "rev12", author: "Gloria M.", rating: 5, date: "2024-07-05", title: "My new favorite!", comment: "Fits perfectly and the fabric is soft. Received many compliments!", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    relatedProducts: [ID_MAP["shein-floral-maxi-gown"], ID_MAP["ladies-fashion-bundle-casual"]],
   },
   {
-    id: "vintage-denim-jacket",
+    id: ID_MAP["vintage-denim-jacket"],
     name: "Classic Vintage Denim Jacket",
     category: "Men Vintage Shirts", // Updated category
     images: [
@@ -393,10 +413,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev13", author: "David O.", rating: 5, date: "2024-07-29", title: "Perfect vintage jacket!", comment: "The wash is exactly what I wanted, and it fits great. So happy with this purchase.", isVerifiedBuyer: true },
       { id: "rev14", author: "Sarah U.", rating: 4, date: "2024-07-25", title: "Good quality, a bit stiff", comment: "Solid jacket, but it's a bit stiff initially. I'm sure it will soften with wear.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["vintage-graphic-tee-90s", "mens-fashion-bundle-streetwear"],
+    relatedProducts: [ID_MAP["vintage-graphic-tee-90s"], ID_MAP["mens-fashion-bundle-streetwear"]],
   },
   {
-    id: "kids-graphic-hoodie",
+    id: ID_MAP["kids-graphic-hoodie"],
     name: "Kids' Fun Graphic Hoodie",
     category: "Children Shirts", // Updated category
     images: [
@@ -444,10 +464,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev15", author: "Nkechi P.", rating: 5, date: "2024-07-27", title: "My daughter loves it!", comment: "The print is so cute, and it's very soft. She wears it all the time.", isVerifiedBuyer: true },
       { id: "rev16", author: "Segun R.", rating: 4, date: "2024-07-23", title: "Good hoodie", comment: "Warm and comfortable. The sizing was accurate.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
+    relatedProducts: [ID_MAP["kids-distressed-denim-jeans"], ID_MAP["kids-graphic-hoodie"]],
   },
   {
-    id: "mens-fashion-bundle-streetwear",
+    id: ID_MAP["mens-fashion-bundle-streetwear"],
     name: "Men's Urban Streetwear Fashion Bundle",
     category: "Men Vintage Shirts", // Updated category
     images: [
@@ -495,10 +515,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev17", author: "Kunle S.", rating: 5, date: "2024-07-30", title: "Fresh look!", comment: "This bundle is fire! Everything fits well and looks great together. Highly recommend.", isVerifiedBuyer: true },
       { id: "rev18", author: "Emeka T.", rating: 4, date: "2024-07-26", title: "Good quality for the price", comment: "The materials are good, and the style is on point. Happy with my purchase.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["vintage-graphic-tee-90s", "vintage-denim-jacket"],
+    relatedProducts: [ID_MAP["vintage-graphic-tee-90s"], ID_MAP["vintage-denim-jacket"]],
   },
   {
-    id: "kids-fashion-bundle-playtime",
+    id: ID_MAP["kids-fashion-bundle-playtime"],
     name: "Kids' Playtime Essentials Fashion Bundle",
     category: "Kids", // Updated category
     images: [
@@ -546,11 +566,11 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev19", author: "Gloria E.", rating: 5, date: "2024-07-28", title: "Perfect for my twins!", comment: "The clothes are durable and cute. They hold up well to all the playing.", isVerifiedBuyer: true },
       { id: "rev20", author: "Femi A.", rating: 4, date: "2024-07-24", title: "Good everyday wear", comment: "Solid basics for kids. Nothing fancy, but good for the price.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
+    relatedProducts: [ID_MAP["kids-distressed-denim-jeans"], ID_MAP["kids-graphic-hoodie"]],
   },
   // --- New Products Added Below ---
   {
-    id: "shein-summer-midi-dress",
+    id: ID_MAP["shein-summer-midi-dress"],
     name: "SHEIN Flowy Summer Midi Dress",
     category: "SHEIN Gowns",
     images: [
@@ -599,10 +619,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev21", author: "Ngozi P.", rating: 5, date: "2024-08-01", title: "Perfect summer dress!", comment: "So comfortable and stylish. I love the print and how it flows.", isVerifiedBuyer: true },
       { id: "rev22", author: "Chika A.", rating: 4, date: "2024-07-29", title: "Great for holidays", comment: "Wore this on my trip, got many compliments. Fabric is a bit thin but good for heat.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["shein-floral-maxi-gown", "ladies-fashion-bundle-casual"],
+    relatedProducts: [ID_MAP["shein-floral-maxi-gown"], ID_MAP["ladies-fashion-bundle-casual"]],
   },
   {
-    id: "vintage-leather-crossbody-bag",
+    id: ID_MAP["vintage-leather-crossbody-bag"],
     name: "Vintage Leather Crossbody Bag",
     category: "Others", // Updated category
     images: [
@@ -649,10 +669,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev23", author: "Uche M.", rating: 5, date: "2024-08-03", title: "Stunning bag!", comment: "The leather is beautiful and it's in fantastic condition for a vintage piece. Very happy!", isVerifiedBuyer: true },
       { id: "rev24", author: "Bisi O.", rating: 4, date: "2024-07-31", title: "Great quality", comment: "A bit smaller than I expected, but the quality is undeniable. Love the vintage feel.", isVerifiedBuyer: false },
     ],
-    relatedProducts: ["luxury-thrift-silk-scarf", "vintage-denim-jacket"],
+    relatedProducts: [ID_MAP["luxury-thrift-silk-scarf"], ID_MAP["vintage-denim-jacket"]],
   },
   {
-    id: "kids-graphic-tshirt-pack",
+    id: ID_MAP["kids-graphic-tshirt-pack"],
     name: "Kids' 3-Pack Graphic T-Shirts",
     category: "Children Shirts", // Updated category
     images: [
@@ -700,10 +720,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev25", author: "Funmi S.", rating: 5, date: "2024-08-05", title: "Excellent value!", comment: "My kids love these shirts. They're soft, the prints are fun, and they hold up well.", isVerifiedBuyer: true },
       { id: "rev26", author: "Kola T.", rating: 4, date: "2024-08-02", title: "Good everyday shirts", comment: "Solid basics for kids. Nothing fancy, but good for the price.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["kids-distressed-denim-jeans", "kids-graphic-hoodie"],
+    relatedProducts: [ID_MAP["kids-distressed-denim-jeans"], ID_MAP["kids-graphic-hoodie"]],
   },
   {
-    id: "mens-casual-linen-shirt",
+    id: ID_MAP["mens-casual-linen-shirt"],
     name: "Men's Casual Linen Blend Shirt",
     category: "Men Vintage Shirts", // Updated category
     images: [
@@ -751,10 +771,10 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev27", author: "Ahmed D.", rating: 5, date: "2024-08-07", title: "Perfect for the heat!", comment: "This shirt is so comfortable and keeps me cool. Looks great too.", isVerifiedBuyer: true },
       { id: "rev28", author: "Chidi N.", rating: 4, date: "2024-08-04", title: "Good quality", comment: "Nice shirt, a bit prone to wrinkles but that's linen for you. Happy with it.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["vintage-graphic-tee-90s", "mens-fashion-bundle-streetwear"],
+    relatedProducts: [ID_MAP["vintage-graphic-tee-90s"], ID_MAP["mens-fashion-bundle-streetwear"]],
   },
   {
-    id: "luxury-thrift-designer-sunglasses",
+    id: ID_MAP["luxury-thrift-designer-sunglasses"],
     name: "Luxury Thrift Designer Sunglasses",
     category: "Others", // Updated category
     images: [
@@ -802,7 +822,7 @@ export const mockProducts: ProductDetails[] = [
       { id: "rev29", author: "Zainab H.", rating: 5, date: "2024-08-09", title: "Love my new shades!", comment: "They look brand new and are exactly what I wanted. Great deal for designer sunglasses.", isVerifiedBuyer: true },
       { id: "rev30", author: "Obi K.", rating: 5, date: "2024-08-06", title: "Fantastic find", comment: "The quality is superb, and they fit perfectly. Very stylish.", isVerifiedBuyer: true },
     ],
-    relatedProducts: ["luxury-thrift-silk-scarf", "vintage-leather-crossbody-bag"],
+    relatedProducts: [ID_MAP["luxury-thrift-silk-scarf"], ID_MAP["vintage-leather-crossbody-bag"]],
   },
 ];
 

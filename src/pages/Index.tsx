@@ -17,15 +17,15 @@ import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Im
 
 // Select specific products from mockProducts to be featured
 const featuredProductIds = [
-  "shein-floral-maxi-gown",
-  "vintage-graphic-tee-90s",
-  "kids-distressed-denim-jeans",
-  "ladies-fashion-bundle-casual",
-  "luxury-thrift-silk-scarf",
-  "mens-fashion-bundle-streetwear",
-  "shein-summer-midi-dress", // Added new product
-  "vintage-leather-crossbody-bag", // Added new product
-];
+  mockProducts.find(p => p.name === "SHEIN Elegant Floral Maxi Gown")?.id || "",
+  mockProducts.find(p => p.name === "Vintage 90s Graphic T-Shirt")?.id || "",
+  mockProducts.find(p => p.name === "Kids' Stylish Distressed Denim Jeans")?.id || "",
+  mockProducts.find(p => p.name === "Ladies' Casual Chic Fashion Bundle")?.id || "",
+  mockProducts.find(p => p.name === "Luxury Thrift Silk Scarf (Designer)")?.id || "",
+  mockProducts.find(p => p.name === "Men's Urban Streetwear Fashion Bundle")?.id || "",
+  mockProducts.find(p => p.name === "SHEIN Flowy Summer Midi Dress")?.id || "", // Added new product
+  mockProducts.find(p => p.name === "Vintage Leather Crossbody Bag")?.id || "", // Added new product
+].filter(id => id !== "");
 
 const staggerContainer = {
   hidden: { opacity: 0 },

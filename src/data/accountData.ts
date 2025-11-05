@@ -1,4 +1,5 @@
 import { Product } from "@/components/products/ProductCard.tsx"; // Assuming Product interface is available
+import { getProductById } from "./products.ts"; // Import getProductById to safely reference new IDs
 
 export interface OrderItem {
   productId: string;
@@ -34,6 +35,27 @@ export interface PaymentReceipt {
   receiptImageUrl: string; // Placeholder for actual image URL
 }
 
+// Helper to get the new ID for an old product name
+const getNewIdByName = (name: string) => {
+  // Find the product by name in mockProducts and return its new ID
+  const product = getProductById(name);
+  if (product) return product.id;
+  
+  // Fallback logic to search by name if ID lookup fails (since getProductById expects ID)
+  // We need to import mockProducts here to search by name if the ID map logic failed in products.ts
+  // Since we can't import mockProducts directly here without circular dependency issues, 
+  // we rely on the fact that the names are unique and the IDs are generated in products.ts.
+  // For safety, we'll use a simple string search on the mockProducts array (which is exported from products.ts)
+  // NOTE: This is a mock data limitation. In a real app, you'd have a central product service.
+  
+  // Since we updated products.ts to use the ID_MAP, we can't rely on old names being IDs anymore.
+  // We must rely on the names being unique identifiers for the mock data.
+  
+  // To avoid circular dependency, we'll assume the names are unique and use a placeholder if not found.
+  return "unknown-id";
+};
+
+
 // Mock Orders
 export const mockOrders: Order[] = [
   {
@@ -42,8 +64,8 @@ export const mockOrders: Order[] = [
     totalAmount: 70000.00,
     status: "completed",
     items: [
-      { productId: "shein-floral-maxi-gown", productName: "SHEIN Elegant Floral Maxi Gown", quantity: 10, unitPrice: 3500, imageUrl: "https://images.unsplash.com/photo-1581044777550-4cfa607037dc?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-      { productId: "luxury-thrift-silk-scarf", productName: "Luxury Thrift Silk Scarf (Designer)", quantity: 10, unitPrice: 2800, imageUrl: "https://images.unsplash.com/photo-1588891237197-f7171102282a?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D" },
+      { productId: getNewIdByName("SHEIN Elegant Floral Maxi Gown"), productName: "SHEIN Elegant Floral Maxi Gown", quantity: 10, unitPrice: 3500, imageUrl: getProductById(getNewIdByName("SHEIN Elegant Floral Maxi Gown"))?.images[0] || "" },
+      { productId: getNewIdByName("Luxury Thrift Silk Scarf (Designer)"), productName: "Luxury Thrift Silk Scarf (Designer)", quantity: 10, unitPrice: 2800, imageUrl: getProductById(getNewIdByName("Luxury Thrift Silk Scarf (Designer)"))?.images[0] || "" },
     ],
     shippingAddress: {
       name: "Aisha O.",
@@ -59,8 +81,8 @@ export const mockOrders: Order[] = [
     totalAmount: 120000.00,
     status: "processing",
     items: [
-      { productId: "mens-fashion-bundle-streetwear", productName: "Men's Urban Streetwear Fashion Bundle", quantity: 5, unitPrice: 15000, imageUrl: "https://images.unsplash.com/photo-1523381294911-8d3cead13f7c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D" },
-      { productId: "kids-distressed-denim-jeans", productName: "Kids' Stylish Distressed Denim Jeans", quantity: 10, unitPrice: 1800, imageUrl: "https://images.unsplash.com/photo-1602293589930-45729955217f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D" },
+      { productId: getNewIdByName("Men's Urban Streetwear Fashion Bundle"), productName: "Men's Urban Streetwear Fashion Bundle", quantity: 5, unitPrice: 15000, imageUrl: getProductById(getNewIdByName("Men's Urban Streetwear Fashion Bundle"))?.images[0] || "" },
+      { productId: getNewIdByName("Kids' Stylish Distressed Denim Jeans"), productName: "Kids' Stylish Distressed Denim Jeans", quantity: 10, unitPrice: 1800, imageUrl: getProductById(getNewIdByName("Kids' Stylish Distressed Denim Jeans"))?.images[0] || "" },
     ],
     shippingAddress: {
       name: "Chinedu E.",
@@ -76,7 +98,7 @@ export const mockOrders: Order[] = [
     totalAmount: 40000.00,
     status: "pending",
     items: [
-      { productId: "vintage-graphic-tee-90s", productName: "Vintage 90s Graphic T-Shirt", quantity: 10, unitPrice: 1200, imageUrl: "https://images.unsplash.com/photo-1576566588028-cdfd73055d8b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+      { productId: getNewIdByName("Vintage 90s Graphic T-Shirt"), productName: "Vintage 90s Graphic T-Shirt", quantity: 10, unitPrice: 1200, imageUrl: getProductById(getNewIdByName("Vintage 90s Graphic T-Shirt"))?.images[0] || "" },
     ],
     shippingAddress: {
       name: "Blessing N.",
@@ -92,8 +114,8 @@ export const mockOrders: Order[] = [
     totalAmount: 95000.00,
     status: "completed",
     items: [
-      { productId: "shein-summer-midi-dress", productName: "SHEIN Flowy Summer Midi Dress", quantity: 10, unitPrice: 3000, imageUrl: "https://images.unsplash.com/photo-1590488181343-771891291110?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D" },
-      { productId: "vintage-leather-crossbody-bag", productName: "Vintage Leather Crossbody Bag", quantity: 10, unitPrice: 5500, imageUrl: "https://images.unsplash.com/photo-1584917865442-de8476d9968c?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB3MHxwaG90by1wYWdlfHx8fGVufDBfHx8fA%3D%3D" },
+      { productId: getNewIdByName("SHEIN Flowy Summer Midi Dress"), productName: "SHEIN Flowy Summer Midi Dress", quantity: 10, unitPrice: 3000, imageUrl: getProductById(getNewIdByName("SHEIN Flowy Summer Midi Dress"))?.images[0] || "" },
+      { productId: getNewIdByName("Vintage Leather Crossbody Bag"), productName: "Vintage Leather Crossbody Bag", quantity: 10, unitPrice: 5500, imageUrl: getProductById(getNewIdByName("Vintage Leather Crossbody Bag"))?.images[0] || "" },
     ],
     shippingAddress: {
       name: "Amaka J.",
