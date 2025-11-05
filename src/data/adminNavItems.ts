@@ -1,11 +1,11 @@
 "use client";
 
-import { LayoutDashboard, ShoppingBag, Package, Users, BarChart2, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Package, Users, BarChart2, Settings, LogOut, ChevronRight } from "lucide-react";
 import { Easing } from "framer-motion";
 
 export const adminNavItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-  { name: "Orders", icon: ShoppingBag, path: "/admin/orders" },
+  { name: "Orders", icon: ShoppingBag, path: "/admin/orders" }, // Added Orders link
   { name: "Products", icon: Package, path: "/admin/products" },
   { name: "Categories", icon: Settings, path: "/admin/categories" },
   { name: "Users", icon: Users, path: "/admin/users" },

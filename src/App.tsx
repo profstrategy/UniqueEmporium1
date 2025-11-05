@@ -39,11 +39,7 @@ const PaymentReceiptsPage = lazy(() => import("./pages/account/PaymentReceiptsPa
 // Admin Dashboard Pages
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout.tsx"));
 const AdminDashboardOverview = lazy(() => import("./pages/admin/DashboardOverview.tsx"));
-// const AdminOrdersManagement = lazy(() => import("./pages/admin/OrdersManagement.tsx")); // Will be created next
-// const AdminProductsManagement = lazy(() => import("./pages/admin/ProductsManagement.tsx")); // Will be created next
-// const AdminCategoriesManagement = lazy(() => import("./pages/admin/CategoriesManagement.tsx")); // Will be created next
-// const AdminUsersManagement = lazy(() => import("./pages/admin/UsersManagement.tsx")); // Will be created next
-// const AdminAnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard.tsx")); // Will be created next
+const AdminOrdersManagement = lazy(() => import("./pages/admin/OrdersManagement.tsx")); // New import
 
 
 const queryClient = new QueryClient();
@@ -90,8 +86,8 @@ const App = () => {
                     {/* Admin Dashboard Routes */}
                     <Route path="/admin" element={<AdminLayout />}>
                       <Route index element={<AdminDashboardOverview />} /> {/* Default route for /admin */}
+                      <Route path="orders" element={<AdminOrdersManagement />} /> {/* New Admin Orders Route */}
                       {/* Add other admin routes here as they are created */}
-                      {/* <Route path="orders" element={<AdminOrdersManagement />} /> */}
                       {/* <Route path="products" element={<AdminProductsManagement />} /> */}
                       {/* <Route path="categories" element={<AdminCategoriesManagement />} /> */}
                       {/* <Route path="users" element={<AdminUsersManagement />} /> */}
