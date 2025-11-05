@@ -129,3 +129,25 @@
     background-position: 100% 50%;
   }
 }
+
+/* New WhatsApp icon attention animation */
+@keyframes whatsapp-attention {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10% { /* Quick pulse up */
+    transform: scale(1.1);
+  }
+  20% { /* Return to normal */
+    transform: scale(1);
+  }
+  /* Stays at scale(1) for the rest of the duration to create a pause */
+}
+
+.animate-whatsapp-attention {
+  animation: whatsapp-attention 5s ease-in-out infinite;
+}
+
+.animate-whatsapp-attention.paused {
+  animation-play-state: paused;
+}

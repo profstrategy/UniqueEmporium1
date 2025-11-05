@@ -43,7 +43,7 @@ const FloatingWhatsApp = () => {
     <div
       className={cn(
         "fixed bottom-8 right-8 z-50 flex items-end",
-        isMobile ? "flex-col" : "flex-row justify-end" // Changed to flex-col for mobile
+        isMobile ? "flex-col" : "flex-row justify-end"
       )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -56,7 +56,7 @@ const FloatingWhatsApp = () => {
               "relative w-72 md:w-80 p-4 md:p-6 rounded-xl shadow-2xl",
               "bg-secondary/20 backdrop-blur-md border border-secondary/50",
               "flex flex-col space-y-4 text-secondary-foreground",
-              isMobile ? "mb-4" : "mr-4" // Conditional margin for spacing
+              isMobile ? "mb-4" : "mr-4"
             )}
             variants={panelVariants}
             initial="hidden"
@@ -108,7 +108,11 @@ const FloatingWhatsApp = () => {
 
       {/* Floating WhatsApp Icon */}
       <motion.button
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp-green shadow-lg text-white"
+        className={cn(
+          "relative flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp-green shadow-lg text-white",
+          "animate-whatsapp-attention", // Apply the animation class
+          isOpen && "paused" // Pause animation when panel is open
+        )}
         onClick={handleTogglePanel}
         variants={iconVariants}
         initial="initial"
