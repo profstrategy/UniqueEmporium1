@@ -83,7 +83,7 @@ const Footer = () => {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
         <motion.div
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 lg:grid-cols-3"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -110,89 +110,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Column 2: Quick Links */}
-          <motion.div variants={fadeInUp}>
-            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <NavLink
-                  to="/"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/products"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Shop All
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/about"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  About Us
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/contact"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Contact
-                </NavLink>
-              </li>
-              <li>
-                <DropdownMenu onOpenChange={setIsCategoriesOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex w-full justify-between p-0 text-sm text-primary-foreground hover:bg-transparent hover:text-primary-foreground/60"
-                    >
-                      Categories
-                      <motion.div
-                        animate={{ rotate: isCategoriesOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <ChevronDown className="h-4 w-4" />
-                      </motion.div>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-64 p-2 grid grid-cols-2 gap-2 bg-primary border-primary-foreground/20 text-primary-foreground">
-                    <AnimatePresence>
-                      {isCategoriesOpen && (
-                        <motion.ul
-                          variants={categoryListVariants}
-                          initial="hidden"
-                          animate="visible"
-                          exit="hidden"
-                          className="col-span-2 grid grid-cols-2 gap-2"
-                        >
-                          {categories.map((category) => (
-                            <DropdownMenuItem key={category.name} asChild>
-                              <Link
-                                to={category.link}
-                                className="flex items-center gap-2 cursor-pointer rounded-md p-2 text-primary-foreground hover:bg-primary-foreground/10"
-                              >
-                                <category.icon className="h-4 w-4" />
-                                {category.name}
-                              </Link>
-                            </DropdownMenuItem>
-                          ))}
-                        </motion.ul>
-                      )}
-                    </AnimatePresence>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Column 3: Customer Support */}
+          {/* Column 2: Customer Support */}
           <motion.div variants={fadeInUp}>
             <h3 className="mb-4 text-lg font-semibold">Customer Support</h3>
             <ul className="space-y-2 text-sm">
@@ -247,7 +165,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* Column 4: Stay Connected */}
+          {/* Column 3: Stay Connected */}
           <motion.div variants={fadeInUp}>
             <h3 className="mb-4 text-lg font-semibold">Stay Connected</h3>
             <p className="mb-4 text-sm text-primary-foreground/80">
