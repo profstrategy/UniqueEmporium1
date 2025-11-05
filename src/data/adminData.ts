@@ -178,7 +178,7 @@ export const mockAdminUsers: AdminUser[] = [
   { id: "user-8", name: "Mama Grace", email: "mama.grace@example.com", phone: "+2349078901234", role: "customer", status: "inactive", lastLogin: "2024-07-10", totalOrders: 1 },
 ];
 
-// --- Admin Analytics Data (Placeholder) ---
+// --- Admin Analytics Data ---
 export interface SalesDataPoint {
   date: string; // YYYY-MM-DD
   sales: number;
@@ -186,23 +186,60 @@ export interface SalesDataPoint {
 }
 
 export const mockSalesData: SalesDataPoint[] = [
-  { date: "2024-07-01", sales: 120000, orders: 15 },
-  { date: "2024-07-08", sales: 150000, orders: 20 },
-  { date: "2024-07-15", sales: 130000, orders: 18 },
-  { date: "2024-07-22", sales: 180000, orders: 25 },
-  { date: "2024-07-29", sales: 160000, orders: 22 },
-  { date: "2024-08-05", sales: 200000, orders: 30 },
+  { date: "Jan", sales: 1200000, orders: 150 },
+  { date: "Feb", sales: 1500000, orders: 180 },
+  { date: "Mar", sales: 1300000, orders: 160 },
+  { date: "Apr", sales: 1800000, orders: 220 },
+  { date: "May", sales: 1600000, orders: 190 },
+  { date: "Jun", sales: 2000000, orders: 250 },
+  { date: "Jul", sales: 2100000, orders: 240 },
+  { date: "Aug", sales: 2300000, orders: 280 },
+  { date: "Sep", sales: 1900000, orders: 210 },
+  { date: "Oct", sales: 2400000, orders: 300 },
+  { date: "Nov", sales: 2700000, orders: 330 },
+  { date: "Dec", sales: 3000000, orders: 380 },
 ];
 
 export interface CategorySalesData {
   name: string;
   sales: number;
+  orders: number;
 }
 
 export const mockCategorySales: CategorySalesData[] = [
-  { name: "SHEIN Gowns", sales: 3000000 },
-  { name: "Men Vintage Shirts", sales: 2500000 },
-  { name: "Children Jeans", sales: 1800000 },
-  { name: "Amazon Ladies", sales: 2200000 },
-  { name: "Others", sales: 1500000 },
+  { name: "SHEIN Gowns", sales: 3000000, orders: 350 },
+  { name: "Men Vintage Shirts", sales: 2500000, orders: 280 },
+  { name: "Children Jeans", sales: 1800000, orders: 200 },
+  { name: "Amazon Ladies", sales: 2200000, orders: 260 },
+  { name: "Kids Patpat", sales: 1000000, orders: 120 },
+  { name: "Children Shirts", sales: 1500000, orders: 170 },
+  { name: "Others", sales: 1500000, orders: 180 },
+];
+
+export interface PaymentMethodData {
+  name: string;
+  value: number;
+}
+
+export const mockPaymentMethods: PaymentMethodData[] = [
+  { name: "Bank Transfer", value: 100 }, // For now, only Bank Transfer
+  // { name: "Card Payment", value: 300 },
+  // { name: "Mobile Money", value: 200 },
+];
+
+export interface RecentActivity {
+  id: string;
+  type: "order" | "payment" | "user" | "product";
+  description: string;
+  timestamp: string; // ISO string
+  status?: "new" | "verified" | "updated" | "deleted";
+}
+
+export const mockRecentActivities: RecentActivity[] = [
+  { id: "act-1", type: "order", description: "Olu Ade placed a new order (ADM-20240805-006)", timestamp: "2024-08-05T14:30:00Z", status: "new" },
+  { id: "act-2", type: "payment", description: "Rep verified payment from Tobi Bello (ADM-20240803-007)", timestamp: "2024-08-05T10:15:00Z", status: "verified" },
+  { id: "act-3", type: "user", description: "New user registered: Mama Grace", timestamp: "2024-08-04T18:00:00Z", status: "new" },
+  { id: "act-4", type: "product", description: "Product 'SHEIN Flowy Summer Midi Dress' updated", timestamp: "2024-08-04T09:00:00Z", status: "updated" },
+  { id: "act-5", type: "order", description: "Order ADM-20240730-002 status changed to 'Completed'", timestamp: "2024-08-03T16:45:00Z", status: "updated" },
+  { id: "act-6", type: "payment", description: "Payment for ADM-20240801-001 is still pending", timestamp: "2024-08-02T11:00:00Z", status: "new" },
 ];

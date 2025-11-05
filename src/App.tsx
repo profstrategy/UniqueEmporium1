@@ -42,7 +42,8 @@ const AdminDashboardOverview = lazy(() => import("./pages/admin/DashboardOvervie
 const AdminOrdersManagement = lazy(() => import("./pages/admin/OrdersManagement.tsx"));
 const AdminProductsManagement = lazy(() => import("./pages/admin/ProductsManagement.tsx"));
 const AdminCategoriesManagement = lazy(() => import("./pages/admin/CategoriesManagement.tsx"));
-const AdminUsersManagement = lazy(() => import("./pages/admin/UsersManagement.tsx")); // New import
+const AdminUsersManagement = lazy(() => import("./pages/admin/UsersManagement.tsx"));
+const AdminAnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard.tsx")); // New import
 
 
 const queryClient = new QueryClient();
@@ -92,9 +93,8 @@ const App = () => {
                       <Route path="orders" element={<AdminOrdersManagement />} />
                       <Route path="products" element={<AdminProductsManagement />} />
                       <Route path="categories" element={<AdminCategoriesManagement />} />
-                      <Route path="users" element={<AdminUsersManagement />} /> {/* New Admin Users Route */}
-                      {/* Add other admin routes here as they are created */}
-                      {/* <Route path="analytics" element={<AdminAnalyticsDashboard />} /> */}
+                      <Route path="users" element={<AdminUsersManagement />} />
+                      <Route path="analytics" element={<AdminAnalyticsDashboard />} /> {/* New Admin Analytics Route */}
                     </Route>
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />

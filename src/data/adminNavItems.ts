@@ -8,8 +8,8 @@ export const adminNavItems = [
   { name: "Orders", icon: ShoppingBag, path: "/admin/orders" },
   { name: "Products", icon: Package, path: "/admin/products" },
   { name: "Categories", icon: Settings, path: "/admin/categories" },
-  { name: "Users", icon: Users, path: "/admin/users" }, // Added Users link
-  { name: "Analytics", icon: BarChart2, path: "/admin/analytics" },
+  { name: "Users", icon: Users, path: "/admin/users" },
+  { name: "Analytics", icon: BarChart2, path: "/admin/analytics" }, // Added Analytics link
 ];
 
 export const linkVariants = {
