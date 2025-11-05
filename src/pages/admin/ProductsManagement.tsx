@@ -77,11 +77,10 @@ const productFormSchema = z.object({
   category: z.string().min(1, "Category is required"),
   price: z.coerce.number().min(1, "Price is required and must be positive"), // Price for MOQ
   minOrderQuantity: z.coerce.number().min(1, "Minimum Order Quantity is required and must be positive"),
-  limitedStock: z.boolean().default(false),
+  limitedStock: z.boolean().default(false), // Dedicated limitedStock field
   fullDescription: z.string().min(1, "Description is required"),
   images: z.array(z.string()).optional(), // For existing images (URLs)
   newImageFiles: z.instanceof(FileList).optional(), // For new file uploads (FileList)
-  status: z.enum(["active", "inactive"]).default("active"), // New status field
   // Simplified other fields for admin UI, providing defaults
   rating: z.coerce.number().min(0).max(5).default(4.5),
   reviewCount: z.coerce.number().min(0).default(0),
@@ -99,7 +98,7 @@ const ProductsManagement = () => {
   const [products, setProducts] = useState<ProductDetails[]>(mockAdminProducts);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterStockStatus, setFilterStockStatus] = useState("all"); // Renamed filterStatus to filterStockStatus
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
@@ -120,7 +119,7 @@ const ProductsManagement = () => {
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
-      status: "active", // Default status for new products
+      limitedStock: false, // Default to not limited stock
       rating: 4.5,
       reviewCount: 0,
       keyFeatures: [],
@@ -131,7 +130,7 @@ const ProductsManagement = () => {
 
   const currentImageFiles = watch("newImageFiles");
   const currentImages = watch("images");
-  const currentStatus = watch("status");
+  const currentLimitedStock = watch("limitedStock"); // Watch the new limitedStock field
 
   // Effect to update image preview when newImageFiles changes
   React.useEffect(() => {
@@ -178,14 +177,14 @@ const ProductsManagement = () => {
       );
     }
 
-    if (filterStatus !== "all") {
+    if (filterStockStatus !== "all") { // Use new filterStockStatus
       filtered = filtered.filter(
-        (product) => (filterStatus === "active" ? !product.limitedStock : product.limitedStock) // Assuming limitedStock implies 'inactive' for simplicity, or add a proper status field to ProductDetails
+        (product) => (filterStockStatus === "limited-stock" ? product.limitedStock : !product.limitedStock)
       );
     }
 
     return filtered;
-  }, [products, searchTerm, filterCategory, filterStatus]);
+  }, [products, searchTerm, filterCategory, filterStockStatus]); // Updated dependencies
 
   // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -205,7 +204,7 @@ const ProductsManagement = () => {
     setEditingProduct(product);
     reset({
       ...product,
-      status: product.limitedStock ? "inactive" : "active", // Map limitedStock to status
+      limitedStock: product.limitedStock, // Set limitedStock directly
       newImageFiles: undefined, // Clear file input for edit
     });
     setImagePreview(product.images?.[0] || null);
@@ -232,7 +231,7 @@ const ProductsManagement = () => {
       reviewCount: data.reviewCount || 0,
       tag: data.tag,
       tagVariant: data.tagVariant,
-      limitedStock: data.status === "inactive",
+      limitedStock: data.limitedStock, // Use limitedStock directly from form
       originalPrice: editingProduct?.originalPrice,
       discountPercentage: editingProduct?.discountPercentage,
       images: (data.images && data.images.length > 0) ? data.images : (editingProduct?.images || []),
@@ -326,14 +325,14 @@ const ProductsManagement = () => {
                     ))}
                   </SelectContent>
               </Select>
-              <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <Select value={filterStockStatus} onValueChange={setFilterStockStatus}> {/* Updated filter */}
                 <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Filter by Status" />
+                  <SelectValue placeholder="Filter by Stock Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive (Limited Stock)</SelectItem>
+                  <SelectItem value="all">All Stock Statuses</SelectItem>
+                  <SelectItem value="in-stock">In Stock</SelectItem>
+                  <SelectItem value="limited-stock">Limited Stock</SelectItem>
                 </SelectContent>
               </Select>
               <Button onClick={handleAddProductClick} className="w-full sm:w-auto">
@@ -346,7 +345,7 @@ const ProductsManagement = () => {
             <div className="text-center py-10 text-muted-foreground">
               <Filter className="h-12 w-12 mx-auto mb-4" />
               <p>No products found matching your filters.</p>
-              <Button onClick={() => { setSearchTerm(""); setFilterCategory("all"); setFilterStatus("all"); }} className="mt-4">
+              <Button onClick={() => { setSearchTerm(""); setFilterCategory("all"); setFilterStockStatus("all"); }} className="mt-4">
                 Clear Filters
               </Button>
             </div>
@@ -362,7 +361,7 @@ const ProductsManagement = () => {
                     <TableHead>MOQ</TableHead>
                     <TableHead>Price/Unit</TableHead>
                     <TableHead>Price/MOQ</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Stock Status</TableHead> {/* Updated column header */}
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -392,7 +391,7 @@ const ProductsManagement = () => {
                         <TableCell>{formatCurrency(product.price)}</TableCell>
                         <TableCell>
                           <Badge variant={product.limitedStock ? "destructive" : "default"}>
-                            {product.limitedStock ? "Inactive" : "Active"}
+                            {product.limitedStock ? "Limited Stock" : "In Stock"} {/* Updated badge text */}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -550,11 +549,11 @@ const ProductsManagement = () => {
 
             <div className="flex items-center space-x-2">
               <Switch
-                id="status-toggle"
-                checked={currentStatus === "active"}
-                onCheckedChange={(checked) => setValue("status", checked ? "active" : "inactive")}
+                id="limitedStock-toggle"
+                checked={currentLimitedStock}
+                onCheckedChange={(checked) => setValue("limitedStock", checked)}
               />
-              <Label htmlFor="status-toggle">Product Status: {currentStatus === "active" ? "Active" : "Inactive"}</Label>
+              <Label htmlFor="limitedStock-toggle">Limited Stock: {currentLimitedStock ? "Yes" : "No"}</Label>
             </div>
 
             <DialogFooter>
@@ -654,11 +653,11 @@ const ProductsManagement = () => {
 
             <div className="flex items-center space-x-2">
               <Switch
-                id="status-toggle-edit"
-                checked={currentStatus === "active"}
-                onCheckedChange={(checked) => setValue("status", checked ? "active" : "inactive")}
+                id="limitedStock-toggle-edit"
+                checked={currentLimitedStock}
+                onCheckedChange={(checked) => setValue("limitedStock", checked)}
               />
-              <Label htmlFor="status-toggle-edit">Product Status: {currentStatus === "active" ? "Active" : "Inactive"}</Label>
+              <Label htmlFor="limitedStock-toggle-edit">Limited Stock: {currentLimitedStock ? "Yes" : "No"}</Label>
             </div>
 
             <DialogFooter>
