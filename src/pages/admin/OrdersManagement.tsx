@@ -156,6 +156,10 @@ const OrdersManagement = () => {
               newPaymentStatus = "verified";
               toast.success(`Payment for Order ${orderId} verified!`);
               break;
+            case "declinePayment": // New action
+              newPaymentStatus = "failed";
+              toast.error(`Payment for Order ${orderId} declined!`);
+              break;
             case "processOrder":
               newOrderStatus = "processing";
               toast.success(`Order ${orderId} is now processing!`);
@@ -337,13 +341,16 @@ const OrdersManagement = () => {
                                 </TooltipProvider>
                                 <AlertDialogContent>
                                   <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogTitle>Verify or Decline Payment?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      This action will mark the payment for Order {order.id} as verified.
+                                      Review the receipt. Mark as verified if payment is confirmed, or decline if the receipt is invalid.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <Button variant="destructive" onClick={() => handleAction(order.id, "declinePayment")}>
+                                      Decline
+                                    </Button>
                                     <AlertDialogAction onClick={() => handleAction(order.id, "verifyPayment")}>
                                       Verify
                                     </AlertDialogAction>
