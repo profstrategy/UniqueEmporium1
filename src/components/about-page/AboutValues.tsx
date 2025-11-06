@@ -80,8 +80,6 @@ const AboutValues = () => {
                 className="h-8 w-8 text-primary mb-2"
                 animate={{
                   y: [0, -5, 0],
-                  rotateX: [0, 5, 0],
-                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,

@@ -90,9 +90,9 @@ export default {
           },
         },
         float: {
-          "0%, 100%": { transform: "translateY(0) rotateX(0deg) rotateZ(0deg)" },
-          "25%": { transform: "translateY(-3px) rotateX(2deg) rotateZ(1deg)" },
-          "75%": { transform: "translateY(3px) rotateX(-2deg) rotateZ(-1deg)" },
+          "0%, 100%": { transform: "translateY(0)" },
+          "25%": { transform: "translateY(-3px)" },
+          "75%": { transform: "translateY(3px)" },
         },
       },
       animation: {

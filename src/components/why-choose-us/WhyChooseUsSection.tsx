@@ -94,12 +94,12 @@ const WhyChooseUsSection = () => {
 
         {/* Banner Image */}
         <motion.div
-          className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12 mb-12"
+          className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-12 mb-12 px-4 sm:px-6 lg:px-8"
           variants={fadeInUp}
         >
           <ImageWithFallback
             src="/my-banner.webp"
-            alt="Unique Emporium Fashion Advantage"
+            alt="Unique Emporium Fashion Banner"
             containerClassName="w-full h-full"
           />
         </motion.div>
@@ -130,8 +130,6 @@ const WhyChooseUsSection = () => {
                   className="mb-2 sm:mb-4 lg:mb-2"
                   animate={{
                     y: [0, -5, 0],
-                    rotateX: [0, 5, 0],
-                    rotateZ: [0, 2, 0],
                   }}
                   transition={{
                     duration: 3,

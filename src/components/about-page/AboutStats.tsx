@@ -51,8 +51,6 @@ const AboutStats = () => {
                 className="h-8 w-8 mx-auto mb-3 text-primary"
                 animate={{
                   y: [0, -5, 0],
-                  rotateX: [0, 5, 0],
-                  rotateZ: [0, 2, 0],
                 }}
                 transition={{
                   duration: 3,

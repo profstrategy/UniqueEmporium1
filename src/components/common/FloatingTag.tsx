@@ -18,8 +18,6 @@ const FloatingTag = ({ text, variant = "default", className }: FloatingTagProps)
       animate={{
         opacity: 1,
         y: [0, -5, 0], // Vertical float
-        rotateX: [0, 5, 0], // Subtle X-axis rotation
-        rotateZ: [0, 2, 0], // Subtle Z-axis rotation
         scale: 1,
       }}
       transition={{
