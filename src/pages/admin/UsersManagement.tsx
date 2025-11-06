@@ -267,7 +267,7 @@ const UsersManagement = () => {
             <Users className="h-5 w-5 text-primary" /> All Users
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 min-w-0">
+        <CardContent className="p-0 min-w-0 w-full"> {/* Added w-full here */}
           <div className="flex flex-col md:flex-row items-center justify-between p-4 gap-4 border-b">
             <div className="relative flex-grow w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -315,7 +315,7 @@ const UsersManagement = () => {
             </div>
           ) : (
             <div className="overflow-x-auto w-full">
-              <Table className="min-w-full"> {/* Added min-w-full here */}
+              <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[120px]">User ID</TableHead>

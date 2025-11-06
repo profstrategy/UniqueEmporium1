@@ -53,7 +53,7 @@ const PaymentReceiptsPage = () => {
             <ReceiptText className="h-5 w-5 text-primary" /> Your Receipts
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 min-w-0">
+        <CardContent className="p-0 min-w-0 w-full"> {/* Added w-full here */}
           {mockReceipts.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-4" />
@@ -62,7 +62,7 @@ const PaymentReceiptsPage = () => {
             </div>
           ) : (
             <div className="overflow-x-auto w-full">
-              <Table className="min-w-full"> {/* Added min-w-full here */}
+              <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[180px]">Transaction ID</TableHead>

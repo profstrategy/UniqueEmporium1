@@ -209,7 +209,7 @@ const CategoriesManagement = () => {
             <Settings className="h-5 w-5 text-primary" /> All Categories
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 w-full">
           <div className="flex flex-col md:flex-row items-center justify-between p-4 gap-4 border-b">
             <div className="relative flex-grow w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -247,7 +247,7 @@ const CategoriesManagement = () => {
             </div>
           ) : (
             <div className="overflow-x-auto w-full">
-              <Table className="min-w-full"> {/* Added min-w-full here */}
+              <Table className="min-w-full">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[150px]">Category ID</TableHead>
@@ -288,18 +288,18 @@ const CategoriesManagement = () => {
                               </Tooltip>
                             </TooltipProvider>
                             <AlertDialog>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <AlertDialogTrigger asChild>
+                              <AlertDialogTrigger asChild>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
                                       <Button variant="outline" size="icon" onClick={() => handleDeleteCategoryClick(category.id)}>
                                         <Trash2 className="h-4 w-4 text-red-600" />
                                       </Button>
-                                    </AlertDialogTrigger>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Delete Category</TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Delete Category</TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
