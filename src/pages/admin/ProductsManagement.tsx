@@ -324,10 +324,10 @@ const ProductsManagement = () => {
       initial="hidden"
       animate="visible"
     >
-      <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+      <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
         Products Management
       </motion.h1>
-      <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+      <motion.p className="text-base md:text-lg text-muted-foreground" variants={fadeInUp}>
         Manage your product catalog, including adding, editing, and deleting items.
       </motion.p>
 

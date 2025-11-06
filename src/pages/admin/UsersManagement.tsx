@@ -253,10 +253,10 @@ const UsersManagement = () => {
       animate="visible"
     >
       <div className="space-y-2">
-        <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+        <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Users Management
         </motion.h1>
-        <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+        <motion.p className="text-base md:text-lg text-muted-foreground" variants={fadeInUp}>
           Manage all registered user accounts and their roles.
         </motion.p>
       </div>

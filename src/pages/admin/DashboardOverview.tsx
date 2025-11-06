@@ -36,15 +36,15 @@ const DashboardOverview = () => {
       animate="visible"
     >
       <div className="space-y-2">
-        <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+        <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Admin Dashboard
         </motion.h1>
-        <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+        <motion.p className="text-base md:text-lg text-muted-foreground" variants={fadeInUp}>
           Welcome to your Unique Emporium Admin Panel.
         </motion.p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <AdminStatCard
           title="Total Orders"
           value={mockAdminStats.totalOrders}

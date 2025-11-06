@@ -41,7 +41,7 @@ const AdminSidebar = () => {
 
   return (
     <motion.aside
-      className="w-64 shrink-0 border-r bg-card p-6 hidden md:block"
+      className="w-64 shrink-0 border-r bg-card p-6 hidden lg:block" // Changed md:block to lg:block to match Header/MobileMenu logic
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" as Easing }}

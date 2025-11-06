@@ -195,10 +195,10 @@ const CategoriesManagement = () => {
       animate="visible"
     >
       <div className="space-y-2">
-        <motion.h1 className="text-3xl font-bold text-foreground" variants={fadeInUp}>
+        <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Categories Management
         </motion.h1>
-        <motion.p className="text-lg text-muted-foreground" variants={fadeInUp}>
+        <motion.p className="text-base md:text-lg text-muted-foreground" variants={fadeInUp}>
           Manage your product categories, including adding, editing, and deleting them.
         </motion.p>
       </div>

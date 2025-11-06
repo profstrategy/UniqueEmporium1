@@ -57,7 +57,7 @@ const AdminLayout = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="h-full"
+            className="h-full w-full" // Ensure full width
           >
             <Outlet />
           </motion.div>
