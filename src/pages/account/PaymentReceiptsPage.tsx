@@ -53,7 +53,7 @@ const PaymentReceiptsPage = () => {
             <ReceiptText className="h-5 w-5 text-primary" /> Your Receipts
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 min-w-0">
+        <CardContent className="p-0 min-w-0"> {/* Added min-w-0 here */}
           {mockReceipts.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-4" />
@@ -61,8 +61,8 @@ const PaymentReceiptsPage = () => {
               <p className="text-sm mt-2">Receipts will appear here after you place an order and upload proof of payment.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full">
-              <Table className="min-w-full"> {/* Added min-w-full here */}
+            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[180px]">Transaction ID</TableHead>

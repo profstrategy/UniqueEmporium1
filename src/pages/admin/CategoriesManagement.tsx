@@ -246,8 +246,8 @@ const CategoriesManagement = () => {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full">
-              <Table className="min-w-full"> {/* Added min-w-full here */}
+            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[150px]">Category ID</TableHead>
