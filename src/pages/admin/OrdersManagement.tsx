@@ -199,8 +199,8 @@ const OrdersManagement = () => {
             <ShoppingBag className="h-5 w-5 text-primary" /> All Orders
           </CardTitle>
         </CardHeader>
-        <CardContent className="min-w-0 p-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b pb-4 mb-4">
+        <CardContent className="min-w-0 p-0">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b p-4">
             <div className="relative flex-grow w-full md:w-auto">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -246,7 +246,7 @@ const OrdersManagement = () => {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
+            <div className="overflow-x-auto w-full">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -459,7 +459,7 @@ const OrdersManagement = () => {
 
           {/* Pagination */}
           {filteredOrders.length > ordersPerPage && (
-            <div className="flex items-center justify-end space-x-2 py-4 pr-4">
+            <div className="flex items-center justify-end space-x-2 p-4 border-t">
               <Button
                 variant="outline"
                 size="icon"
