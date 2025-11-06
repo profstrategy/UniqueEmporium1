@@ -40,11 +40,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   }, [emblaApi, onSelect]);
 
   const handleImageClick = () => {
-    // Use emblaApi.clickAllowed() to prevent opening the dialog if the user was dragging/swiping.
-    // Casting to 'any' resolves the TypeScript error for the missing 'clickAllowed' property.
-    if (!emblaApi || (emblaApi as any).clickAllowed()) {
-      setIsZoomed(true); // Open the dialog for zoom
-    }
+    setIsZoomed(true); // Open the dialog for zoom
   };
 
   return (
