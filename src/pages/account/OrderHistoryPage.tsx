@@ -55,7 +55,7 @@ const OrderHistoryPage = () => {
             <ShoppingBag className="h-5 w-5 text-primary" /> Your Orders
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 min-w-0 w-full"> {/* Added w-full here */}
+        <CardContent className="p-0 min-w-0">
           {mockOrders.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <Package className="h-12 w-12 mx-auto mb-4" />
@@ -66,7 +66,7 @@ const OrderHistoryPage = () => {
             </div>
           ) : (
             <div className="overflow-x-auto w-full">
-              <Table className="min-w-full">
+              <Table className="min-w-full"> {/* Added min-w-full here */}
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[150px]">Order ID</TableHead>
