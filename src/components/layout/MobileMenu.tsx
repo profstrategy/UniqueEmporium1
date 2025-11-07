@@ -118,7 +118,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
                       <Button
                         key={category.name}
                         variant="ghost"
-                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-sm text-foreground hover:bg-primary/70"
+                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-xs text-foreground hover:bg-primary/70"
                         onClick={() => handleLinkClick(category.link)}
                       >
                         <category.icon className="h-5 w-5 mb-1" />
