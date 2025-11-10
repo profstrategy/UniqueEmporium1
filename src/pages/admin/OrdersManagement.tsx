@@ -100,24 +100,11 @@ interface OrderCustomerDetailsDialogProps {
 }
 
 const OrderCustomerDetailsDialog = ({ order, onClose }: OrderCustomerDetailsDialogProps) => {
-  const navigate = useNavigate();
-  
-  // Find the corresponding user ID in mockAdminUsers based on email/name (mock logic)
-  const user = mockAdminUsers.find(u => u.email === order.customerEmail);
+  // Removed useNavigate and user lookup as the profile button is removed.
 
   const handleCopyPhone = () => {
     navigator.clipboard.writeText(order.customerPhone);
     toast.success("Phone number copied!", { description: order.customerPhone });
-  };
-
-  const handleViewProfile = () => {
-    if (user) {
-      onClose();
-      // Navigate to the Admin Users Management page
-      navigate(`/admin/users?viewUserId=${user.id}`);
-    } else {
-      toast.error("User profile not found in mock data.");
-    }
   };
 
   return (
@@ -156,11 +143,7 @@ const OrderCustomerDetailsDialog = ({ order, onClose }: OrderCustomerDetailsDial
           </div>
         </div>
       </div>
-      <div className="flex justify-end">
-        <Button onClick={handleViewProfile} disabled={!user}>
-          Check User Profile
-        </Button>
-      </div>
+      {/* Removed the "Check User Profile" button section */}
     </DialogContent>
   );
 };
