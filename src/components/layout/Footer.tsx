@@ -71,9 +71,12 @@ const Footer = () => {
               Your ultimate destination for luxury thrift, fashion bundles, and unique wears.
             </p>
             <div className="space-y-2 text-sm text-primary-foreground/80">
-              <p className="flex items-center">
+              <a 
+                href="mailto:support@uniqueemporium.com" 
+                className="flex items-center hover:text-primary-foreground/60 transition-colors"
+              >
                 <Mail className="mr-2 h-4 w-4" /> support@uniqueemporium.com
-              </p>
+              </a>
               <a 
                 href="tel:+2349065545572" 
                 className="flex items-center hover:text-primary-foreground/60 transition-colors"
