@@ -49,6 +49,10 @@ const Footer = () => {
     setTimeout(() => setIsSubmitted(false), 3000); // Hide success message after 3 seconds
   };
 
+  // URL-encoded address for Google Maps search
+  const mapAddress = encodeURIComponent("No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria");
+  const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapAddress}`;
+
   return (
     <footer className="relative overflow-hidden bg-primary py-12 text-primary-foreground md:py-16">
       {/* Background Wave Effect */}
@@ -83,9 +87,14 @@ const Footer = () => {
               >
                 <Phone className="mr-2 h-4 w-4" /> +234 (906) 554-5572
               </a>
-              <p className="flex items-center">
+              <a 
+                href={mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center hover:text-primary-foreground/60 transition-colors"
+              >
                 <MapPin className="mr-2 h-11 w-11" /> No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria
-              </p>
+              </a>
             </div>
           </motion.div>
 
