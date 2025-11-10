@@ -4,6 +4,7 @@ import React from "react";
 import { motion, Easing } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { cn } from "@/lib/utils"; // Import cn utility
 
 interface ContactInfo {
   icon: React.ElementType;
@@ -81,7 +82,14 @@ const ContactInfoCards = () => {
               <h3 className="text-sm md:text-lg font-semibold mb-2 md:mb-3 text-foreground">{info.title}</h3>
               <div className="space-y-1 text-[0.65rem] md:text-sm text-muted-foreground">
                 {info.details.map((detail, i) => (
-                  <p key={i}>{detail}</p>
+                  <p 
+                    key={i} 
+                    className={cn(
+                      info.title === "Email Us" && i === 0 && "break-all" // Apply break-all specifically to the email address
+                    )}
+                  >
+                    {detail}
+                  </p>
                 ))}
               </div>
             </Card>
