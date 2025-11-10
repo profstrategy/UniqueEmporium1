@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -36,17 +37,16 @@ import {
   Truck,
   XCircle,
   Clock,
-  CalendarDays,
+  Copy,
   User,
-  DollarSign,
   ChevronLeft,
   ChevronRight,
-  Loader2,
 } from "lucide-react";
-import { mockAdminOrders, AdminOrder } from "@/data/adminData.ts";
+import { mockAdminOrders, AdminOrder, mockAdminUsers } from "@/data/adminData.ts";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
+import { Link, useNavigate } from "react-router-dom";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -94,6 +94,78 @@ const getOrderStatusBadgeClass = (status: AdminOrder["status"]) => {
   }
 };
 
+interface OrderCustomerDetailsDialogProps {
+  order: AdminOrder;
+  onClose: () => void;
+}
+
+const OrderCustomerDetailsDialog = ({ order, onClose }: OrderCustomerDetailsDialogProps) => {
+  const navigate = useNavigate();
+  
+  // Find the corresponding user ID in mockAdminUsers based on email/name (mock logic)
+  const user = mockAdminUsers.find(u => u.email === order.customerEmail);
+
+  const handleCopyPhone = () => {
+    navigator.clipboard.writeText(order.customerPhone);
+    toast.success("Phone number copied!", { description: order.customerPhone });
+  };
+
+  const handleViewProfile = () => {
+    if (user) {
+      onClose();
+      // Navigate to the Admin Users Management page
+      navigate(`/admin/users?viewUserId=${user.id}`);
+    } else {
+      toast.error("User profile not found in mock data.");
+    }
+  };
+
+  return (
+    <DialogContent className="sm:max-w-[425px] p-6 rounded-xl shadow-lg bg-card/80 backdrop-blur-md border border-border/50">
+      <DialogHeader>
+        <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+          <User className="h-6 w-6 text-primary" /> Customer Details
+        </DialogTitle>
+        <DialogDescription>
+          Quick access to contact information for Order {order.id}.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="space-y-4 py-4">
+        <div className="space-y-1">
+          <p className="text-sm text-muted-foreground">Customer Name</p>
+          <p className="font-bold text-lg text-foreground">{order.customerName}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-muted-foreground">Email</p>
+          <p className="font-medium text-foreground">{order.customerEmail}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-muted-foreground">Phone Number</p>
+          <div className="flex items-center gap-2">
+            <p className="font-bold text-xl text-primary">{order.customerPhone}</p>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleCopyPhone} className="h-8 w-8">
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copy Phone Number</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <Button onClick={handleViewProfile} disabled={!user}>
+          Check User Profile
+        </Button>
+      </div>
+    </DialogContent>
+  );
+};
+
+
 const OrdersManagement = () => {
   const [orders, setOrders] = useState<AdminOrder[]>(mockAdminOrders);
   const [searchTerm, setSearchTerm] = useState("");
@@ -101,6 +173,9 @@ const OrdersManagement = () => {
   const [filterOrderStatus, setFilterOrderStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 10;
+  const [isCustomerDetailsModalOpen, setIsCustomerDetailsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
+
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
@@ -180,6 +255,11 @@ const OrdersManagement = () => {
       })
     );
   }, []);
+
+  const handleCustomerClick = (order: AdminOrder) => {
+    setSelectedOrder(order);
+    setIsCustomerDetailsModalOpen(true);
+  };
 
   return (
     <motion.div
@@ -276,8 +356,17 @@ const OrdersManagement = () => {
                       >
                         <TableCell className="font-medium">{order.id}</TableCell>
                         <TableCell>
-                          <div className="font-medium">{order.customerName}</div>
-                          <div className="text-sm text-muted-foreground">{order.customerPhone}</div> {/* Changed to customerPhone */}
+                          <Dialog open={isCustomerDetailsModalOpen && selectedOrder?.id === order.id} onOpenChange={setIsCustomerDetailsModalOpen}>
+                            <DialogTrigger asChild>
+                              <div className="cursor-pointer hover:bg-muted/50 p-1 -m-1 rounded-md transition-colors" onClick={() => handleCustomerClick(order)}>
+                                <div className="font-medium">{order.customerName}</div>
+                                <div className="text-sm text-muted-foreground">{order.customerPhone}</div>
+                              </div>
+                            </DialogTrigger>
+                            {selectedOrder && selectedOrder.id === order.id && (
+                              <OrderCustomerDetailsDialog order={selectedOrder} onClose={() => setIsCustomerDetailsModalOpen(false)} />
+                            )}
+                          </Dialog>
                         </TableCell>
                         <TableCell className="font-semibold">{formatCurrency(order.totalAmount)}</TableCell>
                         <TableCell>
