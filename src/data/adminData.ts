@@ -29,7 +29,7 @@ export interface AdminOrder extends Order {
   customerName: string;
   customerEmail: string;
   customerPhone: string; // Added customerPhone
-  paymentStatus: "pending" | "verified" | "failed";
+  paymentStatus: "pending" | "verified" | "declined"; // Changed from 'failed'
   paymentReceiptId?: string; // Link to a mock receipt
 }
 
@@ -107,7 +107,7 @@ export const mockAdminOrders: AdminOrder[] = [
     customerName: "Amaka J.",
     customerEmail: "amaka.j@example.com",
     customerPhone: "+2348098765432", // Added phone
-    paymentStatus: "failed",
+    paymentStatus: "declined", // Changed from 'failed'
     paymentReceiptId: "PR-20240710-004",
     items: [
       { productId: getNewIdByName("SHEIN Flowy Summer Midi Dress"), productName: "SHEIN Flowy Summer Midi Dress", quantity: 10, unitPrice: 3000, imageUrl: getProductById(getNewIdByName("SHEIN Flowy Summer Midi Dress"))?.images[0] || "" },

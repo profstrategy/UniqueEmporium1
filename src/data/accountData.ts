@@ -31,7 +31,7 @@ export interface PaymentReceipt {
   transactionId: string;
   date: string; // YYYY-MM-DD
   amount: number;
-  status: "pending" | "confirmed" | "failed";
+  status: "pending" | "confirmed" | "declined"; // Changed from 'failed'
   receiptImageUrl: string; // Placeholder for actual image URL
 }
 
@@ -45,11 +45,6 @@ const getNewIdByName = (name: string) => {
   // We need to import mockProducts here to search by name if the ID map logic failed in products.ts
   // Since we can't import mockProducts directly here without circular dependency issues, 
   // we rely on the fact that the names are unique and the IDs are generated in products.ts.
-  // For safety, we'll use a simple string search on the mockProducts array (which is exported from products.ts)
-  // NOTE: This is a mock data limitation. In a real app, you'd have a central product service.
-  
-  // Since we updated products.ts to use the ID_MAP, we can't rely on old names being IDs anymore.
-  // We must rely on the names being unique identifiers for the mock data.
   
   // To avoid circular dependency, we'll assume the names are unique and use a placeholder if not found.
   return "unknown-id";
@@ -158,7 +153,7 @@ export const mockReceipts: PaymentReceipt[] = [
     transactionId: "TXN-567890123",
     date: "2024-07-10",
     amount: 95000.00,
-    status: "failed",
+    status: "declined", // Changed from 'failed'
     receiptImageUrl: "https://via.placeholder.com/400x600/D8C4A6/000000?text=Receipt+UE-004",
   },
 ];

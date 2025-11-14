@@ -71,7 +71,7 @@ const getPaymentStatusBadgeClass = (status: AdminOrder["paymentStatus"]) => {
       return "bg-[#EAB308] text-white hover:bg-[#EAB308]/90"; // Yellow
     case "verified":
       return "bg-[#22C55E] text-white hover:bg-[#22C55E]/90"; // Green
-    case "failed":
+    case "declined": // Changed from 'failed'
       return "bg-[#EF4444] text-white hover:bg-[#EF4444]/90"; // Red
     default:
       return "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
@@ -216,7 +216,7 @@ const OrdersManagement = () => {
               toast.success(`Payment for Order ${orderId} verified!`);
               break;
             case "declinePayment": // New action
-              newPaymentStatus = "failed";
+              newPaymentStatus = "declined"; // Changed from 'failed'
               toast.error(`Payment for Order ${orderId} declined!`);
               break;
             case "processOrder":
@@ -287,7 +287,7 @@ const OrdersManagement = () => {
                   <SelectItem value="all">All Payment Statuses</SelectItem>
                   <SelectItem value="pending">Pending Payment</SelectItem>
                   <SelectItem value="verified">Verified Payment</SelectItem>
-                  <SelectItem value="failed">Failed Payment</SelectItem>
+                  <SelectItem value="declined">Declined Payment</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={filterOrderStatus} onValueChange={setFilterOrderStatus}>

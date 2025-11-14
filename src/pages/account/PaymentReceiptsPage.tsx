@@ -17,13 +17,13 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
-const getReceiptStatusBadgeVariant = (status: "pending" | "confirmed" | "failed") => {
+const getReceiptStatusBadgeVariant = (status: "pending" | "confirmed" | "declined") => {
   switch (status) {
     case "confirmed":
       return "default";
     case "pending":
       return "secondary";
-    case "failed":
+    case "declined": // Changed from 'failed'
       return "destructive";
     default:
       return "outline";
