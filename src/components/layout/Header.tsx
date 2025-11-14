@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
+import { cn } from "@/lib/utils"; // Import cn for conditional classNames
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
@@ -55,8 +56,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-secondary/80 backdrop-blur-sm border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8 text-secondary-foreground">
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-sm border-b border-border">
+        <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8 text-foreground">
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={handleLogoClick}>
             <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
@@ -67,7 +68,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-secondary-foreground/80"}`
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
               }
             >
               Home
@@ -75,7 +76,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <NavLink
               to="/products"
               className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-secondary-foreground/80"}`
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
               }
             >
               Shop All
@@ -84,7 +85,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             {/* Categories Dropdown (Desktop) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1 text-secondary-foreground hover:bg-secondary/50">
+                <Button variant="ghost" className="flex items-center gap-1 text-foreground hover:bg-muted/50">
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -103,7 +104,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-secondary-foreground/80"}`
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
               }
             >
               About Us
@@ -111,7 +112,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-secondary-foreground/80"}`
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
               }
             >
               Contact
@@ -120,7 +121,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <NavLink
               to="/admin"
               className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-secondary-foreground/80"}`
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
               }
             >
               Admin
@@ -129,12 +130,12 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
           {/* Utility Icons */}
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchBarOpen(!isSearchBarOpen)} className="text-secondary-foreground hover:bg-secondary/50">
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchBarOpen(!isSearchBarOpen)} className="text-foreground hover:bg-muted/50">
               <Search className="h-5 w-5" />
             </Button>
 
             <Link to="/favorites" className="relative">
-              <Button variant="ghost" size="icon" className="text-secondary-foreground hover:bg-secondary/50">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
                 <Heart className="h-5 w-5" />
               </Button>
               <Badge count={totalFavorites} variant="destructive" />
@@ -144,7 +145,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
             {/* Temporary Sign In Icon */}
             <Link to="/auth" className="relative">
-              <Button variant="ghost" size="icon" className="text-secondary-foreground hover:bg-secondary/50">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
                 <LogIn className="h-5 w-5" />
               </Button>
             </Link>
@@ -152,7 +153,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             {/* Account Dashboard Link (Hidden on mobile/tablet, visible on large screens) */}
             {!isMobile && ( // isMobile is now true for screens < 1024px
               <Link to="/account" className="relative">
-                <Button variant="ghost" size="icon" className="text-secondary-foreground hover:bg-secondary/50">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
                   <User className="h-5 w-5" />
                 </Button>
               </Link>
@@ -162,7 +163,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-secondary-foreground hover:bg-secondary/50" // Adjusted Button colors
+              className="lg:hidden text-foreground hover:bg-muted/50" // Adjusted Button colors
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
