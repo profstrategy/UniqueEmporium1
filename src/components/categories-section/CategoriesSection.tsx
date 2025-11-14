@@ -91,11 +91,11 @@ const CategoriesSection = () => {
   }, [isPaused, isMobile, scrollSpeed]);
 
   return (
-    <section className="relative py-[0.4rem] bg-secondary/10"> {/* Applied bg-secondary/10 here */}
+    <section className="relative py-[0.4rem] bg-primary/10"> {/* Applied bg-primary/10 here */}
       <motion.div
         className={cn(
           "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-          "p-6 rounded-xl bg-primary/40" // Inner div retains its background
+          "p-6 rounded-xl" // Removed bg-primary/40
         )}
         variants={staggerContainer}
         initial="hidden"
