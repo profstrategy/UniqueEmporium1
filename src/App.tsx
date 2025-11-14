@@ -28,6 +28,7 @@ const Privacy = lazy(() => import("./pages/Privacy.tsx"));
 const Terms = lazy(() => import("./pages/Terms.tsx"));
 const Checkout = lazy(() => import("./pages/Checkout.tsx"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails.tsx"));
+const Auth = lazy(() => import("./pages/Auth.tsx")); // Import Auth page
 
 // Account Dashboard Pages
 const Account = lazy(() => import("./pages/Account.tsx"));
@@ -80,6 +81,7 @@ const App = () => {
                     <Route path="/privacy" element={<Privacy />} />
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/auth" element={<Auth />} /> {/* Add Auth route */}
                     {/* Account Dashboard Routes */}
                     <Route path="/account" element={<Account />}>
                       <Route index element={<DashboardHome />} /> {/* Default route for /account */}
