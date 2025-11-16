@@ -16,6 +16,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
 import type { BankTransferFormData } from "@/components/checkout/BankTransferPaymentForm.tsx";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface OrderData {
   shipping: ShippingFormData | null;
@@ -42,32 +43,50 @@ const formTransitionVariants = {
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
-  const [orderData, setOrderData] = useState<OrderData>({ shipping: null, bankTransfer: null });
+  const [orderData, setOrderData] = useState<OrderData>({
+    shipping: null,
+    bankTransfer: { // Initialize bankTransfer with a default delivery method
+      receiptFile: undefined,
+      deliveryMethod: "pickup",
+    },
+  });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [direction, setDirection] = useState(0);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const isMobile = useIsMobile();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     if (cartItems.length === 0 && !isOrderPlaced) {
-      // If cart becomes empty and order isn't placed, redirect or show empty state
+      // If cart becomes empty and order isn't placed, redirect to cart
+      navigate("/cart");
     }
-  }, [cartItems, isOrderPlaced]);
+  }, [cartItems, isOrderPlaced, navigate]);
 
   const handleNextStep = (data: ShippingFormData | BankTransferFormData) => {
     setDirection(1);
-    if (currentStep === 1) { // Now Bank Transfer
+    if (currentStep === 1) { // From BankTransferPaymentForm
       setOrderData((prev) => ({ ...prev, bankTransfer: data as BankTransferFormData }));
-      setCurrentStep(2);
-    } else if (currentStep === 2) { // Now Shipping
+      setCurrentStep(2); // Move to ShippingForm
+    } else if (currentStep === 2) { // From ShippingForm
       setOrderData((prev) => ({ ...prev, shipping: data as ShippingFormData }));
-      setCurrentStep(3);
+      setCurrentStep(3); // Move to OrderReview
     }
   };
 
   const handlePreviousStep = () => {
     setDirection(-1);
     setCurrentStep((prev) => Math.max(1, prev - 1));
+  };
+
+  const handleDeliveryMethodChange = (method: BankTransferFormData['deliveryMethod']) => {
+    setOrderData((prev) => ({
+      ...prev,
+      bankTransfer: {
+        ...prev.bankTransfer!, // Ensure bankTransfer is not null
+        deliveryMethod: method,
+      },
+    }));
   };
 
   const handlePlaceOrder = async () => {
@@ -99,9 +118,22 @@ const Checkout = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1: // First step: Bank Transfer Payment
-        return <BankTransferPaymentForm onNext={handleNextStep} onPrevious={handlePreviousStep} initialData={orderData.bankTransfer} />;
+        return (
+          <BankTransferPaymentForm
+            onNext={handleNextStep}
+            onPrevious={() => navigate("/cart")} // Go back to cart from first step
+            initialData={orderData.bankTransfer}
+            onDeliveryMethodChange={handleDeliveryMethodChange} // Pass the new callback
+          />
+        );
       case 2: // Second step: Shipping Information
-        return <ShippingForm onNext={handleNextStep} initialData={orderData.shipping} />;
+        return (
+          <ShippingForm
+            onNext={handleNextStep}
+            onPrevious={handlePreviousStep}
+            initialData={orderData.shipping}
+          />
+        );
       case 3: // Third step: Order Review
         if (!orderData.shipping || !orderData.bankTransfer) {
           return (
@@ -146,8 +178,8 @@ const Checkout = () => {
 
         {/* Right Column: Order Summary (1/3 width on desktop, fixed) */}
         <div className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
-          <OrderSummaryCard 
-            deliveryMethod={orderData.bankTransfer?.deliveryMethod} 
+          <OrderSummaryCard
+            deliveryMethod={orderData.bankTransfer?.deliveryMethod} // Pass the selected delivery method
           />
         </div>
       </div>

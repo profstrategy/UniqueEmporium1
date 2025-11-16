@@ -29,6 +29,7 @@ export type ShippingFormData = z.infer<typeof shippingSchema>;
 
 interface ShippingFormProps {
   onNext: (data: ShippingFormData) => void;
+  onPrevious: () => void; // New prop
   initialData?: ShippingFormData | null;
 }
 
@@ -40,7 +41,7 @@ const nigerianStates = [
   "Sokoto", "Taraba", "Yobe", "Zamfara", "FCT"
 ];
 
-const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
+const ShippingForm = ({ onNext, onPrevious, initialData }: ShippingFormProps) => {
   const {
     register,
     handleSubmit,
@@ -142,15 +143,20 @@ const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Continuing...
-              </>
-            ) : (
-              "Continue to Payment"
-            )}
-          </Button>
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
+            <Button type="button" variant="outline" onClick={onPrevious} className="w-full sm:w-auto">
+              Back to Payment
+            </Button>
+            <Button type="submit" className="w-full sm:w-auto" size="lg" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Continuing...
+                </>
+              ) : (
+                "Continue to Review"
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

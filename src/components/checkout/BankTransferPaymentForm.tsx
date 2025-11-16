@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,15 +35,17 @@ interface BankTransferPaymentFormProps {
   onNext: (data: BankTransferFormData) => void;
   onPrevious: () => void;
   initialData?: BankTransferFormData | null;
+  onDeliveryMethodChange: (method: BankTransferFormData['deliveryMethod']) => void; // New prop
 }
 
+// Define deliveryOptions here
 const deliveryOptions = [
-  { value: "pickup", label: "Pick-up (Free)" },
-  { value: "dispatch-rider", label: "Dispatch Rider (@ ₦1)" },
-  { value: "park-delivery", label: "Park Delivery (@ ₦1)" },
+  { label: "1. Pick-up (Free)", value: "pickup" },
+  { label: "2. Dispatch Rider (@ ₦1)", value: "dispatch-rider" },
+  { label: "3. Park Delivery (@ ₦1)", value: "park-delivery" },
 ];
 
-const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransferPaymentFormProps) => {
+const BankTransferPaymentForm = ({ onNext, onPrevious, initialData, onDeliveryMethodChange }: BankTransferPaymentFormProps) => {
   const [receiptUploaded, setReceiptUploaded] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -56,12 +58,17 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransf
     resolver: zodResolver(bankTransferSchema),
     defaultValues: {
       receiptFile: initialData?.receiptFile,
-      deliveryMethod: initialData?.deliveryMethod || "pickup",
+      deliveryMethod: initialData?.deliveryMethod || "pickup", // Ensure default is set
     },
   });
 
   const currentReceiptFile = watch("receiptFile");
   const selectedDeliveryMethod = watch("deliveryMethod");
+
+  // Call onDeliveryMethodChange when selectedDeliveryMethod changes
+  useEffect(() => {
+    onDeliveryMethodChange(selectedDeliveryMethod);
+  }, [selectedDeliveryMethod, onDeliveryMethodChange]);
 
   const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -114,7 +121,9 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransf
               <Package className="h-4 w-4" /> Delivery Method
             </Label>
             <Select 
-              onValueChange={(value) => setValue("deliveryMethod", value as "pickup" | "dispatch-rider" | "park-delivery")} 
+              onValueChange={(value) => {
+                setValue("deliveryMethod", value as "pickup" | "dispatch-rider" | "park-delivery");
+              }} 
               value={selectedDeliveryMethod}
             >
               <SelectTrigger className={cn("w-full")}>
@@ -156,8 +165,8 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransf
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
-            <Button type="button" variant="outline" onClick={onPrevious} className="w-full sm:w-auto">
-              Back to Shipping
+            <Button type="button" variant="outline" onClick={onPrevious} className="w-full sm:w-auto" disabled={true}>
+              Back to Cart
             </Button>
             <Button type="submit" className="w-full sm:w-auto" size="lg" disabled={isSubmitting || !receiptUploaded}>
               {isSubmitting ? (
@@ -165,7 +174,7 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransf
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
                 </>
               ) : (
-                "Continue to Review"
+                "Continue to Shipping"
               )}
             </Button>
           </div>
