@@ -79,7 +79,7 @@ const Cart = () => {
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span className="w-8 text-center text-sm font-medium">{item.quantity}</span> {/* Changed to text-sm */}
+                      <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
                       <Button
                         variant="outline"
                         size="icon"
@@ -89,7 +89,7 @@ const Cart = () => {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="font-bold text-lg">₦{(item.quantity * item.unitPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p> {/* Changed to text-lg */}
+                    <p className="font-bold text-lg">₦{(item.quantity * item.unitPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -102,30 +102,30 @@ const Cart = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
-            <Button variant="outline" className="w-full mt-4 text-sm" onClick={clearCart} disabled={cartItems.length === 0}> {/* Added text-sm */}
+            <Button variant="outline" className="w-full mt-4 text-sm" onClick={clearCart} disabled={cartItems.length === 0}>
               Clear All Items
             </Button>
           </div>
           <div className="md:col-span-1 bg-card border rounded-lg p-6 shadow-lg h-fit">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2> {/* Changed to text-xl */}
-            <div className="flex justify-between text-sm mb-2"> {/* Changed to text-sm */}
+            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <div className="flex justify-between text-sm mb-2">
               <span>Subtotal:</span>
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
-            <div className="flex justify-between text-lg font-bold mb-6"> {/* Changed to text-lg */}
+            <div className="flex justify-between text-lg font-bold mb-6">
               <span>Total:</span>
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
-            <Button asChild className="w-full text-sm" disabled={cartItems.length === 0 || isCheckingOut}> {/* Changed to text-sm */}
+            <Button asChild className="w-full text-sm" disabled={cartItems.length === 0 || isCheckingOut}>
               <Link to="/checkout">
                 {isCheckingOut ? (
-                  <>
+                  <span>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...
-                  </>
+                  </span>
                 ) : (
-                  <>
+                  <span>
                     <CreditCard className="mr-2 h-5 w-5" /> Proceed to Checkout
-                  </>
+                  </span>
                 )}
               </Link>
             </Button>
