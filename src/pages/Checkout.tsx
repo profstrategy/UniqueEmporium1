@@ -76,6 +76,17 @@ const Checkout = () => {
     setCurrentStep(1); // Move to the actual payment form
   };
 
+  // Callback to update delivery method in real-time for OrderSummaryCard
+  const handleRealtimeDeliveryMethodChange = (method: BankTransferFormData['deliveryMethod']) => {
+    setOrderData((prev) => ({
+      ...prev,
+      bankTransfer: {
+        ...prev.bankTransfer!,
+        deliveryMethod: method,
+      },
+    }));
+  };
+
   const handleNextStep = (data: ShippingFormData | BankTransferFormData) => {
     setDirection(1); // Moving forward
     if (currentStep === 1) { // From BankTransferPaymentForm to ShippingForm
@@ -124,6 +135,7 @@ const Checkout = () => {
         return (
           <DeliveryMethodSelection
             onSelectDeliveryMethod={handleDeliveryMethodSelected}
+            onDeliveryMethodChange={handleRealtimeDeliveryMethodChange} // Pass the new callback
             initialDeliveryMethod={orderData.bankTransfer?.deliveryMethod}
             onPrevious={() => navigate("/cart")} // Go back to cart from this first step
           />

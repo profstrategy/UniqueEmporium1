@@ -5,7 +5,7 @@ import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label"; // Import Label component
+import { Label } from "@/components/ui/label";
 import { Package, ArrowLeft, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ type DeliveryMethod = "pickup" | "dispatch-rider" | "park-delivery";
 
 interface DeliveryMethodSelectionProps {
   onSelectDeliveryMethod: (method: DeliveryMethod) => void;
+  onDeliveryMethodChange: (method: DeliveryMethod) => void; // New prop for instant update
   initialDeliveryMethod?: DeliveryMethod;
   onPrevious: () => void; // To go back to cart
 }
@@ -25,14 +26,19 @@ const deliveryOptions = [
   { label: "3. Park Delivery (@ ₦1)", value: "park-delivery" },
 ];
 
-const DeliveryMethodSelection = ({ onSelectDeliveryMethod, initialDeliveryMethod, onPrevious }: DeliveryMethodSelectionProps) => {
+const DeliveryMethodSelection = ({ onSelectDeliveryMethod, onDeliveryMethodChange, initialDeliveryMethod, onPrevious }: DeliveryMethodSelectionProps) => {
   const [selectedMethod, setSelectedMethod] = useState<DeliveryMethod>(initialDeliveryMethod || "pickup");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSelectChange = (value: DeliveryMethod) => {
+    setSelectedMethod(value);
+    onDeliveryMethodChange(value); // Instantly update parent state
+  };
 
   const handleContinue = async () => {
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate a small delay
-    onSelectDeliveryMethod(selectedMethod);
+    onSelectDeliveryMethod(selectedMethod); // This is for moving to the next step
     setIsSubmitting(false);
   };
 
@@ -53,7 +59,7 @@ const DeliveryMethodSelection = ({ onSelectDeliveryMethod, initialDeliveryMethod
             <Package className="h-4 w-4" /> Delivery Method
           </Label>
           <Select
-            onValueChange={(value: DeliveryMethod) => setSelectedMethod(value)}
+            onValueChange={handleSelectChange} // Use the new handler
             value={selectedMethod}
           >
             <SelectTrigger className="w-full">
