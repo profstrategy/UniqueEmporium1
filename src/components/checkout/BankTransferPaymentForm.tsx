@@ -8,16 +8,11 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Banknote, Loader2, Upload, Package } from "lucide-react";
+import { Banknote, Loader2, Upload, Package, ArrowLeft } from "lucide-react"; // Added ArrowLeft
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// Select is no longer needed here as selection is done in previous step
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Zod schema for bank transfer information
 const bankTransferSchema = z.object({
@@ -35,17 +30,17 @@ interface BankTransferPaymentFormProps {
   onNext: (data: BankTransferFormData) => void;
   onPrevious: () => void;
   initialData?: BankTransferFormData | null;
-  onDeliveryMethodChange: (method: BankTransferFormData['deliveryMethod']) => void; // New prop
+  // onDeliveryMethodChange is no longer needed here
 }
 
-// Define deliveryOptions here
-const deliveryOptions = [
-  { label: "1. Pick-up (Free)", value: "pickup" },
-  { label: "2. Dispatch Rider (@ ₦1)", value: "dispatch-rider" },
-  { label: "3. Park Delivery (@ ₦1)", value: "park-delivery" },
-];
+// Define deliveryOptions here for display purposes
+const deliveryOptionsMap: Record<BankTransferFormData['deliveryMethod'], string> = {
+  "pickup": "Pick-up (Free)",
+  "dispatch-rider": "Dispatch Rider (@ ₦1)",
+  "park-delivery": "Park Delivery (@ ₦1)",
+};
 
-const BankTransferPaymentForm = ({ onNext, onPrevious, initialData, onDeliveryMethodChange }: BankTransferPaymentFormProps) => {
+const BankTransferPaymentForm = ({ onNext, onPrevious, initialData }: BankTransferPaymentFormProps) => {
   const [receiptUploaded, setReceiptUploaded] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -63,12 +58,15 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData, onDeliveryMe
   });
 
   const currentReceiptFile = watch("receiptFile");
-  const selectedDeliveryMethod = watch("deliveryMethod");
+  const selectedDeliveryMethod = watch("deliveryMethod"); // Watch to display it
 
-  // Call onDeliveryMethodChange when selectedDeliveryMethod changes
   useEffect(() => {
-    onDeliveryMethodChange(selectedDeliveryMethod);
-  }, [selectedDeliveryMethod, onDeliveryMethodChange]);
+    if (initialData?.receiptFile) {
+      setFileName(initialData.receiptFile.name);
+      setReceiptUploaded(true);
+    }
+  }, [initialData?.receiptFile]);
+
 
   const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -115,31 +113,22 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData, onDeliveryMe
             </p>
           </div>
 
-          {/* Delivery Method Selection */}
+          {/* Display selected Delivery Method (read-only) */}
           <div className="space-y-2">
-            <Label htmlFor="deliveryMethod" className="flex items-center gap-2">
-              <Package className="h-4 w-4" /> Delivery Method
+            <Label htmlFor="deliveryMethodDisplay" className="flex items-center gap-2">
+              <Package className="h-4 w-4" /> Selected Delivery Method
             </Label>
-            <Select 
-              onValueChange={(value) => {
-                setValue("deliveryMethod", value as "pickup" | "dispatch-rider" | "park-delivery");
-              }} 
-              value={selectedDeliveryMethod}
-            >
-              <SelectTrigger className={cn("w-full")}>
-                <SelectValue placeholder="Select a delivery method" />
-              </SelectTrigger>
-              <SelectContent>
-                {deliveryOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-2">
-              💡 All delivery charges for Dispatch Rider and Park Delivery are handled directly with the driver. We only help negotiate.
-            </p>
+            <Input
+              id="deliveryMethodDisplay"
+              value={deliveryOptionsMap[selectedDeliveryMethod]}
+              readOnly
+              className="bg-muted text-foreground font-medium"
+            />
+            {(selectedDeliveryMethod === "dispatch-rider" || selectedDeliveryMethod === "park-delivery") && (
+              <p className="text-xs text-primary font-medium mt-2">
+                *Actual delivery fees are negotiated directly with the driver.
+              </p>
+            )}
           </div>
 
           {/* Upload Section */}
@@ -165,8 +154,8 @@ const BankTransferPaymentForm = ({ onNext, onPrevious, initialData, onDeliveryMe
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
-            <Button type="button" variant="outline" onClick={onPrevious} className="w-full sm:w-auto" disabled={true}>
-              Back to Cart
+            <Button type="button" variant="outline" onClick={onPrevious} className="w-full sm:w-auto">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Delivery Method
             </Button>
             <Button type="submit" className="w-full sm:w-auto" size="lg" disabled={isSubmitting || !receiptUploaded}>
               {isSubmitting ? (

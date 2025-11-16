@@ -10,13 +10,14 @@ import OrderPlacedState from "@/components/checkout/OrderPlacedState.tsx";
 import ShippingForm from "@/components/checkout/ShippingForm.tsx";
 import BankTransferPaymentForm from "@/components/checkout/BankTransferPaymentForm.tsx";
 import OrderReview from "@/components/checkout/OrderReview.tsx";
+import DeliveryMethodSelection from "@/components/checkout/DeliveryMethodSelection.tsx"; // New import
 import { useCart } from "@/context/CartContext.tsx";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import type { ShippingFormData } from "@/components/checkout/ShippingForm.tsx";
 import type { BankTransferFormData } from "@/components/checkout/BankTransferPaymentForm.tsx";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 interface OrderData {
   shipping: ShippingFormData | null;
@@ -42,51 +43,53 @@ const formTransitionVariants = {
 
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0); // Start at step 0 for delivery method selection
   const [orderData, setOrderData] = useState<OrderData>({
     shipping: null,
-    bankTransfer: { // Initialize bankTransfer with a default delivery method
+    bankTransfer: {
       receiptFile: undefined,
-      deliveryMethod: "pickup",
+      deliveryMethod: "pickup", // Default delivery method
     },
   });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [direction, setDirection] = useState(0);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const isMobile = useIsMobile();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (cartItems.length === 0 && !isOrderPlaced) {
-      // If cart becomes empty and order isn't placed, redirect to cart
       navigate("/cart");
     }
   }, [cartItems, isOrderPlaced, navigate]);
 
+  // New handler for delivery method selection
+  const handleDeliveryMethodSelected = (method: BankTransferFormData['deliveryMethod']) => {
+    setDirection(1); // Moving forward
+    setOrderData((prev) => ({
+      ...prev,
+      bankTransfer: {
+        ...prev.bankTransfer!,
+        deliveryMethod: method,
+      },
+    }));
+    setCurrentStep(1); // Move to the actual payment form
+  };
+
   const handleNextStep = (data: ShippingFormData | BankTransferFormData) => {
-    setDirection(1);
-    if (currentStep === 1) { // From BankTransferPaymentForm
+    setDirection(1); // Moving forward
+    if (currentStep === 1) { // From BankTransferPaymentForm to ShippingForm
       setOrderData((prev) => ({ ...prev, bankTransfer: data as BankTransferFormData }));
-      setCurrentStep(2); // Move to ShippingForm
-    } else if (currentStep === 2) { // From ShippingForm
+      setCurrentStep(2);
+    } else if (currentStep === 2) { // From ShippingForm to OrderReview
       setOrderData((prev) => ({ ...prev, shipping: data as ShippingFormData }));
-      setCurrentStep(3); // Move to OrderReview
+      setCurrentStep(3);
     }
   };
 
   const handlePreviousStep = () => {
-    setDirection(-1);
-    setCurrentStep((prev) => Math.max(1, prev - 1));
-  };
-
-  const handleDeliveryMethodChange = (method: BankTransferFormData['deliveryMethod']) => {
-    setOrderData((prev) => ({
-      ...prev,
-      bankTransfer: {
-        ...prev.bankTransfer!, // Ensure bankTransfer is not null
-        deliveryMethod: method,
-      },
-    }));
+    setDirection(-1); // Moving backward
+    setCurrentStep((prev) => Math.max(0, prev - 1)); // Allow going back to step 0
   };
 
   const handlePlaceOrder = async () => {
@@ -117,16 +120,24 @@ const Checkout = () => {
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 1: // First step: Bank Transfer Payment
+      case 0: // Initial step: Select Delivery Method
+        return (
+          <DeliveryMethodSelection
+            onSelectDeliveryMethod={handleDeliveryMethodSelected}
+            initialDeliveryMethod={orderData.bankTransfer?.deliveryMethod}
+            onPrevious={() => navigate("/cart")} // Go back to cart from this first step
+          />
+        );
+      case 1: // Second step: Bank Transfer Payment (now receives selected delivery method)
         return (
           <BankTransferPaymentForm
             onNext={handleNextStep}
-            onPrevious={() => navigate("/cart")} // Go back to cart from first step
+            onPrevious={handlePreviousStep}
             initialData={orderData.bankTransfer}
-            onDeliveryMethodChange={handleDeliveryMethodChange} // Pass the new callback
+            // onDeliveryMethodChange is no longer needed here as selection is done in step 0
           />
         );
-      case 2: // Second step: Shipping Information
+      case 2: // Third step: Shipping Information
         return (
           <ShippingForm
             onNext={handleNextStep}
@@ -134,12 +145,12 @@ const Checkout = () => {
             initialData={orderData.shipping}
           />
         );
-      case 3: // Third step: Order Review
+      case 3: // Fourth step: Order Review
         if (!orderData.shipping || !orderData.bankTransfer) {
           return (
             <div className="text-center py-10">
               <p className="text-destructive">Error: Missing payment or shipping information.</p>
-              <Button onClick={() => setCurrentStep(1)} className="mt-4">Start Over</Button>
+              <Button onClick={() => setCurrentStep(0)} className="mt-4">Start Over</Button>
             </div>
           );
         }
@@ -160,7 +171,8 @@ const Checkout = () => {
   return (
     <div className="min-h-screen w-full bg-background">
       <CheckoutHeader />
-      <CheckoutProgress currentStep={currentStep} />
+      {/* Adjust CheckoutProgress to display steps correctly (e.g., 1-4 instead of 0-3) */}
+      <CheckoutProgress currentStep={currentStep + 1} totalSteps={4} />
 
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Forms (2/3 width on desktop) */}
@@ -179,7 +191,7 @@ const Checkout = () => {
         {/* Right Column: Order Summary (1/3 width on desktop, fixed) */}
         <div className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
           <OrderSummaryCard
-            deliveryMethod={orderData.bankTransfer?.deliveryMethod} // Pass the selected delivery method
+            deliveryMethod={orderData.bankTransfer?.deliveryMethod}
           />
         </div>
       </div>
