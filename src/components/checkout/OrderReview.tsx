@@ -30,7 +30,7 @@ const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder,
   let calculatedShipping = 0;
   let shippingDisplay = "";
 
-  switch (shippingInfo.deliveryMethod) {
+  switch (bankTransferInfo.deliveryMethod) {
     case "pickup":
       calculatedShipping = 0;
       shippingDisplay = "Free (Pick-up)";
@@ -56,7 +56,7 @@ const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder,
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
   };
 
-  const getDeliveryMethodLabel = (method: ShippingFormData['deliveryMethod']) => {
+  const getDeliveryMethodLabel = (method: BankTransferFormData['deliveryMethod']) => {
     switch (method) {
       case "pickup": return "Pick-up (Free)";
       case "dispatch-rider": return "Dispatch Rider (@ ₦1)";
@@ -91,8 +91,8 @@ const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder,
           <h3 className="font-semibold text-lg mb-3 text-foreground flex items-center gap-2">
             <Package className="h-5 w-5" /> Delivery Method
           </h3>
-          <p className="text-muted-foreground text-sm">{getDeliveryMethodLabel(shippingInfo.deliveryMethod)}</p>
-          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && (
+          <p className="text-muted-foreground text-sm">{getDeliveryMethodLabel(bankTransferInfo.deliveryMethod)}</p>
+          {(bankTransferInfo.deliveryMethod === "dispatch-rider" || bankTransferInfo.deliveryMethod === "park-delivery") && (
             <p className="text-xs text-primary font-medium mt-2">
               *Actual delivery fees are negotiated directly with the driver.
             </p>
@@ -156,7 +156,7 @@ const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder,
           <p className="text-sm text-muted-foreground font-normal mt-2">
             Prices are final — no VAT or hidden charges.
           </p>
-          {(shippingInfo.deliveryMethod === "dispatch-rider" || shippingInfo.deliveryMethod === "park-delivery") && (
+          {(bankTransferInfo.deliveryMethod === "dispatch-rider" || bankTransferInfo.deliveryMethod === "park-delivery") && (
             <p className="text-xs text-primary font-medium mt-2">
               *Actual delivery fees for Dispatch/Park Delivery are negotiated directly with the driver.
             </p>
