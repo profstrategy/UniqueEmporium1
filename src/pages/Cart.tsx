@@ -119,11 +119,11 @@ const Cart = () => {
             <Button asChild className="w-full text-sm" disabled={cartItems.length === 0 || isCheckingOut}>
               <Link to="/checkout">
                 {isCheckingOut ? (
-                  <span>
+                  <span className="flex items-center justify-center">
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...
                   </span>
                 ) : (
-                  <span>
+                  <span className="flex items-center justify-center">
                     <CreditCard className="mr-2 h-5 w-5" /> Proceed to Checkout
                   </span>
                 )}
