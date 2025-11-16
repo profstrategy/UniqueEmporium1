@@ -70,7 +70,7 @@ export default function AuthForm() {
       <div className="bg-gray-50 rounded-2xl shadow-2xl relative overflow-hidden w-full max-w-md h-[650px]">
         {/* Sign-Up Form */}
         <div
-          className={`absolute left-0 w-full h-[61%] transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[65%] transition-all duration-1600 ease-in-out ${
             isActive ? "bottom-0" : "-bottom-full"
           }`}
         >
@@ -112,7 +112,7 @@ export default function AuthForm() {
 
         {/* Sign-In Form */}
         <div
-          className={`absolute left-0 w-full h-[61%] transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[65%] transition-all duration-1600 ease-in-out ${
             isActive ? "-top-full" : "top-0"
           }`}
         >
@@ -151,9 +151,9 @@ export default function AuthForm() {
 
         {/* Overlay Container */}
         <div
-          className={`absolute left-0 w-full h-[39%] overflow-hidden z-10 transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[35%] overflow-hidden z-10 transition-all duration-1600 ease-in-out ${
             isActive
-              ? "bottom-[61%] rounded-b-[60px]"
+              ? "bottom-[65%] rounded-b-[60px]"
               : "bottom-0 rounded-t-[60px]"
           }`}
         >
@@ -165,7 +165,7 @@ export default function AuthForm() {
             }`}
           >
             {/* Sign Up Prompt (Top half) */}
-            <div className="absolute top-0 left-0 w-full h-[35%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
+            <div className="absolute top-0 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
               <h1 className="font-bold text-2xl">Start Your Journey!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Enter your details and discover unique wholesale fashion.
@@ -179,7 +179,7 @@ export default function AuthForm() {
             </div>
 
             {/* Sign In Prompt (Bottom half) */}
-            <div className="absolute top-1/2 left-0 w-full h-[35%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
+            <div className="absolute top-1/2 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
               <h1 className="font-bold text-2xl">Welcome Back!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Log in to manage your orders and explore new collections.
