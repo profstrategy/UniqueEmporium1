@@ -7,7 +7,6 @@ import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext.tsx";
 
 interface OrderSummaryCardProps {
-  freeShippingThreshold?: number;
   deliveryMethod?: string;
 }
 
@@ -17,7 +16,6 @@ const fadeInUp = {
 };
 
 const OrderSummaryCard = ({
-  freeShippingThreshold = 100000,
   deliveryMethod,
 }: OrderSummaryCardProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
@@ -32,11 +30,11 @@ const OrderSummaryCard = ({
     calculatedShipping = 0;
     shippingDisplay = "Free (Pick-up)";
   } else if (deliveryMethod === "dispatch-rider" || deliveryMethod === "park-delivery") {
-    calculatedShipping = 1;
+    calculatedShipping = 1; // Nominal fee for calculation
     shippingDisplay = "₦1 (Driver handles fees)";
   } else {
-    calculatedShipping = subtotal >= freeShippingThreshold ? 0 : 3500;
-    shippingDisplay = calculatedShipping === 0 ? "Free" : "Calculated at next step";
+    // No delivery method selected yet, show TBD
+    shippingDisplay = "To be determined";
   }
 
   // Total without VAT
