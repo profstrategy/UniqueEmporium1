@@ -41,7 +41,7 @@ const PaymentReceiptsPage = lazy(() => import("./pages/account/PaymentReceiptsPa
 // Admin Dashboard Pages
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout.tsx"));
 const AdminDashboardOverview = lazy(() => import("./pages/admin/DashboardOverview.tsx"));
-const AdminOrdersManagement = lazy(() => import import("./pages/admin/OrdersManagement.tsx"));
+const AdminOrdersManagement = lazy(() => import("./pages/admin/OrdersManagement.tsx"));
 const AdminProductsManagement = lazy(() => import("./pages/admin/ProductsManagement.tsx"));
 const AdminCategoriesManagement = lazy(() => import("./pages/admin/CategoriesManagement.tsx"));
 const AdminUsersManagement = lazy(() => import("./pages/admin/UsersManagement.tsx"));
