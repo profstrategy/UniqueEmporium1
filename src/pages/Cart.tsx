@@ -63,7 +63,7 @@ const Cart = () => {
                   <div className="flex items-center gap-4 mb-4 sm:mb-0 w-full sm:w-auto">
                     <img src={item.images[0]} alt={item.name} className="h-20 w-20 object-contain rounded-md border" />
                     <div>
-                      <h2 className="font-semibold text-xl">{item.name}</h2>
+                      <h2 className="font-semibold text-sm">{item.name}</h2> {/* Changed text-xl to text-sm */}
                       <p className="text-muted-foreground">₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc</p> {/* Display unit price */}
                       <p className="text-sm text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
                     </div>
