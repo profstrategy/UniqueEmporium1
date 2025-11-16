@@ -130,7 +130,7 @@ const OrderReview = ({ shippingInfo, bankTransferInfo, onPrevious, onPlaceOrder,
               <div key={item.id} className="flex items-center gap-4 border-b pb-3 last:border-b-0 last:pb-0">
                 <img src={item.images[0]} alt={item.name} className="h-16 w-16 object-contain rounded-md border" />
                 <div className="flex-grow">
-                  <p className="font-medium text-foreground">{item.name}</p>
+                  <p className="font-medium text-foreground text-sm">{item.name}</p> {/* Added text-sm here */}
                   <p className="text-sm text-muted-foreground">
                     {item.quantity} x {formatCurrency(item.unitPrice)} / pc
                   </p> {/* Display unit price */}
