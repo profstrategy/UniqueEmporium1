@@ -15,6 +15,7 @@ import FloatingWhatsApp from "./components/layout/FloatingWhatsApp.tsx"; // Impo
 // Lazily load page components for code splitting
 const Index = lazy(() => import("./pages/Index.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const ErrorPage = lazy(() => import("./pages/ErrorPage.tsx")); // New import
 const Favorites = lazy(() => import("./pages/Favorites.tsx"));
 const Cart = lazy(() => import("./pages/Cart.tsx"));
 const Products = lazy(() => import("./pages/Products.tsx"));
@@ -82,6 +83,7 @@ const App = () => {
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/auth" element={<Auth />} /> {/* Add Auth route */}
+                    <Route path="/error" element={<ErrorPage />} /> {/* New Error Page Route */}
                     {/* Account Dashboard Routes */}
                     <Route path="/account" element={<Account />}>
                       <Route index element={<DashboardHome />} /> {/* Default route for /account */}
