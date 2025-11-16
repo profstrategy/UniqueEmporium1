@@ -63,9 +63,9 @@ const Cart = () => {
                   <div className="flex items-center gap-4 mb-4 sm:mb-0 w-full sm:w-auto">
                     <img src={item.images[0]} alt={item.name} className="h-20 w-20 object-contain rounded-md border" />
                     <div>
-                      <h2 className="font-semibold text-sm">{item.name}</h2> {/* Changed text-xl to text-sm */}
-                      <p className="text-muted-foreground">₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc</p> {/* Display unit price */}
-                      <p className="text-sm text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
+                      <h2 className="font-semibold text-sm">{item.name}</h2>
+                      <p className="text-sm text-muted-foreground">₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc</p>
+                      <p className="text-sm text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 w-full sm:w-auto justify-between">
@@ -79,7 +79,7 @@ const Cart = () => {
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span className="w-8 text-center text-lg font-medium">{item.quantity}</span>
+                      <span className="w-8 text-center text-sm font-medium">{item.quantity}</span> {/* Changed to text-sm */}
                       <Button
                         variant="outline"
                         size="icon"
@@ -89,7 +89,7 @@ const Cart = () => {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="font-bold text-2xl">₦{(item.quantity * item.unitPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p> {/* Use unitPrice */}
+                    <p className="font-bold text-lg">₦{(item.quantity * item.unitPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</p> {/* Changed to text-lg */}
                     <Button
                       variant="ghost"
                       size="icon"
@@ -102,21 +102,21 @@ const Cart = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
-            <Button variant="outline" className="w-full mt-4" onClick={clearCart} disabled={cartItems.length === 0}>
+            <Button variant="outline" className="w-full mt-4 text-sm" onClick={clearCart} disabled={cartItems.length === 0}> {/* Added text-sm */}
               Clear All Items
             </Button>
           </div>
           <div className="md:col-span-1 bg-card border rounded-lg p-6 shadow-lg h-fit">
-            <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
-            <div className="flex justify-between text-lg mb-2">
+            <h2 className="text-xl font-bold mb-4">Order Summary</h2> {/* Changed to text-xl */}
+            <div className="flex justify-between text-sm mb-2"> {/* Changed to text-sm */}
               <span>Subtotal:</span>
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
-            <div className="flex justify-between text-lg font-bold mb-6">
+            <div className="flex justify-between text-lg font-bold mb-6"> {/* Changed to text-lg */}
               <span>Total:</span>
               <span>₦{totalPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</span>
             </div>
-            <Button asChild className="w-full text-lg" disabled={cartItems.length === 0 || isCheckingOut}>
+            <Button asChild className="w-full text-sm" disabled={cartItems.length === 0 || isCheckingOut}> {/* Changed to text-sm */}
               <Link to="/checkout">
                 {isCheckingOut ? (
                   <>
