@@ -48,6 +48,8 @@ import {
   Phone,
   ShoppingBag,
   User as UserIcon, // Renamed to avoid conflict with Users icon
+  ChevronFirst,
+  ChevronLast,
 } from "lucide-react";
 import { mockAdminUsers, AdminUser } from "@/data/adminData.ts";
 import { mockOrders } from "@/data/accountData.ts"; // Corrected import path for mockOrders
@@ -155,6 +157,12 @@ const UsersManagement = () => {
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  
+  // New pagination functions
+  const goToFirstPage = () => setCurrentPage(1);
+  const goToLastPage = () => setCurrentPage(totalPages);
+  const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
+  const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
 
   const handleAddUserClick = () => {
     reset(); // Clear form fields
@@ -413,28 +421,53 @@ const UsersManagement = () => {
             </div>
           )}
 
-          {/* Pagination */}
+          {/* Pagination Controls */}
           {filteredUsers.length > usersPerPage && (
-            <div className="flex items-center justify-end space-x-2 p-4 border-t">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                Page {currentPage} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t">
+              <div className="text-sm text-muted-foreground">
+                Showing {indexOfFirstUser + 1} to {Math.min(indexOfLastUser, filteredUsers.length)} of {filteredUsers.length} users
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToFirstPage}
+                  disabled={currentPage === 1}
+                  className="hidden sm:flex"
+                >
+                  <ChevronFirst className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToPrevPage}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center">
+                  <span className="text-sm font-medium">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToLastPage}
+                  disabled={currentPage === totalPages}
+                  className="hidden sm:flex"
+                >
+                  <ChevronLast className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
