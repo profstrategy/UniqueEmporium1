@@ -70,7 +70,7 @@ export default function AuthForm() {
       <div className="bg-gray-50 rounded-2xl shadow-2xl relative overflow-hidden w-full max-w-md h-[650px]">
         {/* Sign-Up Form */}
         <div
-          className={`absolute left-0 w-full h-[65%] transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[61%] transition-all duration-1600 ease-in-out ${
             isActive ? "bottom-0" : "-bottom-full"
           }`}
         >
@@ -112,7 +112,7 @@ export default function AuthForm() {
 
         {/* Sign-In Form */}
         <div
-          className={`absolute left-0 w-full h-[65%] transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[61%] transition-all duration-1600 ease-in-out ${
             isActive ? "-top-full" : "top-0"
           }`}
         >
@@ -151,9 +151,9 @@ export default function AuthForm() {
 
         {/* Overlay Container */}
         <div
-          className={`absolute left-0 w-full h-[35%] overflow-hidden z-10 transition-all duration-1600 ease-in-out ${
+          className={`absolute left-0 w-full h-[39%] overflow-hidden z-10 transition-all duration-1600 ease-in-out ${
             isActive
-              ? "bottom-[65%] rounded-b-[60px]"
+              ? "bottom-[61%] rounded-b-[60px]"
               : "bottom-0 rounded-t-[60px]"
           }`}
         >
