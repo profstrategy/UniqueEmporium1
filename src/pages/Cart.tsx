@@ -26,7 +26,7 @@ const Cart = () => {
   return (
     <div className="container mx-auto p-8">
       <motion.h1
-        className="text-4xl font-bold mb-6 text-center"
+        className="text-xl font-bold mb-6 text-center"
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
