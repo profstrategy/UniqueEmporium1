@@ -4,7 +4,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard } from "lucide-react"; // Import Home and LayoutDashboard icon
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, AlertTriangle } from "lucide-react"; // Added AlertTriangle icon
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
@@ -161,6 +161,11 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           {/* Temporary Admin Link */}
           <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/admin")}>
             <LayoutDashboard className="mr-2 h-5 w-5" /> Admin Dashboard
+          </Button>
+          
+          {/* Temporary Error Link */}
+          <Button variant="ghost" className="justify-start text-base py-1 text-destructive hover:bg-destructive/70" onClick={() => handleLinkClick("/error")}>
+            <AlertTriangle className="mr-2 h-5 w-5" /> Test Error Page
           </Button>
 
           {/* 9. Logout (top-level) */}
