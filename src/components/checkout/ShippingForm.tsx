@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Loader2, Package } from "lucide-react"; // Added Package icon
+import { MapPin, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const shippingSchema = z.object({
@@ -23,9 +23,6 @@ const shippingSchema = z.object({
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   zipCode: z.string().optional(),
-  deliveryMethod: z.enum(["pickup", "dispatch-rider", "park-delivery"], { // Corrected here
-    required_error: "Please select a delivery method",
-  }),
 });
 
 export type ShippingFormData = z.infer<typeof shippingSchema>;
@@ -41,12 +38,6 @@ const nigerianStates = [
   "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos",
   "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers",
   "Sokoto", "Taraba", "Yobe", "Zamfara", "FCT"
-];
-
-const deliveryOptions = [
-  { value: "pickup", label: "Pick-up (Free)" },
-  { value: "dispatch-rider", label: "Dispatch Rider (@ ₦1)" },
-  { value: "park-delivery", label: "Park Delivery (@ ₦1)" }, // Corrected here
 ];
 
 const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
@@ -68,12 +59,10 @@ const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
       city: "",
       state: "",
       zipCode: "",
-      deliveryMethod: "pickup", // Default to pickup
     },
   });
 
   const selectedState = watch("state");
-  const selectedDeliveryMethod = watch("deliveryMethod");
 
   const onSubmit = async (data: ShippingFormData) => {
     onNext(data);
@@ -151,29 +140,6 @@ const ShippingForm = ({ onNext, initialData }: ShippingFormProps) => {
               <Input id="zipCode" {...register("zipCode")} className={cn(errors.zipCode && "border-destructive")} />
               {errors.zipCode && <p className="text-destructive text-sm">{errors.zipCode.message}</p>}
             </div>
-          </div>
-
-          {/* Delivery Method Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="deliveryMethod" className="flex items-center gap-2">
-              <Package className="h-4 w-4" /> Delivery Method
-            </Label>
-            <Select onValueChange={(value) => setValue("deliveryMethod", value as "pickup" | "dispatch-rider" | "park-delivery")} value={selectedDeliveryMethod}> {/* Corrected here */}
-              <SelectTrigger className={cn(errors.deliveryMethod && "border-destructive")}>
-                <SelectValue placeholder="Select a delivery method" />
-              </SelectTrigger>
-              <SelectContent>
-                {deliveryOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.deliveryMethod && <p className="text-destructive text-sm">{errors.deliveryMethod.message}</p>}
-            <p className="text-xs text-muted-foreground mt-2">
-              💡 All delivery charges for Dispatch Rider and Park Delivery are handled directly with the driver. We only help negotiate. {/* Corrected here */}
-            </p>
           </div>
 
           <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
