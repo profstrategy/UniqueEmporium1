@@ -24,7 +24,9 @@ const OrderSummaryCard = ({
 }: OrderSummaryCardProps) => {
   const { cartItems, totalItems, totalPrice } = useCart();
 
-  const subtotal = totalPrice; // totalPrice from useCart now correctly reflects unit prices * quantity
+  // Calculate subtotal based on cart items (unit price * quantity)
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+  
   const vat = subtotal * vatRate;
 
   let calculatedShipping = 0;
