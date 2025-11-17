@@ -1,4 +1,4 @@
-import { supabase } from "../integrations/supabase/client";
+import { supabase } from "../integrations/supabase/serverClient"; // Use serverClient
 import { mockProducts } from "../data/products";
 
 async function seedProducts() {

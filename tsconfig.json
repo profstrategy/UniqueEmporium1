@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -21,11 +21,16 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path Aliases */
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./*"]
+    },
+
+    /* For Node.js scripts (like seed-products.ts) */
+    "esModuleInterop": true, // Allows default imports from modules with no default export
+    "forceConsistentCasingInFileNames": true,
+    "moduleDetection": "force" // Treat all files as modules
   },
-  "include": ["src"],
+  "include": ["src", "src/scripts"], // Include scripts directory
   "references": [{ "path": "./tsconfig.node.json" }]
 }

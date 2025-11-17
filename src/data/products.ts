@@ -1,5 +1,5 @@
 import { Shirt, Baby, Gem, Ruler, Palette, Tag, ShieldCheck, Star, Heart, ShoppingBag, Sun, Watch, Glasses } from "lucide-react"; // Updated icons for fashion
-import { generateProductId } from "@/utils/id-generator.ts"; // Import ID generator
+import { generateProductId } from "../utils/id-generator"; // Import ID generator
 
 export interface Product {
   id: string;
