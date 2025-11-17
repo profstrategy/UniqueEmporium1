@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, AlertTriangle } from "lucide-react"; // Added AlertTriangle icon
+import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, LogOut, AlertTriangle } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import CartIcon from "@/components/common/CartIcon.tsx";
 import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
@@ -14,8 +14,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the new logo component
-import { cn } from "@/lib/utils"; // Import cn for conditional classNames
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
+import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
@@ -37,9 +38,10 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const navigate = useNavigate();
-  const isMobile = useIsMobile(); // This now returns true for mobile and tablet
+  const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
+  const { user, isAdmin, signOut } = useAuth(); // Use AuthContext
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -50,17 +52,13 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
     }
   };
 
-  const handleCategoryClick = (link: string) => {
-    navigate(link);
-  };
-
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-sm border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8 text-foreground">
           {/* Logo */}
           <Link to="/" className="flex items-center" onClick={handleLogoClick}>
-            <UniqueEmporiumLogo className="h-[100px]" /> {/* Updated height to 100px */}
+            <UniqueEmporiumLogo className="h-[100px]" />
           </Link>
 
           {/* Desktop Navigation Links (hidden on mobile/tablet, visible on large screens) */}
@@ -117,15 +115,17 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             >
               Contact
             </NavLink>
-            {/* Temporary Admin Link */}
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
-              }
-            >
-              Admin
-            </NavLink>
+            {/* Admin Link (Visible only if user is admin) */}
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+                }
+              >
+                Admin
+              </NavLink>
+            )}
             {/* Temporary Error Link */}
             <NavLink
               to="/error"
@@ -152,18 +152,29 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
             <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
 
-            {/* Temporary Sign In Icon */}
-            <Link to="/auth" className="relative">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
-                <LogIn className="h-5 w-5" />
-              </Button>
-            </Link>
-
-            {/* Account Dashboard Link (Hidden on mobile/tablet, visible on large screens) */}
-            {!isMobile && ( // isMobile is now true for screens < 1024px
-              <Link to="/account" className="relative">
+            {/* Auth/Account Icon */}
+            {user ? (
+              <>
+                {/* Account Dashboard Link (Desktop) */}
+                {!isMobile && (
+                  <Link to="/account" className="relative">
+                    <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                )}
+                {/* Logout Button (Desktop) */}
+                {!isMobile && (
+                  <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-muted/50">
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                )}
+              </>
+            ) : (
+              /* Sign In Icon */
+              <Link to="/auth" className="relative">
                 <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
-                  <User className="h-5 w-5" />
+                  <LogIn className="h-5 w-5" />
                 </Button>
               </Link>
             )}
@@ -172,7 +183,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-foreground hover:bg-muted/50" // Adjusted Button colors
+              className="lg:hidden text-foreground hover:bg-muted/50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

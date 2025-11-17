@@ -9,6 +9,7 @@ import { motion, Easing } from "framer-motion";
 import { cn } from "@/lib/utils";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 import { adminNavItems, linkVariants } from "@/data/adminNavItems.ts";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 import { toast } from "sonner";
 
 interface AdminMobileMenuProps {
@@ -18,17 +19,17 @@ interface AdminMobileMenuProps {
 
 const AdminMobileMenu = ({ isOpen, onClose }: AdminMobileMenuProps) => {
   const navigate = useNavigate();
+  const { signOut } = useAuth(); // Use signOut from AuthContext
 
   const handleLinkClick = (path: string) => {
     onClose();
     navigate(path);
   };
 
-  const handleLogout = () => {
-    // Handle admin logout logic here (e.g., clear admin session, tokens)
+  const handleLogout = async () => {
+    await signOut();
     onClose();
-    navigate("/admin"); // Redirect to admin login or dashboard after logout
-    toast.info("You have been logged out from Admin.");
+    // Redirection is handled by AuthContext, but we ensure the menu closes
   };
 
   const menuVariants = {

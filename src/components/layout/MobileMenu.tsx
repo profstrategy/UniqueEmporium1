@@ -4,11 +4,12 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, AlertTriangle } from "lucide-react"; // Added AlertTriangle icon
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, AlertTriangle, LogIn } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 import {
   Accordion,
@@ -16,8 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { accountNavItems } from "@/data/accountNavItems.ts"; // Import account nav items
-import { toast } from "sonner"; // Import toast
+import { accountNavItems } from "@/data/accountNavItems.ts";
+import { toast } from "sonner";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -41,17 +42,16 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
   const navigate = useNavigate();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
+  const { user, isAdmin, signOut } = useAuth(); // Use AuthContext
 
   const handleLinkClick = (path: string) => {
     onClose();
     navigate(path);
   };
 
-  const handleLogout = () => {
-    // Handle logout logic here (e.g., clear user session, tokens)
+  const handleLogout = async () => {
+    await signOut();
     onClose();
-    navigate("/"); // Redirect to home after logout
-    toast.info("You have been logged out.");
   };
 
   const menuVariants = {
@@ -76,32 +76,38 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             <Home className="mr-2 h-5 w-5" /> Home
           </Button>
 
-          {/* 2. My Account Accordion */}
-          <div>
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="account" className="border-b-0">
-                <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline">
-                  <div className="flex items-center">
-                    <User className="mr-2 h-5 w-5" /> My Account
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pb-0">
-                  <div className="flex flex-col space-y-1 px-2">
-                    {accountNavItems.map((item) => (
-                      <Button
-                        key={item.name}
-                        variant="ghost"
-                        className="justify-start text-sm py-1 text-foreground hover:bg-primary/70"
-                        onClick={() => handleLinkClick(item.path)}
-                      >
-                        <item.icon className="mr-2 h-4 w-4" /> {item.name}
-                      </Button>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          {/* 2. My Account Accordion / Sign In */}
+          {user ? (
+            <div>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="account" className="border-b-0">
+                  <AccordionTrigger className="flex items-center justify-between px-4 py-1 text-base font-semibold text-foreground hover:no-underline">
+                    <div className="flex items-center">
+                      <User className="mr-2 h-5 w-5" /> My Account
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-0">
+                    <div className="flex flex-col space-y-1 px-2">
+                      {accountNavItems.map((item) => (
+                        <Button
+                          key={item.name}
+                          variant="ghost"
+                          className="justify-start text-sm py-1 text-foreground hover:bg-primary/70"
+                          onClick={() => handleLinkClick(item.path)}
+                        >
+                          <item.icon className="mr-2 h-4 w-4" /> {item.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          ) : (
+            <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/auth")}>
+              <LogIn className="mr-2 h-5 w-5" /> Sign In / Register
+            </Button>
+          )}
 
           {/* 3. Categories Accordion */}
           <div>
@@ -136,11 +142,13 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             <ShoppingBag className="mr-2 h-5 w-5" /> Shop All
           </Button>
 
-          {/* 5. Favorites */}
-          <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/favorites")}>
-            <Heart className="mr-2 h-5 w-5" /> Favorites
-            <Badge count={totalFavorites} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
-          </Button>
+          {/* 5. Favorites (Only visible if logged in) */}
+          {user && (
+            <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/favorites")}>
+              <Heart className="mr-2 h-5 w-5" /> Favorites
+              <Badge count={totalFavorites} variant="destructive" className="absolute right-4 top-1/2 -translate-y-1/2" />
+            </Button>
+          )}
 
           {/* 6. Cart */}
           <Button variant="ghost" className="justify-start text-base relative w-full py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/cart")}>
@@ -158,24 +166,28 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             <Mail className="mr-2 h-5 w-5" /> Contact
           </Button>
 
-          {/* Temporary Admin Link */}
-          <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/admin")}>
-            <LayoutDashboard className="mr-2 h-5 w-5" /> Admin Dashboard
-          </Button>
+          {/* Admin Link (Only visible if user is admin) */}
+          {isAdmin && (
+            <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/admin")}>
+              <LayoutDashboard className="mr-2 h-5 w-5" /> Admin Dashboard
+            </Button>
+          )}
           
           {/* Temporary Error Link */}
           <Button variant="ghost" className="justify-start text-base py-1 text-destructive hover:bg-destructive/70" onClick={() => handleLinkClick("/error")}>
             <AlertTriangle className="mr-2 h-5 w-5" /> Test Error Page
           </Button>
 
-          {/* 9. Logout (top-level) */}
-          <Button
-            variant="ghost"
-            className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/70"
-            onClick={handleLogout}
-          >
-            <LogOut className="mr-2 h-5 w-5" /> Logout
-          </Button>
+          {/* 9. Logout (top-level, only visible if logged in) */}
+          {user && (
+            <Button
+              variant="ghost"
+              className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/70"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-5 w-5" /> Logout
+            </Button>
+          )}
         </motion.nav>
       </SheetContent>
     </Sheet>

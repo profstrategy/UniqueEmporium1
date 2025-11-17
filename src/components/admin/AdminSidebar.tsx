@@ -8,8 +8,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { adminNavItems, linkVariants } from "@/data/adminNavItems.ts";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 
 const AdminSidebar = () => {
+  const { signOut } = useAuth(); // Use signOut from AuthContext
+
   const renderNavLinks = () => (
     <motion.ul className="space-y-2" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.05 } } }}>
       {adminNavItems.map((item) => (
@@ -31,7 +34,11 @@ const AdminSidebar = () => {
         </motion.li>
       ))}
       <motion.li variants={linkVariants} className="pt-4 border-t border-border mt-4">
-        <Button variant="ghost" className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          onClick={signOut} // Use the real signOut function
+        >
           <LogOut className="mr-3 h-5 w-5" />
           Logout
         </Button>
@@ -41,7 +48,7 @@ const AdminSidebar = () => {
 
   return (
     <motion.aside
-      className="w-64 shrink-0 border-r bg-card p-6 hidden lg:block" // Changed md:block to lg:block to match Header/MobileMenu logic
+      className="w-64 shrink-0 border-r bg-card p-6 hidden lg:block"
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" as Easing }}

@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { User, Lock, Mail } from "lucide-react";
+import { User, Lock, Mail, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import GoogleSignInButton from "./GoogleSignInButton";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // Helper component for social links
 const SocialLinks = () => (
@@ -44,7 +47,12 @@ const InputField: React.FC<InputFieldProps> = ({
 );
 
 export default function AuthForm() {
+  const { signInWithEmail, signUpWithEmail } = useAuth();
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
+
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [signUpName, setSignUpName] = useState("");
@@ -52,16 +60,31 @@ export default function AuthForm() {
   const [signUpPassword, setSignUpPassword] = useState("");
   const isMobile = useIsMobile();
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign in logic here
-    console.log("Sign In:", { email: signInEmail, password: signInPassword });
+    setIsSigningIn(true);
+    try {
+      await signInWithEmail(signInEmail, signInPassword);
+      navigate("/account");
+    } catch (error) {
+      // Error handled by toast in AuthContext
+    } finally {
+      setIsSigningIn(false);
+    }
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle sign up logic here
-    console.log("Sign Up:", { name: signUpName, email: signUpEmail, password: signUpPassword });
+    setIsSigningUp(true);
+    try {
+      await signUpWithEmail(signUpEmail, signUpPassword, signUpName);
+      // After successful sign up, redirect to home or show confirmation
+      navigate("/");
+    } catch (error) {
+      // Error handled by toast in AuthContext
+    } finally {
+      setIsSigningUp(false);
+    }
   };
 
   // Mobile View with vertical sliding prompt
@@ -103,9 +126,10 @@ export default function AuthForm() {
             />
             <button
               type="submit"
-              className="mt-4 rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80"
+              className="mt-4 rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80 disabled:opacity-50"
+              disabled={isSigningUp}
             >
-              Sign Up
+              {isSigningUp ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign Up"}
             </button>
           </form>
         </div>
@@ -142,9 +166,10 @@ export default function AuthForm() {
             </a>
             <button
               type="submit"
-              className="rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80"
+              className="rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80 disabled:opacity-50"
+              disabled={isSigningIn}
             >
-              Sign In
+              {isSigningIn ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
             </button>
           </form>
         </div>
@@ -242,9 +267,10 @@ export default function AuthForm() {
           />
           <button
             type="submit"
-            className="mt-4 rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80"
+            className="mt-4 rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80 disabled:opacity-50"
+            disabled={isSigningUp}
           >
-            Sign Up
+            {isSigningUp ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign Up"}
           </button>
         </form>
       </div>
@@ -278,9 +304,10 @@ export default function AuthForm() {
           </a>
           <button
             type="submit"
-            className="rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80"
+            className="rounded-full border border-secondary bg-secondary text-white text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-secondary/80 disabled:opacity-50"
+            disabled={isSigningIn}
           >
-            Sign In
+            {isSigningIn ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
           </button>
         </form>
       </div>

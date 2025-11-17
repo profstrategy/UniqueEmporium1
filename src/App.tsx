@@ -8,14 +8,15 @@ import Header from "./components/layout/Header.tsx";
 import Footer from "./components/layout/Footer.tsx";
 import { CartProvider } from "./context/CartContext.tsx";
 import { FavoritesProvider } from "./context/FavoritesContext.tsx";
+import { AuthProvider, useAuth } from "./context/AuthContext.tsx"; // Import AuthProvider and useAuth
 import ScrollToTop from "./components/common/ScrollToTop.tsx";
-import LoadingPage from "./components/common/LoadingPage.tsx"; // Import the new LoadingPage
-import FloatingWhatsApp from "./components/layout/FloatingWhatsApp.tsx"; // Import FloatingWhatsApp
+import LoadingPage from "./components/common/LoadingPage.tsx";
+import FloatingWhatsApp from "./components/layout/FloatingWhatsApp.tsx";
 
 // Lazily load page components for code splitting
 const Index = lazy(() => import("./pages/Index.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
-const ErrorPage = lazy(() => import("./pages/ErrorPage.tsx")); // New import
+const ErrorPage = lazy(() => import("./pages/ErrorPage.tsx"));
 const Favorites = lazy(() => import("./pages/Favorites.tsx"));
 const Cart = lazy(() => import("./pages/Cart.tsx"));
 const Products = lazy(() => import("./pages/Products.tsx"));
@@ -28,8 +29,7 @@ const Warranty = lazy(() => import("./pages/Warranty.tsx"));
 const Privacy = lazy(() => import("./pages/Privacy.tsx"));
 const Terms = lazy(() => import("./pages/Terms.tsx"));
 const Checkout = lazy(() => import("./pages/Checkout.tsx"));
-const ProductDetails = lazy(() => import("./pages/ProductDetails.tsx"));
-const Auth = lazy(() => import("./pages/Auth.tsx")); // Import Auth page
+const Auth = lazy(() => import("./pages/Auth.tsx"));
 
 // Account Dashboard Pages
 const Account = lazy(() => import("./pages/Account.tsx"));
@@ -45,22 +45,68 @@ const AdminOrdersManagement = lazy(() => import("./pages/admin/OrdersManagement.
 const AdminProductsManagement = lazy(() => import("./pages/admin/ProductsManagement.tsx"));
 const AdminCategoriesManagement = lazy(() => import("./pages/admin/CategoriesManagement.tsx"));
 const AdminUsersManagement = lazy(() => import("./pages/admin/UsersManagement.tsx"));
-const AdminAnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard.tsx")); // New import
-
+const AdminAnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard.tsx"));
 
 const queryClient = new QueryClient();
+
+// Private Route Wrapper (Basic implementation)
+const PrivateRoute = ({ element }: { element: React.ReactNode }) => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (!user) {
+    // Redirect unauthenticated users to the login page
+    navigate("/auth", { replace: true });
+    return null;
+  }
+
+  return <>{element}</>;
+};
+
+// Admin Route Wrapper
+const AdminRoute = ({ element }: { element: React.ReactNode }) => {
+  const { isAdmin, isLoading, user } = useAuth();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (!user) {
+    navigate("/auth", { replace: true });
+    return null;
+  }
+
+  if (!isAdmin) {
+    // Redirect non-admin users to the home page or a 404/unauthorized page
+    navigate("/", { replace: true });
+    toast.error("Unauthorized Access", { description: "You do not have permission to view the Admin Dashboard." });
+    return null;
+  }
+
+  return <>{element}</>;
+};
+
 
 // Component that wraps the main application logic and handles conditional rendering
 const MainAppContent = () => {
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const location = useLocation();
+  const { isLoading } = useAuth();
   
   // Determine if the current route is an auth page.
-  // Admin routes use their own layout and are correctly placed within the Routes structure.
   const isAuthPage = location.pathname === "/auth";
   
   // Hide header/footer/floating elements only on the Auth page
   const showLayout = !isAuthPage;
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <CartProvider onOpenCartDrawer={() => setIsCartDrawerOpen(true)}>
@@ -74,8 +120,6 @@ const MainAppContent = () => {
         <Suspense fallback={<LoadingPage />}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:productId" element={<ProductDetails />} />
             <Route path="/about" element={<About />} />
@@ -86,18 +130,24 @@ const MainAppContent = () => {
             <Route path="/warranty" element={<Warranty />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
-            <Route path="/checkout" element={<Checkout />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/error" element={<ErrorPage />} />
-            {/* Account Dashboard Routes */}
-            <Route path="/account" element={<Account />}>
+            
+            {/* Protected Routes */}
+            <Route path="/favorites" element={<PrivateRoute element={<Favorites />} />} />
+            <Route path="/cart" element={<PrivateRoute element={<Cart />} />} />
+            <Route path="/checkout" element={<PrivateRoute element={<Checkout />} />} />
+
+            {/* Account Dashboard Routes (Protected) */}
+            <Route path="/account" element={<PrivateRoute element={<Account />} />}>
               <Route index element={<DashboardHome />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="orders" element={<OrderHistoryPage />} />
               <Route path="receipts" element={<PaymentReceiptsPage />} />
             </Route>
-            {/* Admin Dashboard Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            
+            {/* Admin Dashboard Routes (Protected by AdminRoute) */}
+            <Route path="/admin" element={<AdminRoute element={<AdminLayout />} />}>
               <Route index element={<AdminDashboardOverview />} />
               <Route path="orders" element={<AdminOrdersManagement />} />
               <Route path="products" element={<AdminProductsManagement />} />
@@ -105,6 +155,7 @@ const MainAppContent = () => {
               <Route path="users" element={<AdminUsersManagement />} />
               <Route path="analytics" element={<AdminAnalyticsDashboard />} />
             </Route>
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -124,7 +175,9 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <MainAppContent />
+          <AuthProvider>
+            <MainAppContent />
+          </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

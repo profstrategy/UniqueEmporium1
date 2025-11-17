@@ -3,17 +3,18 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { LogOut, ChevronRight } from "lucide-react";
-import { motion, Easing } from "framer-motion"; // Import Easing
+import { motion, Easing } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { accountNavItems, linkVariants } from "@/data/accountNavItems.ts"; // Import from new file
+import { accountNavItems, linkVariants } from "@/data/accountNavItems.ts";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 
 interface AccountSidebarProps {
-  onCloseMobileMenu?: () => void; // Callback for mobile menu close (now unused in desktop sidebar)
+  onCloseMobileMenu?: () => void;
 }
 
 const AccountSidebar = ({ onCloseMobileMenu }: AccountSidebarProps) => {
-  // onCloseMobileMenu is no longer directly used here as this component is for desktop only.
+  const { signOut } = useAuth(); // Use signOut from AuthContext
 
   const renderNavLinks = () => (
     <motion.ul className="space-y-2" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.05 } } }}>
@@ -28,7 +29,6 @@ const AccountSidebar = ({ onCloseMobileMenu }: AccountSidebarProps) => {
                 isActive ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground",
               )
             }
-            // onClick={onCloseMobileMenu} // Removed as this is for desktop
           >
             <item.icon className="h-5 w-5" />
             {item.name}
@@ -37,7 +37,11 @@ const AccountSidebar = ({ onCloseMobileMenu }: AccountSidebarProps) => {
         </motion.li>
       ))}
       <motion.li variants={linkVariants} className="pt-4 border-t border-border mt-4">
-        <Button variant="ghost" className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          onClick={signOut} // Use the real signOut function
+        >
           <LogOut className="mr-3 h-5 w-5" />
           Logout
         </Button>
