@@ -104,20 +104,22 @@ export default function AuthForm() {
             <span className="text-xs mb-2 text-muted-foreground">
               Or use your email for registration
             </span>
-            <InputField
-              type="text"
-              placeholder="First Name"
-              Icon={User}
-              value={signUpFirstName}
-              onChange={(e) => setSignUpFirstName(e.target.value)}
-            />
-            <InputField
-              type="text"
-              placeholder="Last Name"
-              Icon={User}
-              value={signUpLastName}
-              onChange={(e) => setSignUpLastName(e.target.value)}
-            />
+            <div className="flex w-full gap-2"> {/* Added flex container */}
+              <InputField
+                type="text"
+                placeholder="First Name"
+                Icon={User}
+                value={signUpFirstName}
+                onChange={(e) => setSignUpFirstName(e.target.value)}
+              />
+              <InputField
+                type="text"
+                placeholder="Last Name"
+                Icon={User}
+                value={signUpLastName}
+                onChange={(e) => setSignUpLastName(e.target.value)}
+              />
+            </div>
             <InputField
               type="email"
               placeholder="Email"
@@ -252,20 +254,22 @@ export default function AuthForm() {
           <span className="text-xs mb-2 text-muted-foreground">
             Or use your Email for registration
           </span>
-          <InputField
-            type="text"
-            placeholder="First Name"
-            Icon={User}
-            value={signUpFirstName}
-            onChange={(e) => setSignUpFirstName(e.target.value)}
-          />
-          <InputField
-            type="text"
-            placeholder="Last Name"
-            Icon={User}
-            value={signUpLastName}
-            onChange={(e) => setSignUpLastName(e.target.value)}
-          />
+          <div className="flex w-full gap-2"> {/* Added flex container */}
+            <InputField
+              type="text"
+              placeholder="First Name"
+              Icon={User}
+              value={signUpFirstName}
+              onChange={(e) => setSignUpFirstName(e.target.value)}
+            />
+            <InputField
+              type="text"
+              placeholder="Last Name"
+              Icon={User}
+              value={signUpLastName}
+              onChange={(e) => setSignUpLastName(e.target.value)}
+            />
+          </div>
           <InputField
             type="email"
             placeholder="Email"
