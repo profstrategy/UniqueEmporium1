@@ -100,6 +100,8 @@ const MainAppContent = () => {
   const location = useLocation();
   const { isLoading } = useAuth();
   
+  console.log("MainAppContent: isLoading from useAuth:", isLoading); // Add this log
+  
   // Determine if the current route is an auth page.
   const isAuthPage = location.pathname === "/auth";
   

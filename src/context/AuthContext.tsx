@@ -28,56 +28,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<CustomUser | null>(null); // Use CustomUser
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Keep initial state as true
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("AuthContext: useEffect started.");
+    let isMounted = true; // To prevent state updates on unmounted component
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        console.log("AuthContext: onAuthStateChange event:", event);
-        setSession(currentSession);
-        const currentUser = currentSession?.user ?? null;
-        
-        if (currentUser) {
-          // Fetch profile data to get first_name, last_name, and role
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('first_name, last_name, role')
-            .eq('id', currentUser.id)
-            .single();
+    const handleAuthChange = async (session: Session | null) => {
+      if (!isMounted) return;
 
-          if (error) {
-            console.error("AuthContext: Error fetching user profile:", error);
-            // Fallback to basic user data if profile fetch fails
-            setUser(currentUser);
-            setIsAdmin(false);
-          } else if (profile) {
-            setUser({
-              ...currentUser,
-              first_name: profile.first_name,
-              last_name: profile.last_name,
-            });
-            setIsAdmin(profile.role === 'admin');
-          } else {
-            // User exists but no profile found (shouldn't happen with trigger)
-            setUser(currentUser);
-            setIsAdmin(false);
-          }
-        } else {
-          setUser(null);
-          setIsAdmin(false);
-        }
-        setIsLoading(false);
-        console.log("AuthContext: onAuthStateChange - setIsLoading(false) called.");
-      }
-    );
-
-    // Initial session check
-    console.log("AuthContext: Performing initial getSession check.");
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      console.log("AuthContext: getSession resolved.");
       setSession(session);
       const currentUser = session?.user ?? null;
 
@@ -89,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           .single();
 
         if (error) {
-          console.error("AuthContext: Error fetching initial user profile:", error);
+          console.error("AuthContext: Error fetching user profile:", error);
           setUser(currentUser);
           setIsAdmin(false);
         } else if (profile) {
@@ -107,18 +66,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         setIsAdmin(false);
       }
-      setIsLoading(false);
+    };
+
+    // 1. Initial session check
+    console.log("AuthContext: Performing initial getSession check.");
+    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+      if (!isMounted) return;
+      console.log("AuthContext: getSession resolved.");
+      await handleAuthChange(initialSession); // Process initial session
+      setIsLoading(false); // Set loading to false ONLY after initial check
       console.log("AuthContext: getSession - setIsLoading(false) called.");
     }).catch(error => {
+      if (!isMounted) return;
       console.error("AuthContext: Error during initial getSession:", error);
       setIsLoading(false); // Ensure loading state is cleared even on error
+      console.log("AuthContext: getSession error - setIsLoading(false) called.");
     });
+
+    // 2. Set up listener for subsequent auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (!isMounted) return;
+        console.log("AuthContext: onAuthStateChange event:", event);
+        // Only update session/user/admin state, do not touch isLoading here
+        // as isLoading is for the *initial* load.
+        await handleAuthChange(currentSession);
+      }
+    );
 
     return () => {
       console.log("AuthContext: Cleaning up auth listener.");
+      isMounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
 
   // Function to handle sign in
   const signInWithEmail = async (email: string, password: string) => {
