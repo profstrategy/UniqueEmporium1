@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => {
       isMounted = false;
-      authListener.subscription.unsubscribe();
+      authListener?.subscription.unsubscribe(); // Safely unsubscribe
       console.log("AuthContext: Cleaning up auth listener.");
     };
   }, []); // Empty dependency array means this runs once on mount
