@@ -14,11 +14,11 @@ interface CustomUser extends User {
 
 interface AuthContextType {
   session: Session | null;
-  user: CustomUser | null; // Use CustomUser here
+  user: CustomUser | null;
   isAdmin: boolean;
   isLoading: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string, firstName: string, lastName: string) => Promise<void>; // Updated signature
+  signUpWithEmail: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -26,11 +26,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<CustomUser | null>(null); // Use CustomUser
+  const [user, setUser] = useState<CustomUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Keep initial state as true
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const isInitialLoadRef = useRef(true); // Track if it's the very first load
+  const isInitialLoadRef = useRef(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -71,8 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAdmin(false);
       }
 
-      // Crucially, set isLoading to false after the initial session determination
-      // This ensures the loading screen is dismissed once the auth state is known.
       if (isInitialLoadRef.current) {
         setIsLoading(false);
         isInitialLoadRef.current = false;
@@ -80,32 +78,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    // Immediately get the session and then set up the listener
-    // The listener will handle the subsequent state updates, including the initial one.
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
-      if (!isMounted) return;
-      // Manually trigger the handler for the initial session
-      handleAuthStateChange('INITIAL_SESSION', initialSession);
-    }).catch(error => {
-      console.error("AuthContext: Error getting initial session:", error);
-      if (isInitialLoadRef.current) {
-        setIsLoading(false); // Ensure loading is false even if initial fetch fails
-        isInitialLoadRef.current = false;
-      }
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session: initialSession } }) => {
+        if (!isMounted) return;
+        handleAuthStateChange('INITIAL_SESSION', initialSession);
+      })
+      .catch(error => {
+        console.error("AuthContext: Error getting initial session:", error);
+        if (isInitialLoadRef.current) {
+          setIsLoading(false);
+          isInitialLoadRef.current = false;
+        }
+      });
 
-
-    // Corrected: Destructure 'data' and then access 'subscription' from it
-    const { data } = supabase.auth.onAuthStateChange(handleAuthStateChange);
+    // Correct Supabase v2 syntax
+    const { data: listener } = supabase.auth.onAuthStateChange(handleAuthStateChange);
 
     return () => {
       isMounted = false;
-      data.subscription?.unsubscribe(); // Now correctly calls unsubscribe on the subscription object
+      listener?.subscription?.unsubscribe();
       console.log("AuthContext: Cleaning up auth listener.");
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  // Function to handle sign in
   const signInWithEmail = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
@@ -115,13 +110,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     toast.success("Welcome back!");
   };
 
-  // Function to handle sign up
   const signUpWithEmail = async (email: string, password: string, firstName: string, lastName: string) => {
     const { data: { user }, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { first_name: firstName, last_name: lastName }, // Pass first_name and last_name
+        data: { first_name: firstName, last_name: lastName },
       },
     });
 
@@ -137,7 +131,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Function to handle sign out
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
