@@ -49,8 +49,16 @@ async function seedProducts() {
 }
 
 seedProducts().catch((err) => {
-  console.error("An unhandled error occurred during product seeding:", err);
-  if (err.message && err.code) {
-    console.error(`Error Code: ${err.code}, Message: ${err.message}`);
+  console.error("An unhandled error occurred during product seeding:");
+  console.error("Error object:", err);
+  if (err instanceof Error) {
+    console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
+  } else if (typeof err === 'object' && err !== null) {
+    try {
+      console.error("JSON stringified error:", JSON.stringify(err, null, 2));
+    } catch (e) {
+      console.error("Could not stringify error object.");
+    }
   }
 });
