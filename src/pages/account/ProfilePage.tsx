@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, Lock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
+import { supabase } from "@/integrations/supabase/client"; // Import supabase client
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -16,16 +18,59 @@ const fadeInUp = {
 };
 
 const ProfilePage = () => {
+  const { user, isLoading: isLoadingAuth } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
-    firstName: "Aisha",
-    lastName: "O.",
-    email: "aisha.o@example.com",
-    phone: "+2348012345678",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
+
+  const fetchUserProfile = useCallback(async () => {
+    if (!user) {
+      setIsLoadingProfile(false);
+      return;
+    }
+
+    setIsLoadingProfile(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('first_name, last_name, email, phone') // Select specific fields
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching profile:", error);
+      toast.error("Failed to load profile.", { description: error.message });
+      // Fallback to user's auth email if profile fetch fails
+      setFormData((prev) => ({
+        ...prev,
+        email: user.email || "",
+      }));
+    } else if (data) {
+      setFormData((prev) => ({
+        ...prev,
+        firstName: data.first_name || "",
+        lastName: data.last_name || "",
+        email: data.email || user.email || "", // Use profile email, fallback to auth email
+        phone: data.phone || "",
+      }));
+    }
+    setIsLoadingProfile(false);
+  }, [user]);
+
+  useEffect(() => {
+    if (!isLoadingAuth && user) {
+      fetchUserProfile();
+    } else if (!isLoadingAuth && !user) {
+      setIsLoadingProfile(false); // No user, no profile to load
+    }
+  }, [user, isLoadingAuth, fetchUserProfile]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,33 +79,68 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
-    toast.loading("Saving profile...", { id: "profile-save" });
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Basic validation for password change (non-functional backend)
-    if (formData.newPassword && formData.newPassword !== formData.confirmNewPassword) {
-      toast.dismiss("profile-save");
-      toast.error("New passwords do not match.");
-      setIsSaving(false);
+    if (!user) {
+      toast.error("You must be logged in to update your profile.");
       return;
     }
 
-    toast.dismiss("profile-save");
-    toast.success("Profile updated successfully!", {
-      description: "Your information has been saved.",
-    });
+    setIsSaving(true);
+    toast.loading("Saving profile...", { id: "profile-save" });
+
+    // Password change validation
+    if (formData.newPassword) {
+      if (formData.newPassword !== formData.confirmNewPassword) {
+        toast.dismiss("profile-save");
+        toast.error("New passwords do not match.");
+        setIsSaving(false);
+        return;
+      }
+      // In a real app, you'd verify currentPassword and then update the password
+      // For this mock, we'll just show a success message for password change
+      // Supabase auth.updateUser({ password: newPassword })
+      toast.info("Password change functionality is mocked. In a real app, current password verification would be needed.");
+    }
+
+    // Update profile data in Supabase
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phone,
+        // email is not directly updatable via profiles table if it's linked to auth.users
+        // updated_at is handled by a trigger
+      })
+      .eq('id', user.id);
+
+    if (profileError) {
+      toast.dismiss("profile-save");
+      toast.error("Failed to update profile.", { description: profileError.message });
+    } else {
+      toast.dismiss("profile-save");
+      toast.success("Profile updated successfully!", {
+        description: "Your information has been saved.",
+      });
+      // Clear password fields after successful (mock) update
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      }));
+      fetchUserProfile(); // Re-fetch to ensure latest data is displayed
+    }
     setIsSaving(false);
-    // Clear password fields after successful (mock) update
-    setFormData((prev) => ({
-      ...prev,
-      currentPassword: "",
-      newPassword: "",
-      confirmNewPassword: "",
-    }));
   };
+
+  if (isLoadingAuth || isLoadingProfile) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -97,7 +177,7 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} disabled />
-                <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
+                <p className="text-xs text-muted-foreground">Email cannot be changed directly here. It's linked to your authentication.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
