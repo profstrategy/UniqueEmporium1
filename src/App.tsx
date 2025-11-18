@@ -56,12 +56,14 @@ const PrivateRoute = ({ element }: { element: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
+  console.log("PrivateRoute: isLoading:", isLoading, "user:", user ? "present" : "null");
+
   if (isLoading) {
     return <LoadingPage />;
   }
 
   if (!user) {
-    // Redirect unauthenticated users to the login page
+    console.log("PrivateRoute: User is null, navigating to /auth");
     navigate("/auth", { replace: true });
     return null;
   }
@@ -74,17 +76,20 @@ const AdminRoute = ({ element }: { element: React.ReactNode }) => {
   const { isAdmin, isLoading, user } = useAuth();
   const navigate = useNavigate();
 
+  console.log("AdminRoute: isLoading:", isLoading, "user:", user ? "present" : "null", "isAdmin:", isAdmin);
+
   if (isLoading) {
     return <LoadingPage />;
   }
 
   if (!user) {
+    console.log("AdminRoute: User is null, navigating to /auth");
     navigate("/auth", { replace: true });
     return null;
   }
 
   if (!isAdmin) {
-    // Redirect non-admin users to the home page or a 404/unauthorized page
+    console.log("AdminRoute: User is not admin, navigating to /");
     navigate("/", { replace: true });
     toast.error("Unauthorized Access", { description: "You do not have permission to view the Admin Dashboard." });
     return null;

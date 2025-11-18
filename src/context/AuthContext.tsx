@@ -34,23 +34,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let isMounted = true; // To prevent state updates on unmounted component
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        if (!isMounted) return;
-        console.log("AuthContext: onAuthStateChange event:", event);
+    const getInitialSession = async () => {
+      console.log("AuthContext: Attempting to get initial session...");
+      const { data: { session: initialSession }, error: sessionError } = await supabase.auth.getSession();
 
-        setSession(currentSession);
-        const currentUser = currentSession?.user ?? null;
+      if (!isMounted) return;
 
+      if (sessionError) {
+        console.error("AuthContext: Error getting initial session:", sessionError);
+        setSession(null);
+        setUser(null);
+        setIsAdmin(false);
+      } else {
+        setSession(initialSession);
+        const currentUser = initialSession?.user ?? null;
         if (currentUser) {
-          const { data: profile, error } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('first_name, last_name, role')
             .eq('id', currentUser.id)
             .single();
 
-          if (error) {
-            console.error("AuthContext: Error fetching user profile:", error);
+          if (!isMounted) return;
+
+          if (profileError) {
+            console.error("AuthContext: Error fetching initial user profile:", profileError);
             setUser(currentUser);
             setIsAdmin(false);
           } else if (profile) {
@@ -61,7 +69,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
             setIsAdmin(profile.role === 'admin');
           } else {
-            // User exists but no profile found (shouldn't happen with trigger)
             setUser(currentUser);
             setIsAdmin(false);
           }
@@ -69,11 +76,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(null);
           setIsAdmin(false);
         }
-        
-        // Crucially, set isLoading to false after the initial session is processed
-        // This will cover 'INITIAL_SESSION' and subsequent events.
-        setIsLoading(false); 
-        console.log("AuthContext: setIsLoading(false) called after event:", event);
+      }
+      setIsLoading(false); // Set loading to false after initial session check
+      console.log("AuthContext: Initial session check complete, isLoading set to false.");
+    };
+
+    getInitialSession(); // Call immediately on mount
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (!isMounted) return;
+        console.log("AuthContext: onAuthStateChange event:", event);
+
+        setSession(currentSession);
+        const currentUser = currentSession?.user ?? null;
+
+        if (currentUser) {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, role')
+            .eq('id', currentUser.id)
+            .single();
+
+          if (!isMounted) return;
+
+          if (profileError) {
+            console.error("AuthContext: Error fetching user profile during state change:", profileError);
+            setUser(currentUser);
+            setIsAdmin(false);
+          } else if (profile) {
+            setUser({
+              ...currentUser,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+            });
+            setIsAdmin(profile.role === 'admin');
+          } else {
+            setUser(currentUser);
+            setIsAdmin(false);
+          }
+        } else {
+          setUser(null);
+          setIsAdmin(false);
+        }
+        // No need to set isLoading here again, as getInitialSession already handles the initial load.
+        // This listener handles *changes* after the initial load.
       }
     );
 
