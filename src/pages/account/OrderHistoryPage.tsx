@@ -1,24 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Package, CalendarDays, DollarSign, Info } from "lucide-react";
-import { mockOrders, OrderStatus } from "@/data/accountData.ts";
-import { cn } from "@/lib/utils";
+import { ShoppingBag, Package, CalendarDays, DollarSign, Info, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
+import { useAuth } from "@/context/AuthContext.tsx";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+// Define the order interface based on your database structure
+interface OrderItem {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  image_url: string;
+}
+
+interface Order {
+  id: string;
+  order_date: string;
+  total_amount: number;
+  status: string;
+  items: OrderItem[];
+  shipping_address: {
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+  };
+  delivery_method: string;
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
-const getStatusBadgeVariant = (status: OrderStatus) => {
-  switch (status) {
+const getStatusBadgeVariant = (status: string) => {
+  switch (status.toLowerCase()) {
     case "completed":
       return "default";
     case "processing":
@@ -33,9 +58,63 @@ const getStatusBadgeVariant = (status: OrderStatus) => {
 };
 
 const OrderHistoryPage = () => {
+  const { user, isLoading: isLoadingAuth } = useAuth();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      // Fetch orders for the logged-in user
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('order_date', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching orders:", error);
+        toast.error("Failed to load orders.", { description: error.message });
+      } else {
+        // Transform the data to match the expected format
+        const transformedOrders = data.map(order => ({
+          id: order.id,
+          orderDate: new Date(order.order_date).toLocaleDateString(),
+          totalAmount: order.total_amount,
+          status: order.status,
+          items: order.items || [],
+          shippingAddress: order.shipping_address,
+          deliveryMethod: order.delivery_method,
+        }));
+        setOrders(transformedOrders);
+      }
+      setIsLoading(false);
+    };
+
+    if (!isLoadingAuth && user) {
+      fetchOrders();
+    } else if (!isLoadingAuth && !user) {
+      setIsLoading(false);
+    }
+  }, [user, isLoadingAuth]);
+
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
   };
+
+  if (isLoadingAuth || isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading orders...</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -56,7 +135,7 @@ const OrderHistoryPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {mockOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <Package className="h-12 w-12 mx-auto mb-4" />
               <p>No orders found. Start shopping to place your first order!</p>
@@ -65,7 +144,7 @@ const OrderHistoryPage = () => {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
+            <div className="overflow-x-auto w-full">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -78,7 +157,7 @@ const OrderHistoryPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockOrders.map((order) => (
+                  {orders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell className="font-medium">{order.id}</TableCell>
                       <TableCell>{order.orderDate}</TableCell>
@@ -87,8 +166,8 @@ const OrderHistoryPage = () => {
                           {order.items.slice(0, 3).map((item, index) => (
                             <ImageWithFallback
                               key={index}
-                              src={item.imageUrl}
-                              alt={item.productName}
+                              src={item.image_url}
+                              alt={item.product_name}
                               containerClassName="h-8 w-8 rounded-full border-2 border-background"
                               className="object-cover"
                             />

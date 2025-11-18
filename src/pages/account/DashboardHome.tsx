@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { User, ShoppingBag, ReceiptText, Heart } from "lucide-react";
+import { User, ShoppingBag, ReceiptText, Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { mockOrders, mockReceipts } from "@/data/accountData.ts";
+import { useAuth } from "@/context/AuthContext.tsx";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 
 const fadeInUp = {
@@ -26,20 +28,87 @@ const staggerContainer = {
 };
 
 const DashboardHome = () => {
+  const { user, isLoading: isLoadingAuth } = useAuth();
   const { totalFavorites } = useFavorites();
+  const [dashboardData, setDashboardData] = useState({
+    totalOrders: 0,
+    pendingOrders: 0,
+    confirmedReceipts: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const totalOrders = mockOrders.length;
-  const pendingOrders = mockOrders.filter(order => order.status === "pending").length;
-  const confirmedReceipts = mockReceipts.filter(receipt => receipt.status === "confirmed").length;
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      
+      try {
+        // Fetch total orders
+        const { count: totalOrders, error: ordersError } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id);
+
+        if (ordersError) throw ordersError;
+
+        // Fetch pending orders
+        const { count: pendingOrders, error: pendingError } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('status', 'pending');
+
+        if (pendingError) throw pendingError;
+
+        // Fetch confirmed receipts
+        const { count: confirmedReceipts, error: receiptsError } = await supabase
+          .from('payment_receipts')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('status', 'confirmed');
+
+        if (receiptsError) throw receiptsError;
+
+        setDashboardData({
+          totalOrders: totalOrders || 0,
+          pendingOrders: pendingOrders || 0,
+          confirmedReceipts: confirmedReceipts || 0,
+        });
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        toast.error("Failed to load dashboard data.", { description: error.message });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (!isLoadingAuth && user) {
+      fetchDashboardData();
+    } else if (!isLoadingAuth && !user) {
+      setIsLoading(false);
+    }
+  }, [user, isLoadingAuth]);
+
+  if (isLoadingAuth || isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
-      className="space-y-8" // Keep space-y-8 for spacing between major sections
+      className="space-y-8"
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
     >
-      {/* Wrapper for the welcome text block with conditional bottom padding */}
       <div className="space-y-2">
         <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Welcome, Fashionista!
@@ -60,9 +129,9 @@ const DashboardHome = () => {
               <ShoppingBag className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalOrders}</div>
+              <div className="text-2xl font-bold">{dashboardData.totalOrders}</div>
               <p className="text-xs text-muted-foreground">
-                {pendingOrders} pending orders
+                {dashboardData.pendingOrders} pending orders
               </p>
               <Button variant="link" className="p-0 h-auto mt-2 text-primary" asChild>
                 <Link to="/account/orders">View all orders</Link>
@@ -96,7 +165,7 @@ const DashboardHome = () => {
               <ReceiptText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{confirmedReceipts}</div>
+              <div className="text-2xl font-bold">{dashboardData.confirmedReceipts}</div>
               <p className="text-xs text-muted-foreground">
                 Payments confirmed
               </p>

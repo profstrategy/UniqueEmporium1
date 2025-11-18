@@ -1,29 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ReceiptText, Eye, FileText, DollarSign, CalendarDays } from "lucide-react";
-import { mockReceipts } from "@/data/accountData.ts";
-import { cn } from "@/lib/utils";
+import { ReceiptText, Eye, FileText, DollarSign, CalendarDays, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
+import { useAuth } from "@/context/AuthContext.tsx";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+// Define the receipt interface based on your database structure
+interface PaymentReceipt {
+  id: string;
+  transaction_id: string;
+  date: string;
+  amount: number;
+  status: string;
+  receipt_image_url: string;
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
-const getReceiptStatusBadgeVariant = (status: "pending" | "confirmed" | "declined") => {
-  switch (status) {
+const getReceiptStatusBadgeVariant = (status: string) => {
+  switch (status.toLowerCase()) {
     case "confirmed":
       return "default";
     case "pending":
       return "secondary";
-    case "declined": // Changed from 'failed'
+    case "declined":
       return "destructive";
     default:
       return "outline";
@@ -31,9 +42,62 @@ const getReceiptStatusBadgeVariant = (status: "pending" | "confirmed" | "decline
 };
 
 const PaymentReceiptsPage = () => {
+  const { user, isLoading: isLoadingAuth } = useAuth();
+  const [receipts, setReceipts] = useState<PaymentReceipt[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReceipts = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      // Fetch payment receipts for the logged-in user
+      const { data, error } = await supabase
+        .from('payment_receipts')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching receipts:", error);
+        toast.error("Failed to load receipts.", { description: error.message });
+      } else {
+        // Transform the data to match the expected format
+        const transformedReceipts = data.map(receipt => ({
+          id: receipt.id,
+          transactionId: receipt.transaction_id,
+          date: new Date(receipt.date).toLocaleDateString(),
+          amount: receipt.amount,
+          status: receipt.status,
+          receiptImageUrl: receipt.receipt_image_url,
+        }));
+        setReceipts(transformedReceipts);
+      }
+      setIsLoading(false);
+    };
+
+    if (!isLoadingAuth && user) {
+      fetchReceipts();
+    } else if (!isLoadingAuth && !user) {
+      setIsLoading(false);
+    }
+  }, [user, isLoadingAuth]);
+
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
   };
+
+  if (isLoadingAuth || isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading receipts...</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -54,14 +118,14 @@ const PaymentReceiptsPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {mockReceipts.length === 0 ? (
+          {receipts.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-4" />
               <p>No payment receipts found.</p>
               <p className="text-sm mt-2">Receipts will appear here after you place an order and upload proof of payment.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
+            <div className="overflow-x-auto w-full">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -73,7 +137,7 @@ const PaymentReceiptsPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockReceipts.map((receipt) => (
+                  {receipts.map((receipt) => (
                     <TableRow key={receipt.id}>
                       <TableCell className="font-medium">{receipt.transactionId}</TableCell>
                       <TableCell>{receipt.date}</TableCell>

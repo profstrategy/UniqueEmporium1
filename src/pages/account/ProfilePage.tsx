@@ -2,15 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, Lock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
-import { supabase } from "@/integrations/supabase/client"; // Import supabase client
+import { useAuth } from "@/context/AuthContext.tsx";
+import { supabase } from "@/integrations/supabase/client";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -22,8 +21,7 @@ const ProfilePage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phone: "",
     currentPassword: "",
@@ -38,9 +36,10 @@ const ProfilePage = () => {
     }
 
     setIsLoadingProfile(true);
+    // Fetch profile data using the correct column names
     const { data, error } = await supabase
       .from('profiles')
-      .select('first_name, last_name, email, phone') // Select specific fields
+      .select('full_name, email, phone')
       .eq('id', user.id)
       .single();
 
@@ -55,9 +54,8 @@ const ProfilePage = () => {
     } else if (data) {
       setFormData((prev) => ({
         ...prev,
-        firstName: data.first_name || "",
-        lastName: data.last_name || "",
-        email: data.email || user.email || "", // Use profile email, fallback to auth email
+        fullName: data.full_name || "",
+        email: data.email || user.email || "",
         phone: data.phone || "",
       }));
     }
@@ -68,7 +66,7 @@ const ProfilePage = () => {
     if (!isLoadingAuth && user) {
       fetchUserProfile();
     } else if (!isLoadingAuth && !user) {
-      setIsLoadingProfile(false); // No user, no profile to load
+      setIsLoadingProfile(false);
     }
   }, [user, isLoadingAuth, fetchUserProfile]);
 
@@ -95,21 +93,15 @@ const ProfilePage = () => {
         setIsSaving(false);
         return;
       }
-      // In a real app, you'd verify currentPassword and then update the password
-      // For this mock, we'll just show a success message for password change
-      // Supabase auth.updateUser({ password: newPassword })
       toast.info("Password change functionality is mocked. In a real app, current password verification would be needed.");
     }
 
-    // Update profile data in Supabase
+    // Update profile data in Supabase using the correct column names
     const { error: profileError } = await supabase
       .from('profiles')
       .update({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
+        full_name: formData.fullName,
         phone: formData.phone,
-        // email is not directly updatable via profiles table if it's linked to auth.users
-        // updated_at is handled by a trigger
       })
       .eq('id', user.id);
 
@@ -121,7 +113,7 @@ const ProfilePage = () => {
       toast.success("Profile updated successfully!", {
         description: "Your information has been saved.",
       });
-      // Clear password fields after successful (mock) update
+      // Clear password fields after successful update
       setFormData((prev) => ({
         ...prev,
         currentPassword: "",
@@ -162,22 +154,16 @@ const ProfilePage = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} disabled />
-                <p className="text-xs text-muted-foreground">Email cannot be changed directly here. It's linked to your authentication.</p>
+                <p className="text-xs text-muted-foreground">Email cannot be changed directly here.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
