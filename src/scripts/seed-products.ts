@@ -1,11 +1,21 @@
-import 'dotenv/config'; // Load environment variables from .env
+import dotenv from 'dotenv';
+dotenv.config(); // Explicitly load environment variables from .env
+
+console.log("DEBUG: dotenv.config() executed.");
+console.log("DEBUG: process.env.VITE_SUPABASE_URL (after dotenv):", process.env.VITE_SUPABASE_URL ? "Loaded" : "NOT LOADED");
+console.log("DEBUG: process.env.SUPABASE_SERVICE_ROLE_KEY (after dotenv):", process.env.SUPABASE_SERVICE_ROLE_KEY ? "Loaded" : "NOT LOADED");
+
+// Early check for critical environment variables
+if (!process.env.VITE_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("CRITICAL ERROR: Supabase environment variables (VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY) are not loaded. Please check your .env file.");
+  process.exit(1); // Exit the script with an error code
+}
+
 import { supabase } from "../integrations/supabase/serverClient.ts";
 import { mockProducts } from "../data/products.ts";
 
-// --- START DEBUG LOGS ---
-console.log("DEBUG: Script started.");
-console.log("DEBUG: process.env.VITE_SUPABASE_URL:", process.env.VITE_SUPABASE_URL ? "Loaded" : "NOT LOADED");
-console.log("DEBUG: process.env.SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "Loaded" : "NOT LOADED");
+// --- START DEBUG LOGS (from serverClient.ts, if reached) ---
+console.log("DEBUG: serverClient.ts import attempted.");
 // --- END DEBUG LOGS ---
 
 async function seedProducts() {
