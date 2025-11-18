@@ -1,0 +1,1 @@
+SELECT id, email, role, first_name, last_name FROM public.profiles WHERE id = auth.uid();
