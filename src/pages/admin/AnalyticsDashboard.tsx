@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,11 +12,12 @@ import {
   Users,
   Clock,
   Package,
-  Activity,
-  LineChart as LineChartIcon,
-  BarChart as BarChartIcon,
-  PieChart as PieChartIcon,
-  List,
+  Activity, // Correctly imported
+  LineChart as LineChartIcon, // Correctly imported
+  BarChart as BarChartIcon, // Correctly imported
+  PieChart as PieChartIcon, // Correctly imported
+  List, // Correctly imported
+  Loader2, // Correctly imported
 } from "lucide-react";
 import {
   LineChart,
@@ -34,14 +35,41 @@ import {
   Cell,
 } from "recharts";
 import {
-  mockAdminStats,
-  mockSalesData,
-  mockCategorySales,
-  mockPaymentMethods,
-  mockRecentActivities,
+  mockAdminStats, // Keeping for structure reference, but will replace with fetched data
+  mockSalesData, // Keeping for structure reference
+  mockCategorySales, // Keeping for structure reference
+  mockPaymentMethods, // Keeping for structure reference
+  mockRecentActivities, // Keeping for structure reference
 } from "@/data/adminData.ts";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+// Define interfaces for fetched data
+interface SalesDataPoint {
+  date: string; // e.g., "Jan", "Feb"
+  sales: number;
+  orders: number;
+}
+
+interface CategorySalesData {
+  name: string;
+  orders: number; // Changed from sales to orders for simplicity in aggregation
+}
+
+interface PaymentMethodData {
+  name: string;
+  value: number; // Percentage or count
+}
+
+interface RecentActivity {
+  id: string;
+  type: "order" | "payment" | "user" | "product";
+  description: string;
+  timestamp: string; // ISO string
+  status?: "new" | "verified" | "updated" | "deleted";
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -63,13 +91,26 @@ const COLORS = ["hsl(40, 30%, 65%)", "hsl(260, 70%, 79%)", "#8884d8", "#82ca9d",
 
 const AnalyticsDashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState("month"); // Non-functional for now
+  const [dashboardStats, setDashboardStats] = useState({
+    totalOrders: 0,
+    pendingPayments: 0,
+    completedOrders: 0,
+    activeUsers: 0,
+    totalRevenue: 0,
+    newProductsLastMonth: 0,
+  });
+  const [salesData, setSalesData] = useState<SalesDataPoint[]>([]);
+  const [categorySales, setCategorySales] = useState<CategorySalesData[]>([]);
+  const [paymentMethodsData, setPaymentMethodsData] = useState<PaymentMethodData[]>([]);
+  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Global loading for initial fetch
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString("en-NG", { style: "currency", currency: "NGN" });
   };
 
   const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "new":
         return "default";
       case "verified":
@@ -78,10 +119,208 @@ const AnalyticsDashboard = () => {
         return "outline";
       case "deleted":
         return "destructive";
+      case "pending":
+        return "secondary";
+      case "confirmed":
+        return "default";
+      case "declined":
+        return "destructive";
       default:
         return "outline";
     }
   };
+
+  const fetchDashboardData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      // --- Fetch Dashboard Stats ---
+      const { count: totalOrdersCount, error: ordersError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true });
+      if (ordersError) throw ordersError;
+
+      const { count: pendingPaymentsCount, error: paymentsError } = await supabase
+        .from('payment_receipts')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
+      if (paymentsError) throw paymentsError;
+
+      const { count: completedOrdersCount, error: completedOrdersError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'completed');
+      if (completedOrdersError) throw completedOrdersError;
+
+      const { count: activeUsersCount, error: usersError } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active');
+      if (usersError) throw usersError;
+
+      const { data: completedOrdersData, error: revenueError } = await supabase
+        .from('orders')
+        .select('total_amount')
+        .eq('status', 'completed');
+      if (revenueError) throw revenueError;
+      const totalRevenueAmount = completedOrdersData.reduce((sum, order) => sum + order.total_amount, 0);
+
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      const { count: newProductsCount, error: productsError } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', oneMonthAgo.toISOString());
+      if (productsError) throw productsError;
+
+      setDashboardStats({
+        totalOrders: totalOrdersCount || 0,
+        pendingPayments: pendingPaymentsCount || 0,
+        completedOrders: completedOrdersCount || 0,
+        activeUsers: activeUsersCount || 0,
+        totalRevenue: totalRevenueAmount || 0,
+        newProductsLastMonth: newProductsCount || 0,
+      });
+
+      // --- Fetch Sales Trend Data ---
+      const { data: allOrders, error: allOrdersError } = await supabase
+        .from('orders')
+        .select('order_date, total_amount, items'); // Added 'items' here
+      if (allOrdersError) throw allOrdersError;
+
+      const monthlySalesMap = new Map<string, { sales: number; orders: number }>();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      allOrders.forEach(order => {
+        const date = new Date(order.order_date);
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        const key = `${month} ${year}`; // Group by month and year
+
+        if (!monthlySalesMap.has(key)) {
+          monthlySalesMap.set(key, { sales: 0, orders: 0 });
+        }
+        const current = monthlySalesMap.get(key)!;
+        current.sales += order.total_amount;
+        current.orders += 1;
+      });
+
+      // Sort by date and format for chart
+      const sortedSalesData = Array.from(monthlySalesMap.entries())
+        .sort(([keyA], [keyB]) => {
+          const [monthA, yearA] = keyA.split(' ');
+          const [monthB, yearB] = keyB.split(' ');
+          const dateA = new Date(`${monthA} 1, ${yearA}`);
+          const dateB = new Date(`${monthB} 1, ${yearB}`);
+          return dateA.getTime() - dateB.getTime();
+        })
+        .map(([key, value]) => ({ date: key.split(' ')[0], sales: value.sales, orders: value.orders })); // Only show month name on X-axis
+
+      setSalesData(sortedSalesData);
+
+      // --- Fetch Orders by Category Data ---
+      const { data: productsData, error: productsDataError } = await supabase
+        .from('products')
+        .select('id, category');
+      if (productsDataError) throw productsDataError;
+
+      const categoryOrderCounts = new Map<string, number>();
+      productsData.forEach(product => categoryOrderCounts.set(product.category, 0)); // Initialize all categories
+
+      allOrders.forEach(order => {
+        order.items.forEach((item: any) => { // Assuming order.items is jsonb array
+          const product = productsData.find(p => p.id === item.product_id);
+          if (product && categoryOrderCounts.has(product.category)) {
+            categoryOrderCounts.set(product.category, categoryOrderCounts.get(product.category)! + 1);
+          }
+        });
+      });
+
+      const sortedCategorySales = Array.from(categoryOrderCounts.entries())
+        .map(([name, orders]) => ({ name, orders }))
+        .sort((a, b) => b.orders - a.orders); // Sort by orders count
+      setCategorySales(sortedCategorySales);
+
+      // --- Fetch Payment Methods Data ---
+      const { data: allReceipts, error: allReceiptsError } = await supabase
+        .from('payment_receipts')
+        .select('status');
+      if (allReceiptsError) throw allReceiptsError;
+
+      const paymentStatusCounts = new Map<string, number>();
+      allReceipts.forEach(receipt => {
+        const status = receipt.status;
+        paymentStatusCounts.set(status, (paymentStatusCounts.get(status) || 0) + 1);
+      });
+
+      const totalReceipts = allReceipts.length;
+      const formattedPaymentMethods: PaymentMethodData[] = Array.from(paymentStatusCounts.entries()).map(([status, count]) => ({
+        name: status.charAt(0).toUpperCase() + status.slice(1),
+        value: totalReceipts > 0 ? (count / totalReceipts) * 100 : 0, // Convert to percentage
+      }));
+      setPaymentMethodsData(formattedPaymentMethods);
+
+      // --- Fetch Recent Activity Feed ---
+      const { data: recentOrdersData, error: recentOrdersError } = await supabase
+        .from('orders')
+        .select('id, status, created_at, profiles(first_name, last_name)')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (recentOrdersError) throw recentOrdersError;
+
+      const { data: recentReceiptsData, error: recentReceiptsError } = await supabase
+        .from('payment_receipts')
+        .select('id, status, created_at, orders(id)')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (recentReceiptsError) throw recentReceiptsError;
+
+      const combinedActivities: RecentActivity[] = [];
+
+      recentOrdersData.forEach((order: any) => {
+        const customerName = `${order.profiles?.first_name || ''} ${order.profiles?.last_name || ''}`.trim();
+        combinedActivities.push({
+          id: order.id,
+          type: "order",
+          description: `${customerName || 'A user'} placed a new order (${order.id})`,
+          timestamp: order.created_at,
+          status: order.status,
+        });
+      });
+
+      recentReceiptsData.forEach((receipt: any) => {
+        combinedActivities.push({
+          id: receipt.id,
+          type: "payment",
+          description: `Payment for order ${receipt.orders?.id || 'N/A'} is ${receipt.status}`,
+          timestamp: receipt.created_at,
+          status: receipt.status,
+        });
+      });
+
+      // Sort all activities by timestamp
+      combinedActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      setRecentActivities(combinedActivities.slice(0, 5)); // Limit to top 5 recent activities
+
+    } catch (error: any) {
+      console.error("Error fetching analytics data:", error);
+      toast.error("Failed to load analytics data.", { description: error.message });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading analytics dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -117,14 +356,14 @@ const AnalyticsDashboard = () => {
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <AdminStatCard
             title="Total Orders"
-            value={mockAdminStats.totalOrders}
+            value={dashboardStats.totalOrders}
             description="All time orders"
             icon={ShoppingBag}
             delay={0.1}
           />
           <AdminStatCard
             title="Completed Orders"
-            value={mockAdminStats.completedOrders}
+            value={dashboardStats.completedOrders}
             description="Successfully delivered"
             icon={CheckCircle2}
             iconColorClass="text-green-500"
@@ -132,7 +371,7 @@ const AnalyticsDashboard = () => {
           />
           <AdminStatCard
             title="Pending Payments"
-            value={mockAdminStats.pendingPayments}
+            value={dashboardStats.pendingPayments}
             description="Awaiting verification"
             icon={Clock}
             iconColorClass="text-yellow-500"
@@ -140,7 +379,7 @@ const AnalyticsDashboard = () => {
           />
           <AdminStatCard
             title="Total Revenue"
-            value={formatCurrency(mockAdminStats.totalRevenue)}
+            value={formatCurrency(dashboardStats.totalRevenue)}
             description="All time sales"
             icon={DollarSign}
             iconColorClass="text-green-600"
@@ -162,7 +401,7 @@ const AnalyticsDashboard = () => {
             <CardContent className="h-[calc(100%-80px)]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={mockSalesData}
+                  data={salesData}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
@@ -209,7 +448,7 @@ const AnalyticsDashboard = () => {
             <CardContent className="h-[calc(100%-80px)]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={mockCategorySales}
+                  data={categorySales}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
@@ -243,7 +482,7 @@ const AnalyticsDashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={mockPaymentMethods}
+                    data={paymentMethodsData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -252,12 +491,12 @@ const AnalyticsDashboard = () => {
                     dataKey="value"
                     nameKey="name"
                   >
-                    {mockPaymentMethods.map((entry, index) => (
+                    {paymentMethodsData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value: number, name: string) => [`${value}%`, name]}
+                    formatter={(value: number, name: string) => [`${value.toFixed(1)}%`, name]}
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
                       borderColor: "hsl(var(--border))",
@@ -282,30 +521,34 @@ const AnalyticsDashboard = () => {
             </CardHeader>
             <CardContent className="h-[calc(100%-80px)] overflow-y-auto">
               <ul className="space-y-4">
-                {mockRecentActivities.map((activity) => (
-                  <motion.li
-                    key={activity.id}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-muted/20 border border-border"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <List className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-1" />
-                    <div>
-                      <p className="text-sm text-foreground">{activity.description}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(activity.timestamp).toLocaleString()}
-                        </span>
-                        {activity.status && (
-                          <Badge variant={getStatusBadgeVariant(activity.status)} className="text-xs px-2 py-0.5">
-                            {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
-                          </Badge>
-                        )}
+                {recentActivities.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-4">No recent activities.</p>
+                ) : (
+                  recentActivities.map((activity) => (
+                    <motion.li
+                      key={activity.id}
+                      className="flex items-start gap-3 p-3 rounded-lg bg-muted/20 border border-border"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <List className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-1" />
+                      <div>
+                        <p className="text-sm text-foreground">{activity.description}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </span>
+                          {activity.status && (
+                            <Badge variant={getStatusBadgeVariant(activity.status)} className="text-xs px-2 py-0.5">
+                              {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </motion.li>
-                ))}
+                    </motion.li>
+                  ))
+                )}
               </ul>
             </CardContent>
           </Card>
