@@ -171,7 +171,8 @@ export const mockAdminCategories: AdminCategory[] = [
 // --- Admin Users Data ---
 export interface AdminUser {
   id: string;
-  name: string;
+  first_name: string; // Changed from name
+  last_name: string;  // New field
   email: string;
   phone: string; // Added phone number
   role: "admin" | "customer";
@@ -181,14 +182,14 @@ export interface AdminUser {
 }
 
 export const mockAdminUsers: AdminUser[] = [
-  { id: "user-1", name: "Aisha O.", email: "aisha.o@example.com", phone: "+2348012345678", role: "customer", status: "active", lastLogin: "2024-08-01", totalOrders: 5 },
-  { id: "user-2", name: "Chinedu E.", email: "chinedu.e@example.com", phone: "+2347012345678", role: "customer", status: "active", lastLogin: "2024-07-30", totalOrders: 8 },
-  { id: "user-3", name: "Blessing N.", email: "blessing.n@example.com", phone: "+2349012345678", role: "customer", status: "active", lastLogin: "2024-07-28", totalOrders: 3 },
-  { id: "user-4", name: "Admin User", email: "admin@unique.com", phone: "+2348098765432", role: "admin", status: "active", lastLogin: "2024-08-02", totalOrders: 0 },
-  { id: "user-5", name: "Inactive User", email: "inactive@example.com", phone: "+2348112345678", role: "customer", status: "inactive", lastLogin: "2024-06-15", totalOrders: 1 },
-  { id: "user-6", name: "Olu Ade", email: "olu.ade@example.com", phone: "+2347034567890", role: "customer", status: "active", lastLogin: "2024-07-29", totalOrders: 2 },
-  { id: "user-7", name: "Tobi Bello", email: "tobi.bello@example.com", phone: "+2348056789012", role: "customer", status: "active", lastLogin: "2024-08-03", totalOrders: 4 },
-  { id: "user-8", name: "Mama Grace", email: "mama.grace@example.com", phone: "+2349078901234", role: "customer", status: "inactive", lastLogin: "2024-07-10", totalOrders: 1 },
+  { id: "user-1", first_name: "Aisha", last_name: "O.", email: "aisha.o@example.com", phone: "+2348012345678", role: "customer", status: "active", lastLogin: "2024-08-01", totalOrders: 5 },
+  { id: "user-2", first_name: "Chinedu", last_name: "E.", email: "chinedu.e@example.com", phone: "+2347012345678", role: "customer", status: "active", lastLogin: "2024-07-30", totalOrders: 8 },
+  { id: "user-3", first_name: "Blessing", last_name: "N.", email: "blessing.n@example.com", phone: "+2349012345678", role: "customer", status: "active", lastLogin: "2024-07-28", totalOrders: 3 },
+  { id: "user-4", first_name: "Admin", last_name: "User", email: "admin@unique.com", phone: "+2348098765432", role: "admin", status: "active", lastLogin: "2024-08-02", totalOrders: 0 },
+  { id: "user-5", first_name: "Inactive", last_name: "User", email: "inactive@example.com", phone: "+2348112345678", role: "customer", status: "inactive", lastLogin: "2024-06-15", totalOrders: 1 },
+  { id: "user-6", first_name: "Olu", last_name: "Ade", email: "olu.ade@example.com", phone: "+2347034567890", role: "customer", status: "active", lastLogin: "2024-07-29", totalOrders: 2 },
+  { id: "user-7", first_name: "Tobi", last_name: "Bello", email: "tobi.bello@example.com", phone: "+2348056789012", role: "customer", status: "active", lastLogin: "2024-08-03", totalOrders: 4 },
+  { id: "user-8", first_name: "Mama", last_name: "Grace", email: "mama.grace@example.com", phone: "+2349078901234", role: "customer", status: "inactive", lastLogin: "2024-07-10", totalOrders: 1 },
 ];
 
 // --- Admin Analytics Data ---

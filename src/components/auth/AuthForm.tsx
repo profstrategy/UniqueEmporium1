@@ -55,7 +55,8 @@ export default function AuthForm() {
 
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
-  const [signUpName, setSignUpName] = useState("");
+  const [signUpFirstName, setSignUpFirstName] = useState(""); // New state
+  const [signUpLastName, setSignUpLastName] = useState("");   // New state
   const [signUpEmail, setSignUpEmail] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
   const isMobile = useIsMobile();
@@ -77,7 +78,7 @@ export default function AuthForm() {
     e.preventDefault();
     setIsSigningUp(true);
     try {
-      await signUpWithEmail(signUpEmail, signUpPassword, signUpName);
+      await signUpWithEmail(signUpEmail, signUpPassword, signUpFirstName, signUpLastName); // Updated call
       // After successful sign up, redirect to home or show confirmation
       navigate("/");
     } catch (error) {
@@ -105,10 +106,17 @@ export default function AuthForm() {
             </span>
             <InputField
               type="text"
-              placeholder="Name"
+              placeholder="First Name"
               Icon={User}
-              value={signUpName}
-              onChange={(e) => setSignUpName(e.target.value)}
+              value={signUpFirstName}
+              onChange={(e) => setSignUpFirstName(e.target.value)}
+            />
+            <InputField
+              type="text"
+              placeholder="Last Name"
+              Icon={User}
+              value={signUpLastName}
+              onChange={(e) => setSignUpLastName(e.target.value)}
             />
             <InputField
               type="email"
@@ -246,10 +254,17 @@ export default function AuthForm() {
           </span>
           <InputField
             type="text"
-            placeholder="Name"
+            placeholder="First Name"
             Icon={User}
-            value={signUpName}
-            onChange={(e) => setSignUpName(e.target.value)}
+            value={signUpFirstName}
+            onChange={(e) => setSignUpFirstName(e.target.value)}
+          />
+          <InputField
+            type="text"
+            placeholder="Last Name"
+            Icon={User}
+            value={signUpLastName}
+            onChange={(e) => setSignUpLastName(e.target.value)}
           />
           <InputField
             type="email"

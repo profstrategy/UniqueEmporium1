@@ -21,7 +21,8 @@ const ProfilePage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
-    fullName: "", // Changed from firstName/lastName
+    firstName: "", // Changed from fullName
+    lastName: "",  // New field
     email: "",
     phone: "",
     currentPassword: "",
@@ -39,7 +40,7 @@ const ProfilePage = () => {
     // Fetch profile data using the correct column names
     const { data, error } = await supabase
       .from('profiles')
-      .select('full_name, email, phone') // Select 'full_name'
+      .select('first_name, last_name, email, phone') // Select 'first_name' and 'last_name'
       .eq('id', user.id)
       .single();
 
@@ -54,7 +55,8 @@ const ProfilePage = () => {
     } else if (data) {
       setFormData((prev) => ({
         ...prev,
-        fullName: data.full_name || "", // Use 'full_name'
+        firstName: data.first_name || "", // Use 'first_name'
+        lastName: data.last_name || "",   // Use 'last_name'
         email: data.email || user.email || "",
         phone: data.phone || "",
       }));
@@ -100,7 +102,8 @@ const ProfilePage = () => {
     const { error: profileError } = await supabase
       .from('profiles')
       .update({
-        full_name: formData.fullName, // Update 'full_name'
+        first_name: formData.firstName, // Update 'first_name'
+        last_name: formData.lastName,   // Update 'last_name'
         phone: formData.phone,
       })
       .eq('id', user.id);
@@ -154,9 +157,15 @@ const ProfilePage = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

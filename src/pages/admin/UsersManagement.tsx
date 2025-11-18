@@ -78,7 +78,8 @@ const staggerContainer = {
 // Form Schema for Add/Edit User
 const userFormSchema = z.object({
   id: z.string().optional(), // For editing
-  name: z.string().min(1, "Name is required"),
+  first_name: z.string().min(1, "First Name is required"), // Changed from name
+  last_name: z.string().min(1, "Last Name is required"),   // New field
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number is required").max(15, "Phone number is too long"),
   role: z.enum(["customer", "admin"]).default("customer"),
@@ -128,7 +129,8 @@ const UsersManagement = () => {
     if (searchTerm) {
       filtered = filtered.filter(
         (user) =>
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) || // Updated search
+          user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||  // Updated search
           user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.phone.includes(searchTerm) ||
           user.id.toLowerCase().includes(searchTerm.toLowerCase())
@@ -173,7 +175,8 @@ const UsersManagement = () => {
     setEditingUser(user);
     reset({
       id: user.id,
-      name: user.name,
+      first_name: user.first_name, // Set first_name
+      last_name: user.last_name,   // Set last_name
       email: user.email,
       phone: user.phone,
       role: user.role,
@@ -199,7 +202,8 @@ const UsersManagement = () => {
 
     const newUserData: AdminUser = {
       id: data.id || `user-${Date.now()}`, // Generate new ID if adding
-      name: data.name,
+      first_name: data.first_name, // Use first_name
+      last_name: data.last_name,   // Use last_name
       email: data.email,
       phone: data.phone,
       role: data.role,
@@ -212,7 +216,7 @@ const UsersManagement = () => {
       setUsers((prev) =>
         prev.map((u) => (u.id === newUserData.id ? newUserData : u))
       );
-      toast.success(`User "${newUserData.name}" updated successfully!`);
+      toast.success(`User "${newUserData.first_name} ${newUserData.last_name}" updated successfully!`);
       setIsEditModalOpen(false);
       setEditingUser(null);
     } else {
@@ -222,7 +226,7 @@ const UsersManagement = () => {
         return;
       }
       setUsers((prev) => [...prev, newUserData]);
-      toast.success(`User "${newUserData.name}" added successfully!`);
+      toast.success(`User "${newUserData.first_name} ${newUserData.last_name}" added successfully!`);
       setIsAddModalOpen(false);
     }
   };
@@ -250,7 +254,7 @@ const UsersManagement = () => {
   const getUserRecentOrders = (userId: string) => {
     // This is dummy logic. In a real app, you'd filter mockOrders by userId.
     // For now, it filters by name, which is not robust but works for mock data.
-    return mockOrders.filter(order => order.shippingAddress.name === viewingUser?.name).slice(0, 3);
+    return mockOrders.filter(order => order.shippingAddress.name === `${viewingUser?.first_name} ${viewingUser?.last_name}`).slice(0, 3);
   };
 
   return (
@@ -347,7 +351,7 @@ const UsersManagement = () => {
                         transition={{ duration: 0.3 }}
                       >
                         <TableCell className="font-medium text-xs">{user.id}</TableCell>
-                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell className="font-medium">{user.first_name} {user.last_name}</TableCell> {/* Display full name */}
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.phone}</TableCell>
                         <TableCell>{user.totalOrders}</TableCell>
@@ -400,7 +404,7 @@ const UsersManagement = () => {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the user "{user.name}".
+                                    This action cannot be undone. This will permanently delete the user "{user.first_name} {user.last_name}".
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -482,10 +486,17 @@ const UsersManagement = () => {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(handleAddOrUpdateUser)} className="space-y-6 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" {...register("name")} className={cn(errors.name && "border-destructive")} />
-              {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="first_name">First Name</Label>
+                <Input id="first_name" {...register("first_name")} className={cn(errors.first_name && "border-destructive")} />
+                {errors.first_name && <p className="text-destructive text-sm">{errors.first_name.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="last_name">Last Name</Label>
+                <Input id="last_name" {...register("last_name")} className={cn(errors.last_name && "border-destructive")} />
+                {errors.last_name && <p className="text-destructive text-sm">{errors.last_name.message}</p>}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -554,10 +565,17 @@ const UsersManagement = () => {
           </DialogHeader>
           <form onSubmit={handleSubmit(handleAddOrUpdateUser)} className="space-y-6 py-4">
             <input type="hidden" {...register("id")} />
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" {...register("name")} className={cn(errors.name && "border-destructive")} />
-              {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="first_name">First Name</Label>
+                <Input id="first_name" {...register("first_name")} className={cn(errors.first_name && "border-destructive")} />
+                {errors.first_name && <p className="text-destructive text-sm">{errors.first_name.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="last_name">Last Name</Label>
+                <Input id="last_name" {...register("last_name")} className={cn(errors.last_name && "border-destructive")} />
+                {errors.last_name && <p className="text-destructive text-sm">{errors.last_name.message}</p>}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -622,7 +640,7 @@ const UsersManagement = () => {
         <DialogContent className="sm:max-w-[600px] p-6 rounded-xl shadow-lg bg-card/80 backdrop-blur-md border border-border/50">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-              <UserIcon className="h-6 w-6 text-primary" /> User Details: {viewingUser?.name}
+              <UserIcon className="h-6 w-6 text-primary" /> User Details: {viewingUser?.first_name} {viewingUser?.last_name}
             </DialogTitle>
           </DialogHeader>
           {viewingUser && (

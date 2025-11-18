@@ -6,13 +6,19 @@ import { Session, User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
+// Extend the User type to include first_name and last_name
+interface CustomUser extends User {
+  first_name?: string;
+  last_name?: string;
+}
+
 interface AuthContextType {
   session: Session | null;
-  user: User | null;
+  user: CustomUser | null; // Use CustomUser here
   isAdmin: boolean;
   isLoading: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string, name: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, firstName: string, lastName: string) => Promise<void>; // Updated signature
   signOut: () => Promise<void>;
 }
 
@@ -20,7 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null); // Use CustomUser
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -29,21 +35,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         setSession(currentSession);
-        setUser(currentSession?.user ?? null);
+        const currentUser = currentSession?.user ?? null;
         
-        if (currentSession?.user) {
+        if (currentUser) {
+          // Fetch profile data to get first_name, last_name, and role
           const { data: profile, error } = await supabase
             .from('profiles')
-            .select('role')
-            .eq('id', currentSession.user.id)
+            .select('first_name, last_name, role')
+            .eq('id', currentUser.id)
             .single();
 
-          if (profile && profile.role === 'admin') {
-            setIsAdmin(true);
+          if (error) {
+            console.error("Error fetching user profile:", error);
+            // Fallback to basic user data if profile fetch fails
+            setUser(currentUser);
+            setIsAdmin(false);
+          } else if (profile) {
+            setUser({
+              ...currentUser,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+            });
+            setIsAdmin(profile.role === 'admin');
           } else {
+            // User exists but no profile found (shouldn't happen with trigger)
+            setUser(currentUser);
             setIsAdmin(false);
           }
         } else {
+          setUser(null);
           setIsAdmin(false);
         }
         setIsLoading(false);
@@ -51,9 +71,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+
+      if (currentUser) {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, role')
+          .eq('id', currentUser.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching initial user profile:", error);
+          setUser(currentUser);
+          setIsAdmin(false);
+        } else if (profile) {
+          setUser({
+            ...currentUser,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+          });
+          setIsAdmin(profile.role === 'admin');
+        } else {
+          setUser(currentUser);
+          setIsAdmin(false);
+        }
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
       setIsLoading(false);
     });
 
@@ -73,12 +120,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Function to handle sign up
-  const signUpWithEmail = async (email: string, password: string, name: string) => {
+  const signUpWithEmail = async (email: string, password: string, firstName: string, lastName: string) => {
     const { data: { user }, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: name }, // Pass full_name in options.data
+        data: { first_name: firstName, last_name: lastName }, // Pass first_name and last_name
       },
     });
 
@@ -88,8 +135,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (user) {
-      // Profile creation is now handled by a database trigger (handle_new_user function)
-      // We no longer need to manually insert into the profiles table here.
       toast.success("Account created successfully!", {
         description: "Please check your email to confirm your account.",
       });

@@ -102,6 +102,8 @@ const DashboardHome = () => {
     );
   }
 
+  const userFirstName = user?.first_name || "Fashionista"; // Get first name from user object
+
   return (
     <motion.div
       className="space-y-8"
@@ -111,7 +113,7 @@ const DashboardHome = () => {
     >
       <div className="space-y-2">
         <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
-          Welcome, Fashionista!
+          Welcome, {userFirstName}!
         </motion.h1>
         <motion.p className="text-sm md:text-lg text-muted-foreground" variants={fadeInUp}>
           Here's a quick overview of your Unique Emporium account.
