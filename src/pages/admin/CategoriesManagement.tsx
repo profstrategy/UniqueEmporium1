@@ -127,6 +127,7 @@ const CategoriesManagement = () => {
       toast.error("Failed to load categories.", { description: error.message });
       setCategories([]);
     } else {
+      console.log("Fetched categories from Supabase:", data); // Added console log
       // Map snake_case from DB to camelCase for AdminCategory interface
       const fetchedCategories: AdminCategory[] = data.map((c: any) => ({
         id: c.id,
@@ -508,7 +509,7 @@ const CategoriesManagement = () => {
             <DialogDescription>
               Update the details for this product category.
             </DialogDescription>
-          </DialogHeader>
+          </DialogDescription>
           <form onSubmit={handleSubmit(handleAddOrUpdateCategory)} className="space-y-6 py-4">
             <input type="hidden" {...register("id")} /> {/* Hidden field for category ID */}
             <div className="space-y-2">
