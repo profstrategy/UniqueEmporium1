@@ -1,1 +1,0 @@
-SELECT id FROM auth.users WHERE email = 'your_logged_in_email@example.com';
