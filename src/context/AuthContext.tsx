@@ -34,63 +34,91 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let isMounted = true; // To prevent state updates on unmounted component
 
-    const handleAuthChange = async (session: Session | null) => {
-      if (!isMounted) return;
+    const loadUserAndProfile = async () => {
+      console.log("AuthContext: Starting loadUserAndProfile function for initial session.");
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        if (!isMounted) return;
+        console.log("AuthContext: getSession resolved, initialSession:", initialSession ? "present" : "null");
+        
+        setSession(initialSession);
+        const currentUser = initialSession?.user ?? null;
 
-      setSession(session);
-      const currentUser = session?.user ?? null;
+        if (currentUser) {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, role')
+            .eq('id', currentUser.id)
+            .single();
 
-      if (currentUser) {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('first_name, last_name, role')
-          .eq('id', currentUser.id)
-          .single();
-
-        if (error) {
-          console.error("AuthContext: Error fetching user profile:", error);
-          setUser(currentUser);
-          setIsAdmin(false);
-        } else if (profile) {
-          setUser({
-            ...currentUser,
-            first_name: profile.first_name,
-            last_name: profile.last_name,
-          });
-          setIsAdmin(profile.role === 'admin');
+          if (error) {
+            console.error("AuthContext: Error fetching initial user profile:", error);
+            setUser(currentUser);
+            setIsAdmin(false);
+          } else if (profile) {
+            setUser({
+              ...currentUser,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+            });
+            setIsAdmin(profile.role === 'admin');
+          } else {
+            setUser(currentUser);
+            setIsAdmin(false);
+          }
         } else {
-          setUser(currentUser);
+          setUser(null);
           setIsAdmin(false);
         }
-      } else {
+      } catch (error) {
+        console.error("AuthContext: Error during initial session load:", error);
         setUser(null);
         setIsAdmin(false);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false); // Set loading to false ONLY after initial check is complete
+          console.log("AuthContext: loadUserAndProfile - setIsLoading(false) called.");
+        }
       }
     };
 
-    // 1. Initial session check
-    console.log("AuthContext: Performing initial getSession check.");
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      if (!isMounted) return;
-      console.log("AuthContext: getSession resolved.");
-      await handleAuthChange(initialSession); // Process initial session
-      setIsLoading(false); // Set loading to false ONLY after initial check
-      console.log("AuthContext: getSession - setIsLoading(false) called.");
-    }).catch(error => {
-      if (!isMounted) return;
-      console.error("AuthContext: Error during initial getSession:", error);
-      setIsLoading(false); // Ensure loading state is cleared even on error
-      console.log("AuthContext: getSession error - setIsLoading(false) called.");
-    });
+    loadUserAndProfile(); // Call the initial load function
 
-    // 2. Set up listener for subsequent auth state changes
+    // Set up listener for subsequent auth state changes (does not affect isLoading)
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         if (!isMounted) return;
         console.log("AuthContext: onAuthStateChange event:", event);
-        // Only update session/user/admin state, do not touch isLoading here
-        // as isLoading is for the *initial* load.
-        await handleAuthChange(currentSession);
+        setSession(currentSession);
+        const currentUser = currentSession?.user ?? null;
+
+        if (currentUser) {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, role')
+            .eq('id', currentUser.id)
+            .single();
+
+          if (error) {
+            console.error("AuthContext: Error fetching user profile on change:", error);
+            setUser(currentUser);
+            setIsAdmin(false);
+          } else if (profile) {
+            setUser({
+              ...currentUser,
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+            });
+            setIsAdmin(profile.role === 'admin');
+          } else {
+            setUser(currentUser);
+            setIsAdmin(false);
+          }
+        } else {
+          setUser(null);
+          setIsAdmin(false);
+        }
+        // IMPORTANT: Do NOT set isLoading(false) here. It's only for initial load.
       }
     );
 
