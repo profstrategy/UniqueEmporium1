@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, Easing } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -44,12 +44,45 @@ import {
   List,
   ChevronFirst,
   ChevronLast,
+  ReceiptText,
+  Loader2, // Added Loader2 import
 } from "lucide-react";
-import { mockAdminOrders, AdminOrder, mockAdminUsers } from "@/data/adminData.ts";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client"; // Import Supabase client
+
+// Define the order interface based on your database structure and joined data
+interface OrderItem {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  image_url: string;
+}
+
+export interface AdminOrder {
+  id: string;
+  user_id: string; // Added user_id to link to profiles
+  orderDate: string;
+  totalAmount: number;
+  status: "pending" | "processing" | "completed" | "cancelled";
+  items: OrderItem[];
+  shippingAddress: {
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+  };
+  deliveryMethod: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  paymentStatus: "pending" | "confirmed" | "declined";
+  paymentReceiptId?: string;
+  receiptImageUrl?: string;
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -72,9 +105,9 @@ const getPaymentStatusBadgeClass = (status: AdminOrder["paymentStatus"]) => {
   switch (status) {
     case "pending":
       return "bg-[#EAB308] text-white hover:bg-[#EAB308]/90"; // Yellow
-    case "verified":
+    case "confirmed":
       return "bg-[#22C55E] text-white hover:bg-[#22C55E]/90"; // Green
-    case "declined": // Changed from 'failed'
+    case "declined":
       return "bg-[#EF4444] text-white hover:bg-[#EF4444]/90"; // Red
     default:
       return "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
@@ -178,19 +211,19 @@ const OrderDetailsDialog = ({ order, onClose }: OrderDetailsDialogProps) => {
             {order.items.map((item, index) => (
               <div key={index} className="flex items-center gap-4 border-b pb-3 last:border-b-0 last:pb-0">
                 <ImageWithFallback
-                  src={item.imageUrl}
-                  alt={item.productName}
+                  src={item.image_url}
+                  alt={item.product_name}
                   containerClassName="h-16 w-16 object-contain rounded-md border flex-shrink-0"
                   fallbackLogoClassName="h-8 w-8"
                 />
                 <div className="flex-grow">
-                  <p className="font-medium text-foreground">{item.productName}</p>
+                  <p className="font-medium text-foreground">{item.product_name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {item.quantity} units @ {formatCurrency(item.unitPrice)} / unit
+                    {item.quantity} units @ {formatCurrency(item.unit_price)} / unit
                   </p>
                 </div>
                 <p className="font-semibold text-foreground text-lg flex-shrink-0">
-                  {formatCurrency(item.quantity * item.unitPrice)}
+                  {formatCurrency(item.quantity * item.unit_price)}
                 </p>
               </div>
             ))}
@@ -203,7 +236,7 @@ const OrderDetailsDialog = ({ order, onClose }: OrderDetailsDialogProps) => {
 
 
 const OrdersManagement = () => {
-  const [orders, setOrders] = useState<AdminOrder[]>(mockAdminOrders);
+  const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPaymentStatus, setFilterPaymentStatus] = useState("all");
   const [filterOrderStatus, setFilterOrderStatus] = useState("all");
@@ -211,11 +244,54 @@ const OrdersManagement = () => {
   const ordersPerPage = 10;
   const [isCustomerDetailsModalOpen, setIsCustomerDetailsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(true);
 
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
   };
+
+  const fetchOrders = useCallback(async () => {
+    setIsLoadingOrders(true);
+    const { data, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        profiles(first_name, last_name, email, phone),
+        payment_receipts(id, status, receipt_image_url)
+      `)
+      .order('order_date', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching orders:", error);
+      toast.error("Failed to load orders.", { description: error.message });
+      setOrders([]);
+    } else {
+      const fetchedOrders: AdminOrder[] = data.map((order: any) => ({
+        id: order.id,
+        user_id: order.user_id,
+        orderDate: new Date(order.order_date).toLocaleDateString(),
+        totalAmount: order.total_amount,
+        status: order.status,
+        items: order.items,
+        shippingAddress: order.shipping_address,
+        deliveryMethod: order.delivery_method,
+        customerName: `${order.profiles?.first_name || ''} ${order.profiles?.last_name || ''}`.trim(),
+        customerEmail: order.profiles?.email || 'N/A',
+        customerPhone: order.profiles?.phone || 'N/A',
+        paymentStatus: order.payment_receipts?.[0]?.status || 'pending', // Assuming one receipt per order
+        paymentReceiptId: order.payment_receipts?.[0]?.id,
+        receiptImageUrl: order.payment_receipts?.[0]?.receipt_image_url,
+      }));
+      setOrders(fetchedOrders);
+    }
+    setIsLoadingOrders(false);
+  }, []);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
 
   const filteredOrders = useMemo(() => {
     let filtered = orders;
@@ -226,7 +302,7 @@ const OrdersManagement = () => {
           order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.customerPhone.includes(searchTerm) // Added phone search
+          order.customerPhone.includes(searchTerm)
       );
     }
 
@@ -259,44 +335,55 @@ const OrdersManagement = () => {
   const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
   const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
 
-  const handleAction = useCallback(async (orderId: string, action: string) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
+  const handleAction = useCallback(async (orderId: string, action: string, receiptId?: string) => {
+    let successMessage = "";
+    let errorMessage = "";
 
-    setOrders((prevOrders) =>
-      prevOrders.map((order) => {
-        if (order.id === orderId) {
-          let newOrderStatus = order.status;
-          let newPaymentStatus = order.paymentStatus;
-
-          switch (action) {
-            case "verifyPayment":
-              newPaymentStatus = "verified";
-              toast.success(`Payment for Order ${orderId} verified!`);
-              break;
-            case "declinePayment":
-              newPaymentStatus = "declined";
-              toast.error(`Payment for Order ${orderId} declined!`);
-              break;
-            case "processOrder":
-              newOrderStatus = "processing";
-              toast.success(`Order ${orderId} is now processing!`);
-              break;
-            case "completeOrder":
-              newOrderStatus = "completed";
-              toast.success(`Order ${orderId} completed!`);
-              break;
-            case "cancelOrder":
-              newOrderStatus = "cancelled";
-              toast.info(`Order ${orderId} cancelled.`);
-              break;
-          }
-          return { ...order, status: newOrderStatus, paymentStatus: newPaymentStatus };
+    try {
+      if (action === "verifyPayment" || action === "declinePayment") {
+        if (!receiptId) {
+          toast.error("No receipt ID found for this action.");
+          return;
         }
-        return order;
-      })
-    );
-  }, []);
+        const newPaymentStatus = action === "verifyPayment" ? "confirmed" : "declined";
+        const { error } = await supabase
+          .from('payment_receipts')
+          .update({ status: newPaymentStatus })
+          .eq('id', receiptId);
+
+        if (error) throw error;
+        successMessage = `Payment for Order ${orderId} ${newPaymentStatus}!`;
+      } else {
+        let newOrderStatus: AdminOrder["status"];
+        switch (action) {
+          case "processOrder":
+            newOrderStatus = "processing";
+            break;
+          case "completeOrder":
+            newOrderStatus = "completed";
+            break;
+          case "cancelOrder":
+            newOrderStatus = "cancelled";
+            break;
+          default:
+            throw new Error("Invalid order action.");
+        }
+        const { error } = await supabase
+          .from('orders')
+          .update({ status: newOrderStatus })
+          .eq('id', orderId);
+
+        if (error) throw error;
+        successMessage = `Order ${orderId} status updated to "${newOrderStatus}"!`;
+      }
+      toast.success(successMessage);
+      fetchOrders(); // Re-fetch orders to update the UI
+    } catch (error: any) {
+      errorMessage = `Failed to perform action: ${error.message}`;
+      toast.error("Action Failed", { description: errorMessage });
+      console.error("Action error:", error);
+    }
+  }, [fetchOrders]);
 
   const handleCustomerClick = (order: AdminOrder) => {
     setSelectedOrder(order);
@@ -337,7 +424,7 @@ const OrdersManagement = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex flex-col gap-4 w-full md:w-auto sm:flex-row">
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
               <Select value={filterPaymentStatus} onValueChange={setFilterPaymentStatus}>
                 <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Filter by Payment Status" />
@@ -345,7 +432,7 @@ const OrdersManagement = () => {
                 <SelectContent>
                   <SelectItem value="all">All Payment Statuses</SelectItem>
                   <SelectItem value="pending">Pending Payment</SelectItem>
-                  <SelectItem value="verified">Verified Payment</SelectItem>
+                  <SelectItem value="confirmed">Confirmed Payment</SelectItem>
                   <SelectItem value="declined">Declined Payment</SelectItem>
                 </SelectContent>
               </Select>
@@ -364,7 +451,12 @@ const OrdersManagement = () => {
             </div>
           </div>
 
-          {filteredOrders.length === 0 ? (
+          {isLoadingOrders ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="ml-3 text-muted-foreground">Loading orders...</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               <Filter className="h-12 w-12 mx-auto mb-4" />
               <p>No orders found matching your filters.</p>
@@ -431,7 +523,7 @@ const OrdersManagement = () => {
                                   <TooltipTrigger asChild>
                                     <DialogTrigger asChild>
                                       <Button variant="outline" size="icon" disabled={!order.paymentReceiptId}>
-                                        <Eye className="h-4 w-4" />
+                                        <ReceiptText className="h-4 w-4" />
                                       </Button>
                                     </DialogTrigger>
                                   </TooltipTrigger>
@@ -443,9 +535,9 @@ const OrdersManagement = () => {
                                   <DialogTitle>Payment Receipt for {order.id}</DialogTitle>
                                 </DialogHeader>
                                 <div className="p-4">
-                                  {order.paymentReceiptId ? (
+                                  {order.receiptImageUrl ? (
                                     <ImageWithFallback
-                                      src={`https://via.placeholder.com/400x600/D8C4A6/000000?text=Receipt+${order.id}`} // Placeholder image
+                                      src={order.receiptImageUrl}
                                       alt={`Payment Receipt for ${order.id}`}
                                       containerClassName="w-full h-auto max-h-[80vh] object-contain"
                                     />
@@ -475,15 +567,15 @@ const OrdersManagement = () => {
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>Verify or Decline Payment?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      Review the receipt. Mark as verified if payment is confirmed, or decline if the receipt is invalid.
+                                      Review the receipt. Mark as confirmed if payment is verified, or decline if the receipt is invalid.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter className="flex-row justify-between space-x-2">
                                     <AlertDialogCancel className="w-1/3">Cancel</AlertDialogCancel>
-                                    <Button variant="destructive" onClick={() => handleAction(order.id, "declinePayment")} className="w-1/3">
+                                    <Button variant="destructive" onClick={() => handleAction(order.id, "declinePayment", order.paymentReceiptId)} className="w-1/3">
                                       Decline
                                     </Button>
-                                    <AlertDialogAction onClick={() => handleAction(order.id, "verifyPayment")} className="w-1/3">
+                                    <AlertDialogAction onClick={() => handleAction(order.id, "verifyPayment", order.paymentReceiptId)} className="w-1/3">
                                       Verify
                                     </AlertDialogAction>
                                   </AlertDialogFooter>
@@ -492,7 +584,7 @@ const OrdersManagement = () => {
                             )}
 
                             {/* Process Order */}
-                            {order.status === "pending" && order.paymentStatus === "verified" && (
+                            {order.status === "pending" && order.paymentStatus === "confirmed" && (
                               <AlertDialog>
                                 <TooltipProvider>
                                   <Tooltip>
