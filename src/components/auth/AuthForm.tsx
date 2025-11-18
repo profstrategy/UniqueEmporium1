@@ -104,22 +104,20 @@ export default function AuthForm() {
             <span className="text-xs mb-2 text-muted-foreground">
               Or use your email for registration
             </span>
-            <div className="flex w-full gap-2"> {/* Added flex container */}
-              <InputField
-                type="text"
-                placeholder="First Name"
-                Icon={User}
-                value={signUpFirstName}
-                onChange={(e) => setSignUpFirstName(e.target.value)}
-              />
-              <InputField
-                type="text"
-                placeholder="Last Name"
-                Icon={User}
-                value={signUpLastName}
-                onChange={(e) => setSignUpLastName(e.target.value)}
-              />
-            </div>
+            <InputField
+              type="text"
+              placeholder="First Name"
+              Icon={User}
+              value={signUpFirstName}
+              onChange={(e) => setSignUpFirstName(e.target.value)}
+            />
+            <InputField
+              type="text"
+              placeholder="Surname"
+              Icon={User}
+              value={signUpLastName}
+              onChange={(e) => setSignUpLastName(e.target.value)}
+            />
             <InputField
               type="email"
               placeholder="Email"
@@ -264,7 +262,7 @@ export default function AuthForm() {
             />
             <InputField
               type="text"
-              placeholder="Last Name"
+              placeholder="Surname"
               Icon={User}
               value={signUpLastName}
               onChange={(e) => setSignUpLastName(e.target.value)}
