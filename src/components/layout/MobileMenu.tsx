@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, LogIn } from "lucide-react";
@@ -40,13 +40,14 @@ const categories = [
 
 const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuProps) => {
   const navigate = useNavigate();
+  const location = useLocation(); // Initialize useLocation
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
   const { user, isAdmin, signOut } = useAuth(); // Use AuthContext
 
-  const handleLinkClick = (path: string) => {
+  const handleLinkClick = (path: string, state?: any) => { // Updated signature to accept state
     onClose();
-    navigate(path);
+    navigate(path, { state }); // Pass state to navigate
   };
 
   const handleLogout = async () => {
@@ -105,7 +106,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
             </div>
           ) : (
             !user && (
-              <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/auth")}>
+              <Button variant="ghost" className="justify-start text-base py-1 text-foreground hover:bg-primary/70" onClick={() => handleLinkClick("/auth", { from: location.pathname })}> {/* Added state here */}
                 <LogIn className="mr-2 h-5 w-5" /> Sign In / Register
               </Button>
             )
@@ -178,7 +179,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
           )}
           
           {/* 9. Logout (top-level, only visible if logged in) */}
-          {user && ( // Corrected: Show logout if user is logged in
+          {user && (
             <Button
               variant="ghost"
               className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/70"

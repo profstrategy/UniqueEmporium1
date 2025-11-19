@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, LogOut } from "lucide-react";
@@ -38,6 +38,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Initialize useLocation
   const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
@@ -155,7 +156,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                   </Link>
                 )}
                 {/* Logout Button (Desktop) */}
-                {!isMobile && user && ( // Corrected: Show logout if user is logged in and not mobile
+                {!isMobile && user && (
                   <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-muted/50">
                     <LogOut className="h-5 w-5" />
                   </Button>
@@ -163,7 +164,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               </>
             ) : (
               /* Sign In Icon */
-              <Link to="/auth" className="relative">
+              <Link to="/auth" state={{ from: location.pathname }} className="relative"> {/* Added state here */}
                 <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50">
                   <LogIn className="h-5 w-5" />
                 </Button>

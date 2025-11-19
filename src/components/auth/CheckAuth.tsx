@@ -5,7 +5,7 @@ import LoadingPage from '@/components/common/LoadingPage';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function CheckAuth({ children }: { children: React.ReactNode }) {
-  const { session, setAuthState, isLoading, user } = useAuth();
+  const { session, setAuthState, isLoading, user, isAdmin } = useAuth(); // Added isAdmin
   const navigate = useNavigate();
   const location = useLocation();
   const hasRedirected = useRef(false);
@@ -51,10 +51,12 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
 
       // After user is loaded (or if already loaded), handle redirection
       if (isMounted && user && !isLoading && location.pathname === '/auth' && !hasRedirected.current) {
-        if (user.role === 'admin') {
+        if (isAdmin) {
           navigate('/admin', { replace: true });
         } else {
-          navigate('/account', { replace: true });
+          // Redirect to the 'from' state if available, otherwise to home page
+          const from = (location.state as { from?: string })?.from;
+          navigate(from || '/', { replace: true });
         }
         hasRedirected.current = true;
       }
@@ -65,7 +67,7 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [session, user, isLoading, setAuthState, navigate, location.pathname]); // Dependencies
+  }, [session, user, isLoading, isAdmin, setAuthState, navigate, location.pathname, location.state]); // Added isAdmin and location.state to dependencies
 
   if (isLoading) return <LoadingPage />;
 
