@@ -67,7 +67,7 @@ export default function AuthForm() {
     setIsSigningIn(true);
     try {
       await signInWithEmail(signInEmail, signInPassword);
-      navigate("/account");
+      // Redirection is now handled by CheckAuth
     } catch (error) {
       // Error handled by toast in AuthContext
     } finally {
@@ -80,8 +80,7 @@ export default function AuthForm() {
     setIsSigningUp(true);
     try {
       await signUpWithEmail(signUpEmail, signUpPassword, signUpFirstName, signUpLastName); // Updated call
-      // After successful sign up, redirect to home or show confirmation
-      navigate("/");
+      // Redirection is now handled by CheckAuth
     } catch (error) {
       // Error handled by toast in AuthContext
     } finally {

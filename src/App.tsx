@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -52,20 +52,25 @@ const AdminAnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashbo
 
 const queryClient = new QueryClient();
 
-// Private Route Wrapper (Basic implementation)
+// Private Route Wrapper
 const PrivateRoute = ({ element }: { element: React.ReactNode }) => {
-  const { user, isLoading } = useAuth();
+  const { user, isAdmin, isLoading } = useAuth();
   const navigate = useNavigate();
-
-  console.log("PrivateRoute: isLoading:", isLoading, "user:", user ? "present" : "null");
+  const location = useLocation();
 
   if (isLoading) {
     return <LoadingPage />;
   }
 
   if (!user) {
-    console.log("PrivateRoute: User is null, navigating to /auth");
     navigate("/auth", { replace: true });
+    return null;
+  }
+
+  // If user is admin, redirect them away from /account paths
+  if (isAdmin && location.pathname.startsWith("/account")) {
+    navigate("/admin", { replace: true });
+    toast.info("Redirecting to Admin Dashboard.", { description: "Admin users access their dedicated panel." });
     return null;
   }
 
@@ -77,20 +82,16 @@ const AdminRoute = ({ element }: { element: React.ReactNode }) => {
   const { isAdmin, isLoading, user } = useAuth();
   const navigate = useNavigate();
 
-  console.log("AdminRoute: isLoading:", isLoading, "user:", user ? "present" : "null", "isAdmin:", isAdmin);
-
   if (isLoading) {
     return <LoadingPage />;
   }
 
   if (!user) {
-    console.log("AdminRoute: User is null, navigating to /auth");
     navigate("/auth", { replace: true });
     return null;
   }
 
   if (!isAdmin) {
-    console.log("AdminRoute: User is not admin, navigating to /");
     navigate("/", { replace: true });
     toast.error("Unauthorized Access", { description: "You do not have permission to view the Admin Dashboard." });
     return null;
@@ -105,8 +106,6 @@ const MainAppContent = () => {
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const location = useLocation();
   const { isLoading } = useAuth();
-  
-  console.log("MainAppContent: isLoading from useAuth:", isLoading); // Add this log
   
   // Determine if the current route is an auth page.
   const isAuthPage = location.pathname === "/auth";
