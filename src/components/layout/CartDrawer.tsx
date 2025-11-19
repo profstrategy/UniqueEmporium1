@@ -13,15 +13,16 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
-  const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart, isLoadingCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
+    // This is a client-side simulation. Actual checkout logic would be in Checkout.tsx
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsCheckingOut(false);
     onClose();
-    clearCart();
+    clearCart(); // Clear cart after simulated checkout
   };
 
   return (
@@ -36,7 +37,12 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           </SheetDescription>
         </SheetHeader>
         <div className="flex-grow overflow-y-auto py-4">
-          {cartItems.length === 0 ? (
+          {isLoadingCart ? (
+            <div className="flex items-center justify-center h-full min-h-[100px]">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              <p className="ml-3 text-muted-foreground">Loading cart...</p>
+            </div>
+          ) : cartItems.length === 0 ? (
             <p className="text-center text-muted-foreground">Your cart is empty.</p>
           ) : (
             <div className="space-y-4">
@@ -48,8 +54,8 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
                       <p className="font-medium">{item.name}</p>
                       <p className="text-sm text-muted-foreground">
                         ₦{item.unitPrice.toLocaleString('en-NG', { minimumFractionDigits: 2 })} / pc
-                      </p> {/* Display unit price */}
-                      <p className="text-xs text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p> {/* Display MOQ */}
+                      </p>
+                      <p className="text-xs text-muted-foreground">MOQ: {item.minOrderQuantity} pcs</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

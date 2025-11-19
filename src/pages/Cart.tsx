@@ -13,15 +13,25 @@ const fadeInUp = {
 };
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, totalPrice, clearCart, isLoadingCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
+    // This is a client-side simulation. Actual checkout logic would be in Checkout.tsx
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsCheckingOut(false);
-    clearCart();
+    clearCart(); // Clear cart after simulated checkout
   };
+
+  if (isLoadingCart) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading your cart...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-8">
