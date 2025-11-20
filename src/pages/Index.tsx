@@ -1,81 +1,180 @@
 "use client";
 
-import React from "react";
+import HeroSection from "@/components/hero-section/HeroSection.tsx";
+import CategoriesSection from "@/components/categories-section/CategoriesSection.tsx";
+import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
+import WhyChooseUsSection from "@/components/why-choose-us/WhyChooseUsSection.tsx";
+import CustomerReviewsSection from "@/components/customer-reviews/CustomerReviewsSection.tsx";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts";
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
+import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx";
+import React, { useEffect, useState, useRef } from "react";
+import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
+import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
+
+// Select specific products from mockProducts to be featured
+const featuredProductIds = [
+  mockProducts.find(p => p.name === "SHEIN Elegant Floral Maxi Gown")?.id || "",
+  mockProducts.find(p => p.name === "Vintage 90s Graphic T-Shirt")?.id || "",
+  mockProducts.find(p => p.name === "Kids' Stylish Distressed Denim Jeans")?.id || "",
+  mockProducts.find(p => p.name === "Ladies' Casual Chic Fashion Bundle")?.id || "",
+  mockProducts.find(p => p.name === "Luxury Thrift Silk Scarf (Designer)")?.id || "",
+  mockProducts.find(p => p.name === "Men's Urban Streetwear Fashion Bundle")?.id || "",
+  mockProducts.find(p => p.name === "SHEIN Flowy Summer Midi Dress")?.id || "", // Added new product
+  mockProducts.find(p => p.name === "Vintage Leather Crossbody Bag")?.id || "", // Added new product
+].filter(id => id !== "");
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50, x: -50 },
+  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
+};
+
+const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
 
 const Index = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  const featuredProductsRef = useRef<HTMLDivElement>(null);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut" as Easing,
-      },
-    },
+  useEffect(() => {
+    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+    setRecentlyViewedProductIds(storedViewed);
+
+    setLoadingFeatured(true);
+    const timer = setTimeout(() => {
+      const fetchedFeatured = featuredProductIds
+        .map(id => mockProducts.find(p => p.id === id))
+        .filter((product): product is ProductDetails => product !== undefined);
+      setFeaturedProducts(fetchedFeatured);
+      setLoadingFeatured(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
+
+  const scrollToFeaturedProducts = () => {
+    featuredProductsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
-      {/* Background elements for visual interest */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        initial={{ scale: 1.2, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" as Easing }}
-      >
-        <img
-          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Fashion background"
-          className="w-full h-full object-cover opacity-30"
-        />
-      </motion.div>
+    <div className="relative min-h-screen w-full">
+      <HeroSection onScrollToFeatured={scrollToFeaturedProducts} />
 
-      {/* Overlay for text readability */}
-      <div className="absolute inset-0 bg-black opacity-60 z-10"></div>
-
-      {/* Content */}
-      <motion.div
-        className="relative z-20 text-center px-6 py-12 max-w-4xl mx-auto"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+      {/* Moved introductory text before CategoriesSection */}
+      <motion.p
+        className="font-semibold text-base md:text-xl lg:text-2xl text-primary mt-2 mb-2 px-4 sm:px-6 lg:px-8 text-center mx-auto lg:whitespace-nowrap"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" as Easing }}
       >
-        <motion.h1
-          className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight font-poppins mb-6"
-          variants={itemVariants}
+        Luxury Wholesale Fashion for Smart Resellers
+      </motion.p>
+
+      <CategoriesSection />
+
+      {/* Featured Products Section */}
+      <section id="featured-products-section" ref={featuredProductsRef} className="pt-4 pb-16 bg-muted/30">
+        <motion.div
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
         >
-          Unique Emporium
-        </motion.h1>
-        <motion.p
-          className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto"
-          variants={itemVariants}
-        >
-          Discover curated luxury thrift and vintage fashion. Each piece tells a story, waiting to become part of yours.
-        </motion.p>
-        <motion.div variants={itemVariants}>
-            <Button size="lg" variant="outline" asChild className="rounded-full">
-              <Link to="/products" className="flex items-center gap-2">
-                Shop the Collection <ArrowRight className="h-5 w-5" />
-              </Link>
+          {/* Moved paragraph */}
+          <motion.p
+            className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-2 mb-8 md:mb-12" // Changed mt-4 to mt-2
+            variants={fadeInUp}
+          >
+            Explore the latest SHEIN gowns, vintage shirts, kids’ jeans, and fashion bundles with easy navigation, smart picks, and clear checkout.
+          </motion.p>
+          <motion.h2
+            className="font-poppins font-bold text-xl md:text-4xl text-foreground"
+            variants={fadeInUp}
+          >
+            Featured Collections
+          </motion.h2>
+          <motion.p
+            className="text-sm text-muted-foreground mt-2 mb-8 md:mb-12"
+            variants={fadeInUp}
+          >
+            Discover our most popular SHEIN gowns, vintage shirts, and fashion bundles
+          </motion.p>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 md:gap-5">
+            {loadingFeatured
+              ? Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)
+              : featuredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+          </div>
+
+          <motion.div variants={fadeInUp} className="mt-12">
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/products">Shop the Collection</Link>
             </Button>
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* Moved Banner Image */}
+      <motion.div
+        className="relative w-full max-w-5xl mx-auto h-48 md:h-64 rounded-xl overflow-hidden shadow-lg mt-8 mb-12 px-4 sm:px-6 lg:px-8"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <ImageWithFallback
+          src="/my-banner.webp"
+          alt="Unique Emporium Fashion Banner"
+          containerClassName="w-full h-full"
+        />
+      </motion.div>
+
+      {/* Top Selling Products Section (on Home Page) */}
+      <motion.div
+        className="mt-16"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <TopSellingProductsSection />
+      </motion.div>
+
+      {/* Why Choose Us Section */}
+      <WhyChooseUsSection />
+
+      {/* Customer Reviews Section */}
+      <CustomerReviewsSection />
+
+      {/* Recently Viewed Products Section (on Home Page) */}
+      <motion.div
+        className="mt-16 mb-20"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
+      </motion.div>
     </div>
   );
 };
