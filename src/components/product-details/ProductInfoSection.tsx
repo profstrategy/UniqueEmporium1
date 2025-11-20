@@ -225,7 +225,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
                 onClick={handleToggleFavorite}
               >
                 <Heart className={cn("mr-2 h-5 w-5", favorited && "fill-red-500 text-red-500")} />
-                {favorited ? "Remove from Favorites" : "Add to Favorites"}
+                {favorited ? "Remove" : "Add to Favorites"}
               </Button>
               <Button
                 variant="outline"
