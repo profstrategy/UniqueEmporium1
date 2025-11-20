@@ -1,136 +1,171 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { products as productsData, ProductDetails as ProductDetailsType } from "@/data/products";
-import { ProductInfoSection } from "@/components/product-details/ProductInfoSection";
-import { ProductImageGallery } from "@/components/product-details/ProductImageGallery";
-import { ProductDescriptionTabs } from "@/components/product-details/ProductDescriptionTabs";
-import { RecommendedProductsSection } from "@/components/recommended-products/RecommendedProductsSection";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence, Easing } from "framer-motion";
+import { getProductById, ProductDetails as ProductDetailsType, getRandomProducts, getRecentlyViewedProducts } from "@/data/products.ts";
+import ProductBreadcrumb from "@/components/product-details/ProductBreadcrumb.tsx";
+import ProductImageGallery from "@/components/product-details/ProductImageGallery.tsx";
+import ProductInfoSection from "@/components/product-details/ProductInfoSection.tsx";
+import ProductTabs from "@/components/product-details/ProductTabs.tsx";
+import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
+import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import ProductDetailsSkeleton from "@/components/product-details/ProductDetailsSkeleton.tsx";
 
-const ProductDetailsPage = () => {
-  const { id } = useParams<{ id: string }>();
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50, x: -50 },
+  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
+};
+
+const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
+const MAX_RECENTLY_VIEWED = 8;
+
+const ProductDetails = () => {
+  const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<ProductDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
 
   useEffect(() => {
     setLoading(true);
     setError(null);
     const timer = setTimeout(() => {
-      const foundProduct = productsData.find((p) => p.id === id);
-      if (foundProduct) {
-        setProduct(foundProduct);
+      if (productId) {
+        const fetchedProduct = getProductById(productId);
+        if (fetchedProduct) {
+          setProduct(fetchedProduct);
+
+          setRecentlyViewedProductIds((prevIds) => {
+            const currentViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+            const updatedViewed = [productId, ...currentViewed.filter(id => id !== productId)].slice(0, MAX_RECENTLY_VIEWED);
+            localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updatedViewed));
+            return updatedViewed;
+          });
+
+        } else {
+          setError("Product not found.");
+          toast.error("Product not found.", { description: `No product found with ID: ${productId}` });
+        }
       } else {
-        setError("Product not found.");
-        toast.error("Product not found.");
+        setError("Invalid product ID.");
+        toast.error("Invalid product ID.", { description: "Please provide a valid product identifier." });
       }
       setLoading(false);
-    }, 500); // Simulate network delay
+    }, 700);
     return () => clearTimeout(timer);
-  }, [id]);
+  }, [productId]);
 
-  const recommendedProducts = useMemo(() => {
-    if (!product) return [];
-    return productsData
-      .filter((p) => p.id !== product.id && p.category === product.category)
-      .slice(0, 10);
-  }, [product, productsData]);
+  useEffect(() => {
+    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
+    setRecentlyViewedProductIds(storedViewed);
+  }, []);
+
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[calc(100vh-80px)]">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
+    return <ProductDetailsSkeleton />;
   }
 
-  if (error) {
+  if (error || !product) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-destructive">
-        <AlertCircle className="h-16 w-16 mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Error</h2>
-        <p className="text-lg">{error}</p>
-        <Button onClick={() => window.history.back()} className="mt-6">
-          Go Back
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+        <motion.h1
+          className="text-4xl font-bold text-destructive mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Error
+        </motion.h1>
+        <motion.p
+          className="text-lg text-muted-foreground mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {error || "Something went wrong while fetching product details."}
+        </motion.p>
+        <Button onClick={() => navigate("/products")}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Products
         </Button>
       </div>
     );
   }
 
-  if (!product) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-muted-foreground">
-        <AlertCircle className="h-16 w-16 mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
-        <p className="text-lg">The product you are looking for does not exist.</p>
-        <Button onClick={() => window.history.back()} className="mt-6">
-          Go Back
-        </Button>
-      </div>
-    );
-  }
+  const actualRecentlyViewedProducts = getRecentlyViewedProducts(recentlyViewedProductIds, product.id);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-background"
-    >
-      <div className="container py-8 md:py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Product Image Gallery */}
+    <div className="min-h-screen w-full bg-background">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <ProductBreadcrumb product={product} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-8">
+          {/* Product Media & Purchase Options */}
           <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            className="lg:sticky lg:top-24 h-fit space-y-8"
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            viewport={{ once: true, amount: 0.1 }}
           >
-            <ProductImageGallery images={product.images} />
+            <ProductImageGallery
+              images={product.images}
+              productName={product.name}
+            />
           </motion.div>
 
-          {/* Product Info Section */}
+          {/* Product Info & Actions */}
           <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" as Easing }}
           >
             <ProductInfoSection product={product} />
           </motion.div>
         </div>
 
-        {/* Product Description Tabs */}
+        {/* Detailed Information Tabs */}
         <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-12 lg:mt-16"
+          className="mt-12"
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as Easing }}
         >
-          <ProductDescriptionTabs product={product} />
+          <ProductTabs product={product} />
+        </motion.div>
+
+        {/* Recommended Products Section */}
+        <motion.div
+          className="mt-16"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <RecommendedProductsSection currentProductId={product.id} />
+        </motion.div>
+
+        {/* Recently Viewed Products Section */}
+        <motion.div
+          className="mt-16 mb-20"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
         </motion.div>
       </div>
-
-      {/* Recommended Products Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-      >
-        <RecommendedProductsSection
-          title="Related Products"
-          products={recommendedProducts}
-          loading={false}
-          error={null}
-          currentProductId={product.id}
-        />
-      </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
-export default ProductDetailsPage;
+export default ProductDetails;
