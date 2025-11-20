@@ -11,7 +11,7 @@ import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
 import MobileMenu from "./MobileMenu.tsx";
 import CartDrawer from "./CartDrawer.tsx";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, Easing } from "framer-motion"; // Import AnimatePresence and Easing
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { useAuth } from "@/context/AuthContext.tsx"; // Use AuthContext
@@ -80,6 +80,11 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
     }, 150); // Small delay to allow moving mouse to dropdown content
   };
 
+  const dropdownVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: -10, transition: { duration: 0.2, ease: "easeIn" as Easing } },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" as Easing } },
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-sm border-b border-border">
@@ -120,28 +125,41 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-64 p-2 grid grid-cols-2 gap-2"
-                onMouseEnter={openCategoriesDropdown}
-                onMouseLeave={closeCategoriesDropdown}
-              >
-                {categories.map((category) => (
-                  <DropdownMenuItem 
-                    key={category.name} 
-                    asChild 
-                    className="rounded-full p-0 hover:bg-accent" // Applied rounded-full and hover here
+              <AnimatePresence>
+                {isCategoriesDropdownOpen && (
+                  <DropdownMenuContent
+                    forceMount // Ensures content stays in DOM for exit animation
+                    asChild
                   >
-                    <Link 
-                      to={category.link} 
-                      className="flex items-center gap-2 cursor-pointer w-full h-full p-2" // Ensure link fills the item
-                      onClick={() => setIsCategoriesDropdownOpen(false)} // Close dropdown on item click
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                      variants={dropdownVariants}
+                      className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg" // Added bg-card, border, shadow-lg for styling
+                      onMouseEnter={openCategoriesDropdown}
+                      onMouseLeave={closeCategoriesDropdown}
                     >
-                      <category.icon className="h-4 w-4" />
-                      {category.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
+                      {categories.map((category) => (
+                        <DropdownMenuItem 
+                          key={category.name} 
+                          asChild 
+                          className="rounded-full p-0 hover:bg-accent"
+                        >
+                          <Link 
+                            to={category.link} 
+                            className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
+                            onClick={() => setIsCategoriesDropdownOpen(false)}
+                          >
+                            <category.icon className="h-4 w-4" />
+                            {category.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </motion.div>
+                  </DropdownMenuContent>
+                )}
+              </AnimatePresence>
             </DropdownMenu>
 
             <NavLink
