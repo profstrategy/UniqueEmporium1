@@ -128,18 +128,18 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               </DropdownMenuTrigger>
               <AnimatePresence>
                 {isCategoriesDropdownOpen && (
-                  <DropdownMenuContent
-                    forceMount // Ensures content stays in DOM for exit animation
-                    asChild
+                  <motion.div
+                    key="categories-dropdown-content" // Unique key for AnimatePresence
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={dropdownVariants}
+                    onMouseEnter={openCategoriesDropdown}
+                    onMouseLeave={closeCategoriesDropdown}
                   >
-                    <motion.div
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      variants={dropdownVariants}
+                    <DropdownMenuContent
+                      forceMount // Ensures content stays in DOM for exit animation
                       className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg" // Added bg-card, border, shadow-lg for styling
-                      onMouseEnter={openCategoriesDropdown}
-                      onMouseLeave={closeCategoriesDropdown}
                     >
                       {categories.map((category) => (
                         <DropdownMenuItem 
@@ -157,8 +157,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                           </Link>
                         </DropdownMenuItem>
                       ))}
-                    </motion.div>
-                  </DropdownMenuContent>
+                    </DropdownMenuContent>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </DropdownMenu>
