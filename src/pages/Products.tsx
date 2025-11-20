@@ -205,7 +205,7 @@ const Products = () => {
         <div className="hidden lg:flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
           {/* Category Select */}
           <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px] rounded-full">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
@@ -219,7 +219,7 @@ const Products = () => {
 
           {/* Sort By Select */}
           <Select value={sortBy} onValueChange={handleSortByChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px] rounded-full">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -254,7 +254,7 @@ const Products = () => {
           >
             {/* Category Select */}
             <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full rounded-full">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
@@ -268,7 +268,7 @@ const Products = () => {
 
             {/* Sort By Select */}
             <Select value={sortBy} onValueChange={handleSortByChange}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full rounded-full">
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
