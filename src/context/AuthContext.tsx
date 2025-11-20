@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { toast } from "sonner"; // Import toast for error handling
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface CustomUser extends User {
   first_name?: string;
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CustomUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const setAuthState = (newSession: Session | null, newUser: CustomUser | null) => {
     setSession(newSession);
@@ -90,6 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
     toast.info("You have been signed out.");
+    navigate('/'); // Redirect to homepage after successful logout
   };
 
   return (
