@@ -1,174 +1,120 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, Easing } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Instagram,
-  Loader2,
-  CheckCircle2,
-} from "lucide-react";
-import { FaTiktok, FaTelegram, FaWhatsapp } from "react-icons/fa"; // Import FaWhatsapp
+import { Input } from "@/components/ui/input.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "react-hot-toast";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50, x: -50 },
-  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
-};
+const newsletterSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address." }),
+});
 
 const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<z.infer<typeof newsletterSchema>>({
+    resolver: zodResolver(newsletterSchema),
+  });
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const onSubmit = async (data: z.infer<typeof newsletterSchema>) => {
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setEmail(""); // Clear email after submission
-    setTimeout(() => setIsSubmitted(false), 3000); // Hide success message after 3 seconds
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("Newsletter subscription:", data);
+    toast.success("Thanks for subscribing to our newsletter!");
+    reset();
   };
 
-  // URL-encoded address for Google Maps search
-  const mapAddress = encodeURIComponent("No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria");
-  const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapAddress}`;
-
   return (
-    <footer className="relative overflow-hidden bg-primary py-12 text-primary-foreground md:py-16">
-      {/* Background Wave Effect */}
-      <div className="footer-wave-effect absolute inset-x-0 bottom-0 h-40" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
-        <motion.div
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 lg:grid-cols-3"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          {/* Column 1: Company Info */}
-          <motion.div variants={fadeInUp}>
-            <Link to="/" className="mb-4 flex items-center">
-              <UniqueEmporiumLogo className="h-[110px]" />
+    <footer className="bg-card text-card-foreground border-t py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Info */}
+          <div className="space-y-4">
+            <Link to="/" className="flex items-center space-x-2">
+              <UniqueEmporiumLogo className="h-8 w-8 text-primary" />
+              <span className="text-2xl font-bold">Unique Emporium</span>
             </Link>
-            <p className="mb-4 text-sm text-primary-foreground/80">
-              Your ultimate destination for luxury thrift, fashion bundles, and unique wears.
+            <p className="text-sm text-muted-foreground">
+              Your one-stop shop for unique and high-quality products.
             </p>
-            <div className="space-y-2 text-sm text-primary-foreground/80">
-              <a 
-                href="mailto:support@uniqueemporium.com" 
-                className="flex items-center hover:text-primary-foreground/60 transition-colors"
-              >
-                <Mail className="mr-2 h-4 w-4" /> support@uniqueemporium.com
-              </a>
-              <a 
-                href="tel:+2349065545572" 
-                className="flex items-center hover:text-primary-foreground/60 transition-colors"
-              >
-                <Phone className="mr-2 h-4 w-4" /> +234 (906) 554-5572
-              </a>
-              <a 
-                href={mapLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center hover:text-primary-foreground/60 transition-colors"
-              >
-                <MapPin className="mr-2 h-11 w-11" /> No 4 crescent Street opposite Ace supermarket unity, Ilorin, Kwara State, Nigeria
-              </a>
+            <div className="flex space-x-4">
+              {/* Social Media Icons */}
+              {/* Placeholder for social media icons */}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Column 2: Customer Support */}
-          <motion.div variants={fadeInUp}>
-            <h3 className="mb-4 text-lg font-semibold">Customer Support</h3>
-            <ul className="space-y-2 text-sm">
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
               <li>
-                <Link
-                  to="/faq"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
+                <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop" className="text-muted-foreground hover:text-primary transition-colors">
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="text-muted-foreground hover:text-primary transition-colors">
                   FAQ
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Customer Service */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
+            <ul className="space-y-2">
               <li>
-                <Link
-                  to="/shipping"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Shipping Information
+                <Link to="/shipping" className="text-muted-foreground hover:text-primary transition-colors">
+                  Shipping & Returns
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/returns"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Returns & Exchanges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/warranty"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
-                  Warranty Information
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/privacy"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
+                <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/terms"
-                  className="hover:text-primary-foreground/60 transition-colors"
-                >
+                <Link to="/terms" className="text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
               </li>
             </ul>
-          </motion.div>
+          </div>
 
-          {/* Column 3: Stay Connected */}
-          <motion.div variants={fadeInUp}>
-            <h3 className="mb-4 text-lg font-semibold">Stay Connected</h3>
-            <p className="mb-4 text-sm text-primary-foreground/80">
-              Subscribe to our newsletter for the latest updates and exclusive offers.
+          {/* Newsletter */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Subscribe to our newsletter for exclusive offers and updates.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="mb-6 flex gap-2">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex space-x-2">
               <Input
                 type="email"
                 placeholder="Your email"
-                className="flex-1 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/60 focus:border-primary-foreground/50"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                {...register("email")}
+                className="flex-grow"
               />
-              <Button type="submit" variant="secondary" disabled={isSubmitting}>
+              <Button type="submit" variant="secondary" className="rounded-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
@@ -176,86 +122,14 @@ const Footer = () => {
                 )}
               </Button>
             </form>
-            <AnimatePresence>
-              {isSubmitted && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mb-4 flex items-center text-sm text-green-400"
-                >
-                  <CheckCircle2 className="mr-2 h-4 w-4" /> Subscribed successfully!
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div className="flex space-x-4">
-              <motion.a
-                href="https://whatsapp.com/channel/0029VbBJEWBL7UVVHCMcjT0a"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <FaWhatsapp className="h-6 w-6" />
-              </motion.a>
-              <motion.a
-                href="https://www.facebook.com/profile.php?id=100083121582522&mibextid=ZbWKwL"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Facebook className="h-6 w-6" />
-              </motion.a>
-              <motion.a
-                href="https://www.tiktok.com/@uniquethriftwears001"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <FaTiktok className="h-6 w-6" />
-              </motion.a>
-              <motion.a
-                href="https://www.instagram.com/unique_emporium1/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Instagram className="h-6 w-6" />
-              </motion.a>
-              <motion.a
-                href="https://t.me/+hmN1ID2WHJdjZGRk"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <FaTelegram className="h-6 w-6" />
-              </motion.a>
-            </div>
-          </motion.div>
-        </motion.div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-2">{errors.email.message}</p>
+            )}
+          </div>
+        </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/20 pt-8 text-center text-sm text-primary-foreground/60 md:flex-row">
-          <p>&copy; 2019-2025 Unique Emporium. All rights reserved.</p>
-          <p>
-            <a
-              href="https://www.web-aura.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-primary-foreground transition-colors"
-            >
-              Built with ❤️ by Web-Aura
-            </a>
-          </p>
+        <div className="border-t pt-8 mt-8 text-center text-sm text-muted-foreground">
+          &copy; {new Date().getFullYear()} Unique Emporium. All rights reserved.
         </div>
       </div>
     </footer>
