@@ -203,7 +203,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
-              className="flex-1 w-full h-[52px] bg-primary text-primary-foreground hover:bg-primary/90"
+              className="flex-1 w-full h-[52px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-full"
               onClick={handleAddToCart}
               disabled={isAddingToCart}
             >
@@ -221,7 +221,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               <Button
                 variant="outline"
                 size="lg"
-                className="flex-1"
+                className="flex-1 rounded-full"
                 onClick={handleToggleFavorite}
               >
                 <Heart className={cn("mr-2 h-5 w-5", favorited && "fill-red-500 text-red-500")} />
@@ -230,7 +230,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
               <Button
                 variant="outline"
                 size="lg"
-                className="flex-1"
+                className="flex-1 rounded-full"
                 onClick={handleShare}
                 aria-label="Share Product"
               >
