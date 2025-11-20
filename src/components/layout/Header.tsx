@@ -37,6 +37,7 @@ const categories = [
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false); // New state for categories dropdown
   const navigate = useNavigate();
   const location = useLocation(); // Initialize useLocation
   const isMobile = useIsMobile();
@@ -58,6 +59,25 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
       e.preventDefault(); // Prevent default Link navigation
       navigate("/auth", { state: { from: location.pathname } });
     }
+  };
+
+  // Timeout ref for delayed closing
+  const dropdownCloseTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openCategoriesDropdown = () => {
+    if (dropdownCloseTimeout.current) {
+      clearTimeout(dropdownCloseTimeout.current);
+    }
+    setIsCategoriesDropdownOpen(true);
+  };
+
+  const closeCategoriesDropdown = () => {
+    if (dropdownCloseTimeout.current) {
+      clearTimeout(dropdownCloseTimeout.current);
+    }
+    dropdownCloseTimeout.current = setTimeout(() => {
+      setIsCategoriesDropdownOpen(false);
+    }, 150); // Small delay to allow moving mouse to dropdown content
   };
 
   return (
@@ -89,13 +109,22 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             </NavLink>
 
             {/* Categories Dropdown (Desktop) */}
-            <DropdownMenu>
+            <DropdownMenu open={isCategoriesDropdownOpen} onOpenChange={setIsCategoriesDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1 text-foreground hover:bg-secondary/80 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1 text-foreground hover:bg-secondary/80 rounded-full"
+                  onMouseEnter={openCategoriesDropdown}
+                  onMouseLeave={closeCategoriesDropdown}
+                >
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 p-2 grid grid-cols-2 gap-2">
+              <DropdownMenuContent
+                className="w-64 p-2 grid grid-cols-2 gap-2"
+                onMouseEnter={openCategoriesDropdown}
+                onMouseLeave={closeCategoriesDropdown}
+              >
                 {categories.map((category) => (
                   <DropdownMenuItem 
                     key={category.name} 
@@ -105,6 +134,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                     <Link 
                       to={category.link} 
                       className="flex items-center gap-2 cursor-pointer w-full h-full p-2" // Ensure link fills the item
+                      onClick={() => setIsCategoriesDropdownOpen(false)} // Close dropdown on item click
                     >
                       <category.icon className="h-4 w-4" />
                       {category.name}
