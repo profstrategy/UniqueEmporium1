@@ -1,130 +1,80 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Shirt, Baby, Gem, ShoppingBag, SlidersHorizontal } from "lucide-react";
-import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
-import { motion, AnimatePresence, Easing } from "framer-motion";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts, ProductDetails, getProductsByIds } from "@/data/products.ts";
-import RecommendedProductsSection from "@/components/recommended-products/RecommendedProductsSection.tsx";
-import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
-import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Filter, X, Search, Loader2, ArrowUpWideNarrow, ArrowDownWideNarrow } from "lucide-react";
+import ProductCard from "@/components/ProductCard";
+import { products as productsData, Product } from "@/data/products";
+import { categories as categoriesData } from "@/data/categories";
+import { RecommendedProductsSection } from "@/components/recommended-products/RecommendedProductsSection";
+import { cn } from "@/lib/utils";
 
-const allProducts: ProductDetails[] = mockProducts;
-
-const categories = [
-  { name: "All Categories", value: "all" },
-  { name: "Kids", value: "Kids", icon: Baby },
-  { name: "Kids Patpat", value: "Kids Patpat", icon: Baby },
-  { name: "Children Jeans", value: "Children Jeans", icon: Baby },
-  { name: "Children Shirts", value: "Children Shirts", icon: Baby },
-  { name: "Men Vintage Shirts", value: "Men Vintage Shirts", icon: Shirt },
-  { name: "Amazon Ladies", value: "Amazon Ladies", icon: ShoppingBag },
-  { name: "SHEIN Gowns", value: "SHEIN Gowns", icon: Shirt },
-  { name: "Others", value: "Others", icon: Gem },
-];
-
-const sortOptions = [
-  { name: "Default", value: "default" },
-  { name: "Name (A-Z)", value: "name-asc" },
-  { name: "Name (Z-A)", value: "name-desc" },
-  { name: "Price (Low to High)", value: "price-asc" },
-  { name: "Price (High to Low)", value: "price-desc" },
-  { name: "Rating (High to Low)", value: "rating-desc" },
-];
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50, x: -50 },
-  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
-};
-
-const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
-
-const Products = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialQuery = searchParams.get("query") || "";
+const ProductsPage = () => {
+  const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
+  const initialSearch = searchParams.get("search") || "";
 
-  const [currentQuery, setCurrentQuery] = useState(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [sortBy, setSortBy] = useState("default");
-  const [isMobileFilterPanelOpen, setIsMobileFilterPanelOpen] = useState(false);
-  const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(true); // New state for initial load
-
-  useEffect(() => {
-    setCurrentQuery(initialQuery);
-    setSelectedCategory(initialCategory);
-    // Simulate initial load delay only once
-    if (isInitialLoad) {
-      const timer = setTimeout(() => {
-        setIsInitialLoad(false);
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, [initialQuery, initialCategory, isInitialLoad]); // Added isInitialLoad to dependencies
+  const [category, setCategory] = useState<string>(initialCategory);
+  const [searchTerm, setSearchTerm] = useState<string>(initialSearch);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
+  const [minRating, setMinRating] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<string>("default");
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
-    setRecentlyViewedProductIds(storedViewed);
-  }, []);
+    setCategory(searchParams.get("category") || "all");
+    setSearchTerm(searchParams.get("search") || "");
+  }, [searchParams]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentQuery(e.target.value);
-  };
+  useEffect(() => {
+    // Simulate data fetching
+    setLoading(true);
+    setError(null);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500); // Simulate network delay
+    return () => clearTimeout(timer);
+  }, [category, searchTerm, priceRange, minRating, sortBy]);
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
-    if (value === "all") {
-      searchParams.delete("category");
-    } else {
-      searchParams.set("category", value);
+  const filteredProducts = useMemo(() => {
+    let filtered = productsData.filter((product) => product.status === "active");
+
+    if (category !== "all") {
+      filtered = filtered.filter((product) => product.category === category);
     }
-    setSearchParams(searchParams);
-  };
 
-  const handleSortByChange = (value: string) => {
-    setSortBy(value);
-  };
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (currentQuery.trim()) {
-      searchParams.set("query", currentQuery.trim());
-    } else {
-      searchParams.delete("query");
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.fullDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    setSearchParams(searchParams);
-  };
 
-  const filterAndSortProducts = () => {
-    let filtered = allProducts.filter((product) => {
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-      const matchesQuery = product.name.toLowerCase().includes(currentQuery.toLowerCase());
-      return matchesCategory && matchesQuery;
-    });
+    filtered = filtered.filter(
+      (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+
+    filtered = filtered.filter((product) => product.rating >= minRating);
 
     switch (sortBy) {
-      case "name-asc":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name-desc":
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-        break;
       case "price-asc":
         filtered.sort((a, b) => a.price - b.price);
         break;
@@ -134,218 +84,261 @@ const Products = () => {
       case "rating-desc":
         filtered.sort((a, b) => b.rating - a.rating);
         break;
+      case "name-asc":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
       default:
+        // Default sorting (e.g., by creation date or popularity)
         break;
     }
+
     return filtered;
-  };
+  }, [productsData, category, searchTerm, priceRange, minRating, sortBy]);
 
-  const displayedProducts = filterAndSortProducts();
-  const productForRecommendationsId = displayedProducts[0]?.id || mockProducts[0]?.id;
+  const maxPrice = useMemo(() => {
+    return Math.max(...productsData.map((p) => p.price), 100000);
+  }, [productsData]);
 
-  const handleClearFilters = () => {
-    setCurrentQuery("");
-    setSelectedCategory("all");
-    setSortBy("default");
-    setSearchParams({});
-    setIsMobileFilterPanelOpen(false);
-  };
+  const productForRecommendationsId = filteredProducts.length > 0 ? filteredProducts[0].id : undefined;
+  const recommendedProducts = useMemo(() => {
+    if (!productForRecommendationsId) return [];
+    return productsData.filter(p => p.id !== productForRecommendationsId).slice(0, 10);
+  }, [productForRecommendationsId, productsData]);
 
-  const actualRecentlyViewedProducts = getProductsByIds(recentlyViewedProductIds);
+
+  const renderFilters = () => (
+    <div className="space-y-6 p-4">
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 pr-4 py-2 rounded-full border focus:border-primary focus:ring-primary"
+        />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-3">Category</h3>
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="category-all"
+              checked={category === "all"}
+              onCheckedChange={() => setCategory("all")}
+            />
+            <Label htmlFor="category-all">All</Label>
+          </div>
+          {categoriesData.map((cat) => (
+            <div key={cat.id} className="flex items-center space-x-2">
+              <Checkbox
+                id={`category-${cat.id}`}
+                checked={category === cat.id}
+                onCheckedChange={() => setCategory(cat.id)}
+              />
+              <Label htmlFor={`category-${cat.id}`}>{cat.name}</Label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-3">Price Range</h3>
+        <Slider
+          min={0}
+          max={maxPrice}
+          step={1000}
+          value={priceRange}
+          onValueChange={(val: [number, number]) => setPriceRange(val)}
+          className="w-full"
+        />
+        <div className="flex justify-between text-sm mt-2">
+          <span>₦{priceRange[0].toLocaleString()}</span>
+          <span>₦{priceRange[1].toLocaleString()}</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg mb-3">Minimum Rating</h3>
+        <Select value={String(minRating)} onValueChange={(val) => setMinRating(Number(val))}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select minimum rating" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="0">Any Rating</SelectItem>
+            <SelectItem value="4">4 Stars & Up</SelectItem>
+            <SelectItem value="3">3 Stars & Up</SelectItem>
+            <SelectItem value="2">2 Stars & Up</SelectItem>
+            <SelectItem value="1">1 Star & Up</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={() => {
+          setCategory("all");
+          setSearchTerm("");
+          setPriceRange([0, maxPrice]);
+          setMinRating(0);
+          setSortBy("default");
+        }}
+      >
+        Clear Filters
+      </Button>
+    </div>
+  );
 
   return (
-    <div className="max-w-7xl mx-auto py-12 pt-8 px-4 sm:px-6 lg:px-8">
-      {/* Header Section */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        className="text-center mb-8"
-      >
-        <div className="space-y-2">
-          <motion.h1
-            className="font-poppins text-3xl md:text-4xl font-bold text-foreground"
-            variants={fadeInUp}
-          >
-            Our Unique Collections
-          </motion.h1>
-          <motion.p
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
-            variants={fadeInUp}
-          >
-            Explore our extensive collection of luxury thrift, fashion bundles, and unique wears.
-          </motion.p>
-        </div>
-      </motion.div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-background"
+    >
+      <div className="container py-8 md:py-12">
+        <h1 className="text-4xl md:text-5xl font-bold font-poppins text-center mb-8 text-foreground">
+          Our Products
+        </h1>
 
-      {/* Filters and Search Section */}
-      <motion.div
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-8"
-      >
-        <form onSubmit={handleSearchSubmit} className="flex flex-1 max-w-md w-full space-x-2">
-          <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search unique wears..."
-              className="w-full pl-9"
-              value={currentQuery}
-              onChange={handleSearchChange}
-            />
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Desktop Filters */}
+          <motion.aside
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="hidden md:block w-full md:w-1/4 lg:w-1/5 sticky top-24 h-fit bg-card p-6 rounded-lg shadow-sm border"
+          >
+            {renderFilters()}
+          </motion.aside>
+
+          {/* Mobile Filters */}
+          <div className="md:hidden flex justify-between items-center mb-4 px-4">
+            <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" /> Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-full sm:max-w-xs p-0">
+                <SheetHeader className="p-4 border-b">
+                  <SheetTitle className="flex items-center justify-between">
+                    <span className="text-xl font-bold">Filters</span>
+                    <Button variant="ghost" size="icon" onClick={() => setIsFilterSheetOpen(false)}>
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </SheetTitle>
+                </SheetHeader>
+                {renderFilters()}
+              </SheetContent>
+            </Sheet>
+
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                <SelectItem value="rating-desc">Rating</SelectItem>
+                <SelectItem value="name-asc">Name: A-Z</SelectItem>
+                <SelectItem value="name-desc">Name: Z-A</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Button type="submit">Search</Button>
-        </form>
 
-        {/* Desktop Filters */}
-        <div className="hidden lg:flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-          {/* Category Select */}
-          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-          </Select>
+          {/* Product Grid */}
+          <main className="w-full md:w-3/4 lg:w-4/5">
+            <div className="hidden md:flex justify-end mb-6">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="default">Default</SelectItem>
+                  <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                  <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                  <SelectItem value="rating-desc">Rating</SelectItem>
+                  <SelectItem value="name-asc">Name: A-Z</SelectItem>
+                  <SelectItem value="name-desc">Name: Z-A</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Sort By Select */}
-          <Select value={sortBy} onValueChange={handleSortByChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Sort By" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+              </div>
+            ) : error ? (
+              <div className="text-center text-destructive py-12">
+                <p>Error loading products: {error}</p>
+                <Button onClick={() => setLoading(true)} className="mt-4">
+                  Retry
+                </Button>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center text-muted-foreground py-12">
+                <p>No products found matching your criteria.</p>
+                <Button
+                  variant="outline"
+                  className="mt-4"
+                  onClick={() => {
+                    setCategory("all");
+                    setSearchTerm("");
+                    setPriceRange([0, maxPrice]);
+                    setMinRating(0);
+                    setSortBy("default");
+                  }}
+                >
+                  Clear All Filters
+                </Button>
+              </div>
+            ) : (
+              <motion.div
+                layout
+                className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+              >
+                <AnimatePresence>
+                  {filteredProducts.map((product) => (
+                    <motion.div
+                      key={product.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ProductCard product={product} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </main>
         </div>
-
-        {/* Mobile Filter Toggle Button */}
-        <Button
-          variant="outline"
-          className="lg:hidden w-full flex items-center justify-center gap-2"
-          onClick={() => setIsMobileFilterPanelOpen(!isMobileFilterPanelOpen)}
-        >
-          <SlidersHorizontal className="h-4 w-4" /> Filters
-        </Button>
-      </motion.div>
-
-      {/* Mobile Filter Panel */}
-      <AnimatePresence>
-        {isMobileFilterPanelOpen && (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={fadeInUp}
-            className="lg:hidden w-full p-4 border rounded-lg bg-card flex flex-col gap-4 mb-8"
-          >
-            {/* Category Select */}
-            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Sort By Select */}
-            <Select value={sortBy} onValueChange={handleSortByChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Sort By" />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={handleClearFilters}>Clear Filters</Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Results Count */}
-      <motion.p
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        className="text-muted-foreground text-center mb-8"
-      >
-        {isInitialLoad ? "Loading products..." : `Showing ${displayedProducts.length} of ${allProducts.length} unique wears`}
-      </motion.p>
-
-      {/* Product Grid Display */}
-      {isInitialLoad ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 sm:gap-5">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <ProductCardSkeleton key={i} />
-          ))}
-        </div>
-      ) : displayedProducts.length > 0 ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 sm:gap-5">
-          {displayedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="text-center py-16"
-        >
-          <p className="text-lg text-muted-foreground mb-4">No products found matching your criteria.</p>
-          <Button onClick={handleClearFilters}>Clear Filters</Button>
-        </motion.div>
-      )}
-
-      {/* Recommended Products Section (on Products Page) */}
-      {productForRecommendationsId && (
-        <motion.div
-          className="mt-16"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          <RecommendedProductsSection currentProductId={productForRecommendationsId} />
-        </motion.div>
-      )}
-
-      {/* Recently Viewed Products Section (on Products Page) */}
+      </div>
       <motion.div
-        className="mt-16 mb-20"
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <RecentlyViewedProductsSection products={actualRecentlyViewedProducts} />
+        <RecommendedProductsSection
+          title="You might also like"
+          products={recommendedProducts}
+          loading={false}
+          error={null}
+          currentProductId={productForRecommendationsId}
+        />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
-export default Products;
+export default ProductsPage;
