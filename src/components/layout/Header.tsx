@@ -81,8 +81,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   };
 
   const dropdownVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: -10, transition: { duration: 0.2, ease: "easeIn" as Easing } },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" as Easing } },
+    hidden: { opacity: 0, scale: 0.95, y: -30, transition: { duration: 0.4, ease: "easeIn" as Easing } }, // Increased y and duration
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as Easing } }, // Increased duration
   };
 
   return (
