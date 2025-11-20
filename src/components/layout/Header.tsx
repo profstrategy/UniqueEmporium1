@@ -81,8 +81,9 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   };
 
   const dropdownVariants = {
-    hidden: { opacity: 0, y: -30, transition: { duration: 1, ease: "easeIn" as Easing } }, // Increased duration to 1s
-    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" as Easing } }, // Increased duration to 1s
+    initial: { opacity: 0, y: -10 }, // Start slightly above
+    animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" as Easing } }, // Smooth drop
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: "easeIn" as Easing } }, // Smooth fade up on exit
   };
 
   return (
@@ -132,9 +133,9 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                     asChild
                   >
                     <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
                       variants={dropdownVariants}
                       className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg" // Added bg-card, border, shadow-lg for styling
                       onMouseEnter={openCategoriesDropdown}
