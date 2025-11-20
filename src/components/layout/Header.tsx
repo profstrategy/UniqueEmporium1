@@ -84,7 +84,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             {/* Categories Dropdown (Desktop) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1 text-foreground hover:bg-muted/50">
+                <Button variant="ghost" className="flex items-center gap-1 text-foreground hover:bg-secondary/80">
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
