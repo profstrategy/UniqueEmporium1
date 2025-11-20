@@ -1,161 +1,110 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion, Easing } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { Shirt, Baby, Gem, ShoppingBag, LucideIcon } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils"; // Import cn for conditional classNames
-import ImageWithFallback from "@/components/common/ImageWithFallback.tsx"; // Import ImageWithFallback
+import { Button } from "@/components/ui/button";
 
 interface Category {
+  id: string;
   name: string;
-  icon: LucideIcon;
-  description: string;
-  link: string;
-  image: string | undefined; // Changed type to allow undefined
+  image: string;
+  productCount: number;
 }
 
 const categories: Category[] = [
-  { name: "Kids", icon: Baby, description: "Wholesale kids' fashion", link: "/products?category=Kids", image: undefined },
-  { name: "Kids Patpat", icon: Baby, description: "Patpat brand kids' wear", link: "/products?category=Kids Patpat", image: undefined },
-  { name: "Children Jeans", icon: Baby, description: "Bulk children's denim", link: "/products?category=Children Jeans", image: undefined },
-  { name: "Children Shirts", icon: Baby, description: "Wholesale kids' tops", link: "/products?category=Children Shirts", image: undefined },
-  { name: "Men Vintage Shirts", icon: Shirt, description: "Bulk vintage shirts for men", link: "/products?category=Men Vintage Shirts", image: undefined },
-  { name: "Amazon Ladies", icon: ShoppingBag, description: "Bulk Amazon ladies' wear", link: "/products?category=Amazon Ladies", image: undefined },
-  { name: "SHEIN Gowns", icon: Shirt, description: "Wholesale SHEIN dresses", link: "/products?category=SHEIN Gowns", image: undefined },
-  { name: "Others", icon: Gem, description: "Miscellaneous wholesale items", link: "/products?category=Others", image: undefined },
-];
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.07, // Adjusted stagger for individual cards
-      delayChildren: 0.2,
-    },
+  {
+    id: "shein-gowns",
+    name: "SHEIN Gowns",
+    image: "/shein-gowns.webp",
+    productCount: 120,
   },
-};
+  {
+    id: "kidswear",
+    name: "Kidswear",
+    image: "/kidswear.webp",
+    productCount: 85,
+  },
+  {
+    id: "vintage-shirts",
+    name: "Vintage Shirts",
+    image: "/vintage-shirts.webp",
+    productCount: 50,
+  },
+  {
+    id: "accessories",
+    name: "Accessories",
+    image: "/accessories.webp",
+    productCount: 30,
+  },
+];
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as Easing } },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50, x: -50 },
-  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
 const CategoriesSection = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const isMobile = useIsMobile();
-  const scrollSpeed = 1; // Adjust scroll speed as needed
-
-  // Conditionally create the list of categories to display
-  const categoriesToDisplay = isMobile ? [...categories, ...categories] : categories;
-
-  useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement || !isMobile) { // Only auto-scroll if on mobile
-      return;
-    }
-
-    let animationFrameId: number;
-    let lastTimestamp: DOMHighResTimeStamp;
-
-    const scroll = (timestamp: DOMHighResTimeStamp) => {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const elapsed = timestamp - lastTimestamp;
-
-      if (elapsed > 16 && !isPaused) { // Only scroll if not paused
-        scrollElement.scrollLeft += scrollSpeed;
-        
-        const singleSetWidth = scrollElement.scrollWidth / 2; 
-
-        if (scrollElement.scrollLeft >= singleSetWidth) {
-          scrollElement.scrollLeft = 0;
-        }
-        lastTimestamp = timestamp;
-      }
-      animationFrameId = requestAnimationFrame(scroll);
-    };
-
-    animationFrameId = requestAnimationFrame(scroll);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isPaused, isMobile, scrollSpeed]);
-
   return (
-    <section className="relative py-[0.4rem] bg-primary/10"> {/* Applied bg-primary/10 here */}
+    <section className="relative py-[0.4rem] bg-primary/10 rounded-3xl"> {/* Applied bg-primary/10 and rounded-3xl here */}
       <motion.div
         className={cn(
           "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-          "p-6 rounded-xl bg-primary/20" // Added bg-primary/20 here
+          "py-8 md:py-12"
         )}
-        variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ staggerChildren: 0.1 }}
       >
-        {/* Existing introductory text - DO NOT REMOVE OR EDIT */}
         <motion.h2
-          className="font-poppins font-bold text-xl md:text-4xl text-foreground"
-          variants={fadeInUp}
+          className="text-3xl md:text-4xl font-bold text-gray-800 mb-8"
+          variants={itemVariants}
         >
-          Explore Our Collections
+          Shop by Category
         </motion.h2>
-        <motion.p
-          className="text-sm text-muted-foreground mt-2 mb-8 md:mb-12"
-          variants={fadeInUp}
-        >
-          Find the perfect style to express your uniqueness
-        </motion.p>
 
-        {/* Category Cards Container */}
-        <motion.div
-          className="flex overflow-x-auto whitespace-nowrap gap-2 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 md:gap-4 no-scrollbar"
-          ref={scrollRef}
-          onMouseEnter={() => isMobile && setIsPaused(true)}
-          onMouseLeave={() => isMobile && setIsPaused(false)}
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          {categoriesToDisplay.map((category, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category) => (
             <motion.div
-              key={`${category.name}-${index}`}
+              key={category.id}
+              className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
               variants={itemVariants}
-              className="flex flex-col items-center cursor-pointer min-w-[120px] md:min-w-0"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
             >
-              <Link to={category.link} className="flex flex-col items-center">
-                {/* Image Container */}
-                <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden shadow-md mb-3 bg-white flex items-center justify-center">
-                  <ImageWithFallback
-                    src={category.image} // Now explicitly undefined
-                    alt={category.name}
-                    containerClassName="w-full h-full"
-                  />
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold text-white mb-1">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-200">
+                    {category.productCount} products
+                  </p>
+                  <Link to={`/products?category=${category.id}`}>
+                    <Button
+                      variant="secondary"
+                      className="mt-3 px-4 py-2 text-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                      View Category
+                    </Button>
+                  </Link>
                 </div>
-                {/* Category Name */}
-                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 text-center mt-2 leading-tight">
-                  {category.name.split(' ').map((word, i) => (
-                    <React.Fragment key={i}>
-                      {word}
-                      {i < category.name.split(' ').length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
-              </Link>
+              </div>
             </motion.div>
           ))}
+        </div>
+
+        <motion.div variants={itemVariants} className="mt-12">
+          <Link to="/products">
+            <Button size="lg" className="rounded-full">
+              View All Products
+            </Button>
+          </Link>
         </motion.div>
       </motion.div>
     </section>
