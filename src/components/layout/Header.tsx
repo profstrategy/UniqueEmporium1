@@ -11,7 +11,7 @@ import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
 import MobileMenu from "./MobileMenu.tsx";
 import CartDrawer from "./CartDrawer.tsx";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion, AnimatePresence, Easing } from "framer-motion"; // Import AnimatePresence and Easing
+import { motion, AnimatePresence, Easing } from "framer-motion"; // Keep for other animations if needed
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { useAuth } from "@/context/AuthContext.tsx"; // Use AuthContext
@@ -80,11 +80,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
     }, 150); // Small delay to allow moving mouse to dropdown content
   };
 
-  const dropdownVariants = {
-    initial: { opacity: 0, y: -10 }, // Subtle slide down start
-    animate: { opacity: 1, y: 0, transition: { duration: 1.5, ease: "easeOut" as Easing } }, // Slide down with 1500ms duration
-    exit: { opacity: 0, y: -10, transition: { duration: 1.5, ease: "easeIn" as Easing } }, // Slide up with 1500ms duration
-  };
+  // Removed dropdownVariants as it's no longer needed for this dropdown
 
   return (
     <>
@@ -114,7 +110,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               Shop All
             </NavLink>
 
-            {/* Categories Dropdown (Desktop) */}
+            {/* Categories Dropdown (Desktop) - Animation removed */}
             <DropdownMenu open={isCategoriesDropdownOpen} onOpenChange={setIsCategoriesDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -126,41 +122,31 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <AnimatePresence>
-                {isCategoriesDropdownOpen && (
-                  <motion.div
-                    key="categories-dropdown-content" // Unique key for AnimatePresence
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={dropdownVariants}
-                    onMouseEnter={openCategoriesDropdown}
-                    onMouseLeave={closeCategoriesDropdown}
-                  >
-                    <DropdownMenuContent
-                      // Removed forceMount
-                      className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg" // Added bg-card, border, shadow-lg for styling
+              {/* Directly render DropdownMenuContent without motion.div and AnimatePresence */}
+              {isCategoriesDropdownOpen && (
+                <DropdownMenuContent
+                  onMouseEnter={openCategoriesDropdown}
+                  onMouseLeave={closeCategoriesDropdown}
+                  className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg"
+                >
+                  {categories.map((category) => (
+                    <DropdownMenuItem 
+                      key={category.name} 
+                      asChild 
+                      className="rounded-full p-0 hover:bg-accent"
                     >
-                      {categories.map((category) => (
-                        <DropdownMenuItem 
-                          key={category.name} 
-                          asChild 
-                          className="rounded-full p-0 hover:bg-accent"
-                        >
-                          <Link 
-                            to={category.link} 
-                            className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
-                            onClick={() => setIsCategoriesDropdownOpen(false)}
-                          >
-                            <category.icon className="h-4 w-4" />
-                            {category.name}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      <Link 
+                        to={category.link} 
+                        className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
+                        onClick={() => setIsCategoriesDropdownOpen(false)}
+                      >
+                        <category.icon className="h-4 w-4" />
+                        {category.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
 
             <NavLink
@@ -217,10 +203,8 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                     </Button>
                   </Link>
                 )}
-                {/* Removed Logout Button (Desktop) */}
               </>
             ) : (
-              // Removed the Sign In / Register button
               null
             )}
 
