@@ -31,7 +31,7 @@ const contactInfos: ContactInfo[] = [
   {
     icon: Clock,
     title: "Business Hours",
-    details: ["Mon-Sat: 9 AM - 6 PM", "Sun: Closed"], // Updated business hours
+    details: ["Mon-Sat: 9 AM - 5 PM", "Sun: Closed"], // Corrected business hours
   },
 ];
 
