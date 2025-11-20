@@ -1,132 +1,210 @@
 "use client";
 
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Heart, User, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, LogOut } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
-import MobileMenu from "@/components/layout/MobileMenu.tsx";
+import CartIcon from "@/components/common/CartIcon.tsx";
+import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
+import MobileMenu from "./MobileMenu.tsx";
+import CartDrawer from "./CartDrawer.tsx";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
 import { useFavorites } from "@/context/FavoritesContext.tsx";
-import { useAuth } from "@/context/AuthContext.tsx";
+import { useAuth } from "@/context/AuthContext.tsx"; // Use AuthContext
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
-import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
-  setIsCartDrawerOpen: Dispatch<SetStateAction<boolean>>;
+  setIsCartDrawerOpen: (isOpen: boolean) => void;
 }
+
+const categories = [
+  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
+  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
+  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
+  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
+  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
+  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
+  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
+  { name: "Others", icon: Gem, link: "/products?category=Others" },
+];
 
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation(); // Initialize useLocation
+  const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, signOut } = useAuth(); // Use AuthContext
 
-  const handleLogout = async () => {
-    await signOut();
-    toast.success("Logged out successfully!");
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleLogoClick = () => {
+    navigate("/");
+    if (isMobileMenuOpen) {
+      closeMobileMenu();
+    }
   };
 
-  useEffect(() => {
-    // Close mobile menu when route changes
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Left section: Mobile Menu Toggle & Logo */}
-        <div className="flex items-center space-x-2 md:space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-foreground hover:bg-secondary/80 rounded-full"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+    <>
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-sm border-b border-border">
+        <div className="mx-auto flex max-w-7xl items-center justify-between h-16 px-4 sm:px-6 lg:px-8 text-foreground">
+          {/* Logo */}
+          <Link to="/" className="flex items-center" onClick={handleLogoClick}>
+            <UniqueEmporiumLogo className="h-[100px]" />
+          </Link>
+
+          {/* Desktop Navigation Links (hidden on mobile/tablet, visible on large screens) */}
+          <nav className="hidden lg:flex items-center space-x-6">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+              }
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-            <span className="sr-only">Toggle mobile menu</span>
-          </Button>
-          <Link to="/" className="flex items-center">
-            <UniqueEmporiumLogo className="h-[100px] w-auto" />
-          </Link>
-        </div>
+              Home
+            </NavLink>
+            <NavLink
+              to="/products"
+              className={({ isActive }) =>
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+              }
+            >
+              Shop All
+            </NavLink>
 
-        {/* Center section: Desktop Navigation (hidden on mobile) */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/products" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Shop All
-          </Link>
-          <Link to="/about" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            About Us
-          </Link>
-          <Link to="/contact" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Contact
-          </Link>
-          {isAdmin && (
-            <Link to="/admin" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Admin
-            </Link>
-          )}
-        </nav>
+            {/* Categories Dropdown (Desktop) */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-1 text-foreground hover:bg-secondary/80 rounded-full">
+                  Categories <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64 p-2 grid grid-cols-2 gap-2">
+                {categories.map((category) => (
+                  <DropdownMenuItem 
+                    key={category.name} 
+                    asChild 
+                    className="rounded-full p-0 hover:bg-accent" // Applied rounded-full and hover here
+                  >
+                    <Link 
+                      to={category.link} 
+                      className="flex items-center gap-2 cursor-pointer w-full h-full p-2" // Ensure link fills the item
+                    >
+                      <category.icon className="h-4 w-4" />
+                      {category.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-        {/* Right section: Icons */}
-        <div className="flex items-center space-x-2 md:space-x-4">
-          {user && !isAdmin && (
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+              }
+            >
+              About Us
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+              }
+            >
+              Contact
+            </NavLink>
+            {/* Admin Link (Visible only if user is admin) */}
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `transition-colors duration-200 ${isActive ? "text-primary font-semibold" : "hover:text-primary/80"}`
+                }
+              >
+                Admin
+              </NavLink>
+            )}
+          </nav>
+
+          {/* Utility Icons */}
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchBarOpen(!isSearchBarOpen)} className="text-foreground hover:bg-secondary/80 rounded-full">
+              <Search className="h-5 w-5" />
+            </Button>
+
             <Link to="/favorites" className="relative">
               <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full">
                 <Heart className="h-5 w-5" />
               </Button>
-              <Badge count={totalFavorites} variant="destructive" className="absolute -top-1 -right-1" />
+              <Badge count={totalFavorites} variant="destructive" />
             </Link>
-          )}
 
-          {!isAdmin && (
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full" onClick={() => setIsCartDrawerOpen(true)}>
-              <ShoppingBag className="h-5 w-5" />
-              <Badge count={totalItems} variant="destructive" className="absolute -top-1 -right-1" />
-            </Button>
-          )}
+            <CartIcon onOpenCartDrawer={() => setIsCartDrawerOpen(true)} />
 
-          {user ? (
-            <>
-              {!isAdmin && (
-                <Link to="/account" className="relative">
-                  <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full">
-                    <User className="h-5 w-5" />
+            {/* Auth/Account Icon */}
+            {user ? (
+              <>
+                {/* Account Dashboard Link (Desktop) */}
+                {!isMobile && !isAdmin && (
+                  <Link to="/account" className="relative">
+                    <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                )}
+                {/* Logout Button (Desktop) */}
+                {!isMobile && user && (
+                  <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-secondary/80 rounded-full">
+                    <LogOut className="h-5 w-5" />
                   </Button>
-                </Link>
-              )}
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full" onClick={handleLogout}>
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </>
-          ) : (
-            null
-          )}
+                )}
+              </>
+            ) : (
+              /* Sign In Icon */
+              <Link to="/auth" state={{ from: location.pathname }} className="relative"> {/* Added state here */}
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full">
+                  <LogIn className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
+
+            {/* Mobile Menu Button (visible on mobile/tablet, hidden on large screens) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden text-foreground hover:bg-secondary/80 rounded-full"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Slide-out Search Bar */}
+      <SlideOutSearchBar isOpen={isSearchBarOpen} onClose={() => setIsSearchBarOpen(false)} />
+
+      {/* Mobile Menu */}
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         favoriteCount={totalFavorites}
         itemCount={totalItems}
       />
-    </header>
+
+      {/* Cart Drawer (Desktop Only) */}
+      {!isMobile && <CartDrawer isOpen={isCartDrawerOpen} onClose={() => setIsCartDrawerOpen(false)} />}
+    </>
   );
 };
 
