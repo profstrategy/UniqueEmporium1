@@ -27,7 +27,7 @@ const CartIcon = ({ onOpenCartDrawer }: CartIconProps) => {
 
   return (
     <div className="relative">
-      <Button variant="ghost" size="icon" onClick={handleClick} className="rounded-full hover:bg-secondary/10">
+      <Button variant="ghost" size="icon" onClick={handleClick} className="rounded-full hover:bg-secondary/80">
         <ShoppingBag className="h-5 w-5" />
       </Button>
       <Badge count={totalItems} variant="destructive" /> {/* Use totalItems */}
