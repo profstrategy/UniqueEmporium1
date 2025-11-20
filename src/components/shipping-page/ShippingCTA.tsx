@@ -25,7 +25,7 @@ const ShippingCTA = () => {
       <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
         Our customer support team is ready to assist you with any shipping-related inquiries for your unique wears.
       </p>
-      <Button asChild size="lg">
+      <Button asChild size="lg" className="rounded-full">
         <Link to="/contact">Contact Us</Link>
       </Button>
     </motion.div>

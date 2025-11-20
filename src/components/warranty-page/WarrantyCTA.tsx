@@ -25,7 +25,7 @@ const WarrantyCTA = () => {
       <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
         Our customer support team is ready to help you with any quality-related questions or concerns.
       </p>
-      <Button asChild size="lg">
+      <Button asChild size="lg" className="rounded-full">
         <Link to="/contact">Contact Us</Link>
       </Button>
     </motion.div>

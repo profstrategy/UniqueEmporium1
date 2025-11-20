@@ -25,7 +25,7 @@ const TermsCTA = () => {
       <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
         If you have any concerns or require further clarification on our terms of service for unique wears, please don't hesitate to reach out.
       </p>
-      <Button asChild size="lg">
+      <Button asChild size="lg" className="rounded-full">
         <Link to="/contact">Contact Us</Link>
       </Button>
     </motion.div>
