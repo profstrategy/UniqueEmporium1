@@ -53,6 +53,13 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
     }
   };
 
+  const handleFavoritesClick = (e: React.MouseEvent) => {
+    if (!user) {
+      e.preventDefault(); // Prevent default Link navigation
+      navigate("/auth", { state: { from: location.pathname } });
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-sm border-b border-border">
@@ -142,7 +149,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               <Search className="h-5 w-5" />
             </Button>
 
-            <Link to="/favorites" className="relative">
+            <Link to="/favorites" className="relative" onClick={handleFavoritesClick}>
               <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/80 rounded-full">
                 <Heart className="h-5 w-5" />
               </Button>

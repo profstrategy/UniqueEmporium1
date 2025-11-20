@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Fixed import path, added useLocation
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Badge from "./Badge.tsx";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useCart } from "@/context/CartContext.tsx"; // Fixed import path
+import { useCart } from "@/context/CartContext.tsx";
+import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 
 interface CartIconProps {
   onOpenCartDrawer: () => void;
@@ -15,9 +16,16 @@ interface CartIconProps {
 const CartIcon = ({ onOpenCartDrawer }: CartIconProps) => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { totalItems } = useCart(); // Get totalItems from CartContext
+  const location = useLocation(); // Initialize useLocation
+  const { totalItems } = useCart();
+  const { user } = useAuth(); // Get user from AuthContext
 
   const handleClick = () => {
+    if (!user) {
+      navigate("/auth", { state: { from: location.pathname } });
+      return;
+    }
+
     if (isMobile) {
       navigate("/cart");
     } else {
