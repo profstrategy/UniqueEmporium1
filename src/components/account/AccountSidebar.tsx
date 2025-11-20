@@ -36,7 +36,7 @@ const AccountSidebar = ({ onCloseMobileMenu }: AccountSidebarProps) => {
             end={item.path === "/account"} // Only exact match for dashboard home
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary",
+                "flex items-center gap-3 rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-primary",
                 isActive ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground",
               )
             }
@@ -52,7 +52,7 @@ const AccountSidebar = ({ onCloseMobileMenu }: AccountSidebarProps) => {
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              className="w-full justify-start text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
             >
               <LogOut className="mr-3 h-5 w-5" />
               Logout
