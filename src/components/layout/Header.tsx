@@ -138,7 +138,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                     onMouseLeave={closeCategoriesDropdown}
                   >
                     <DropdownMenuContent
-                      forceMount // Ensures content stays in DOM for exit animation
+                      // Removed forceMount
                       className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-md shadow-lg" // Added bg-card, border, shadow-lg for styling
                     >
                       {categories.map((category) => (
