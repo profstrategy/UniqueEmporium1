@@ -90,8 +90,15 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64 p-2 grid grid-cols-2 gap-2">
                 {categories.map((category) => (
-                  <DropdownMenuItem key={category.name} asChild>
-                    <Link to={category.link} className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-full p-2">
+                  <DropdownMenuItem 
+                    key={category.name} 
+                    asChild 
+                    className="rounded-full p-0 hover:bg-accent" // Applied rounded-full and hover here
+                  >
+                    <Link 
+                      to={category.link} 
+                      className="flex items-center gap-2 cursor-pointer w-full h-full p-2" // Ensure link fills the item
+                    >
                       <category.icon className="h-4 w-4" />
                       {category.name}
                     </Link>
