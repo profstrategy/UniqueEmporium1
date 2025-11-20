@@ -131,12 +131,12 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
 
           {/* Utility Icons */}
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchBarOpen(!isSearchBarOpen)} className="text-foreground hover:bg-muted/50 rounded-full">
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchBarOpen(!isSearchBarOpen)} className="text-foreground hover:bg-secondary/10 rounded-full">
               <Search className="h-5 w-5" />
             </Button>
 
             <Link to="/favorites" className="relative">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50 rounded-full">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/10 rounded-full">
                 <Heart className="h-5 w-5" />
               </Button>
               <Badge count={totalFavorites} variant="destructive" />
@@ -150,14 +150,14 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                 {/* Account Dashboard Link (Desktop) */}
                 {!isMobile && !isAdmin && (
                   <Link to="/account" className="relative">
-                    <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50 rounded-full">
+                    <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/10 rounded-full">
                       <User className="h-5 w-5" />
                     </Button>
                   </Link>
                 )}
                 {/* Logout Button (Desktop) */}
                 {!isMobile && user && (
-                  <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-muted/50 rounded-full">
+                  <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-secondary/10 rounded-full">
                     <LogOut className="h-5 w-5" />
                   </Button>
                 )}
@@ -165,7 +165,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             ) : (
               /* Sign In Icon */
               <Link to="/auth" state={{ from: location.pathname }} className="relative"> {/* Added state here */}
-                <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted/50 rounded-full">
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-secondary/10 rounded-full">
                   <LogIn className="h-5 w-5" />
                 </Button>
               </Link>
@@ -175,7 +175,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-foreground hover:bg-muted/50 rounded-full"
+              className="lg:hidden text-foreground hover:bg-secondary/10 rounded-full"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
