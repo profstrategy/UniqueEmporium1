@@ -30,10 +30,6 @@ export interface Product {
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
   minOrderQuantity: number; // Added minOrderQuantity
-  full_description?: string; // Added missing property
-  key_features?: string[]; // Added missing property
-  style_notes?: string; // Added missing property
-  detailed_specs?: { [key: string]: string }; // Added missing property
 }
 
 interface ProductCardProps {
