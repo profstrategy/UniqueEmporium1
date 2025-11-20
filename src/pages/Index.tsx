@@ -126,7 +126,7 @@ const Index = () => {
           </div>
 
           <motion.div variants={fadeInUp} className="mt-12">
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" asChild className="rounded-full">
               <Link to="/products">Shop the Collection</Link>
             </Button>
           </motion.div>
