@@ -73,7 +73,7 @@ const HeroSection = ({ onScrollToFeatured }: HeroSectionProps) => {
         <div className="flex flex-col space-y-4 w-full md:max-w-2xl lg:max-w-3xl mx-auto"> {/* Adjusted for centering */}
           {/* Product Info Card - Now displays custom text */}
           <motion.div
-            className="mt-6 rounded-2xl border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg w-full text-center"
+            className="mt-6 rounded-4xl border border-white/20 bg-[oklch(0.15_0.02_240_/_0.2)] p-4 shadow-lg w-full text-center"
             variants={fadeInUpVariants}
             initial="hidden"
             animate="visible"
