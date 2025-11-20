@@ -161,12 +161,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                     </Button>
                   </Link>
                 )}
-                {/* Logout Button (Desktop) */}
-                {!isMobile && user && (
-                  <Button variant="ghost" size="icon" onClick={signOut} className="text-foreground hover:bg-secondary/80 rounded-full">
-                    <LogOut className="h-5 w-5" />
-                  </Button>
-                )}
+                {/* Removed Logout Button (Desktop) */}
               </>
             ) : (
               // Removed the Sign In / Register button
