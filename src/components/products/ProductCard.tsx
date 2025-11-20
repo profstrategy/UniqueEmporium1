@@ -209,7 +209,7 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
                 transition={{ duration: 0.2 }}
                 className="absolute inset-0 hidden md:flex items-center justify-center space-x-4 bg-black/60 z-20"
               >
-                <Button className="text-sm font-medium" onClick={handleAddToCart} disabled={isAddingToCart}>
+                <Button className="text-sm font-medium rounded-full" onClick={handleAddToCart} disabled={isAddingToCart}>
                   {isAddingToCart ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
