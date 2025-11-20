@@ -91,7 +91,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               <DropdownMenuContent className="w-64 p-2 grid grid-cols-2 gap-2">
                 {categories.map((category) => (
                   <DropdownMenuItem key={category.name} asChild>
-                    <Link to={category.link} className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-md p-2">
+                    <Link to={category.link} className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-full p-2">
                       <category.icon className="h-4 w-4" />
                       {category.name}
                     </Link>
