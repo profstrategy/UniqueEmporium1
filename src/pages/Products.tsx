@@ -193,7 +193,7 @@ const Products = () => {
             <Input
               type="text"
               placeholder="Search unique wears..."
-              className="w-full pl-9"
+              className="w-full pl-9 rounded-full"
               value={currentQuery}
               onChange={handleSearchChange}
             />
