@@ -145,7 +145,7 @@ const CategoriesSection = () => {
                   />
                 </div>
                 {/* Category Name */}
-                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 text-center mt-2 leading-tight">
+                <p className="text-[10px] md:text-sm lg:text-sm font-bold text-gray-900 text-center mt-2 leading-tight">
                   {category.name.split(' ').map((word, i) => (
                     <React.Fragment key={i}>
                       {word}
