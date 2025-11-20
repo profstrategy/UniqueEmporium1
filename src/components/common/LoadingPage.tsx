@@ -7,7 +7,7 @@ import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Im
 const LoadingPage = () => {
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/10"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
