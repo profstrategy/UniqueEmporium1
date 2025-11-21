@@ -123,7 +123,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignUp} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
-            <UniqueEmporiumLogo className="h-[60px] w-auto mb-[10px]" /> {/* Logo for Sign Up */}
+            {/* Removed logo from here */}
             <h1 className="font-bold text-[19px] text-foreground">Create Your Unique Account</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">
@@ -228,7 +228,7 @@ export default function AuthForm() {
           >
             {/* Sign Up Prompt (Top half) */}
             <div className="absolute top-0 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
-              {/* <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> Removed logo */}
+              <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> {/* Added logo here */}
               <h1 className="font-bold text-2xl">Start Your Journey!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Enter your details and discover unique wholesale fashion.
@@ -243,7 +243,7 @@ export default function AuthForm() {
 
             {/* Sign In Prompt (Bottom half) */}
             <div className="absolute top-1/2 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
-              {/* <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> Removed logo */}
+              <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> {/* Logo for Sign In Prompt */}
               <h1 className="font-bold text-2xl">Welcome Back!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Log in to manage your orders and explore new collections.
@@ -406,7 +406,7 @@ export default function AuthForm() {
             </p>
             <button
               onClick={() => setIsActive(true)}
-              className="ghost bg-transparent border-2 border-white text-white rounded-full text-xs font-bold py-3 px-11 tracking-wider uppercase transition duration-80 active:scale-95 focus:outline-none hover:bg-white hover:text-secondary"
+              className="ghost bg-transparent border-2 border-white text-white rounded-full text-xs font-bold py-3 px-11 tracking-wider uppercase hover:bg-white hover:text-secondary"
               id="signUp"
             >
               Sign Up
