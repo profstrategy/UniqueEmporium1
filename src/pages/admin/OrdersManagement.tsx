@@ -533,6 +533,9 @@ const OrdersManagement = () => {
                               <DialogContent className="max-w-3xl p-0">
                                 <DialogHeader className="p-4 border-b">
                                   <DialogTitle>Payment Receipt for {order.id}</DialogTitle>
+                                  <DialogDescription>
+                                    Viewing the uploaded payment receipt image for this order.
+                                  </DialogDescription>
                                 </DialogHeader>
                                 <div className="p-4">
                                   {order.receiptImageUrl ? (

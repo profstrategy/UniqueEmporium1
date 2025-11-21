@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ReceiptText, Eye, FileText, DollarSign, CalendarDays, Loader2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
@@ -157,6 +157,9 @@ const PaymentReceiptsPage = () => {
                           <DialogContent className="max-w-3xl p-0">
                             <DialogHeader className="p-4 border-b">
                               <DialogTitle>Receipt for {receipt.transactionId}</DialogTitle>
+                              <DialogDescription>
+                                Viewing the uploaded payment receipt image.
+                              </DialogDescription>
                             </DialogHeader>
                             <div className="p-4">
                               {receipt.receiptImageUrl ? (
