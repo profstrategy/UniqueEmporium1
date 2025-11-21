@@ -1,0 +1,1 @@
+SELECT public.get_user_role(auth.uid());
