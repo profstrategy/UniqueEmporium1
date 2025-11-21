@@ -314,14 +314,46 @@ const ProductsManagement = () => {
   };
 
   const handleAddOrUpdateProduct = async (data: ProductFormData) => {
-    // For now, image upload is mocked. In a real app, this would involve Supabase Storage.
-    let imageUrls: string[] = data.images || [];
+    let imageUrls: string[] = data.images || []; // Start with existing images
+
     if (data.newImageFiles && data.newImageFiles.length > 0) {
-      // Simulate upload and get URLs
-      const newUploadedUrls = Array.from(data.newImageFiles).map((file, i) => 
-        `https://via.placeholder.com/400x400?text=${data.name.replace(/\s/g, '+')}+Img${i + 1}`
-      );
-      imageUrls = newUploadedUrls; // Replace existing images with new uploads
+      const uploadedUrls: string[] = [];
+      const uploadPromises = Array.from(data.newImageFiles).map(async (file) => {
+        const fileExtension = file.name.split('.').pop();
+        // Generate a unique file path for each image
+        const filePath = `products/${data.id || `new-${Date.now()}`}/${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('product_images') // Use the new product_images bucket
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false, // Do not upsert, create new files
+          });
+
+        if (uploadError) {
+          console.error(`Error uploading image ${file.name}:`, uploadError);
+          toast.error(`Failed to upload image: ${file.name}.`, { description: uploadError.message });
+          return null; // Return null for failed uploads
+        } else {
+          const { data: publicUrlData } = supabase.storage.from('product_images').getPublicUrl(uploadData.path);
+          return publicUrlData.publicUrl;
+        }
+      });
+
+      const results = await Promise.all(uploadPromises);
+      const successfulUploads = results.filter(url => url !== null) as string[];
+
+      // If new images are successfully uploaded, replace all existing images with the new ones.
+      // This simplifies management; old images in storage might become orphaned but won't be linked.
+      if (successfulUploads.length > 0) {
+        imageUrls = successfulUploads;
+      } else if (data.images && data.images.length > 0) {
+        // If no new images were successfully uploaded, but there were existing images, keep them.
+        imageUrls = data.images;
+      } else {
+        // If no new images and no existing images, ensure it's an empty array.
+        imageUrls = [];
+      }
     }
 
     // Calculate discount percentage if originalPrice is provided and greater than current price
@@ -340,7 +372,7 @@ const ProductsManagement = () => {
       status: data.status,
       limited_stock: data.limitedStock, // Map to snake_case
       full_description: data.fullDescription, // Map to snake_case
-      images: imageUrls, // Array of text
+      images: imageUrls, // Array of text - now contains real URLs
       tag: data.tag, // Use tag from form
       tag_variant: data.tagVariant, // Use tagVariant from form
       rating: data.rating,
@@ -368,9 +400,10 @@ const ProductsManagement = () => {
       }
     } else {
       // Add new product
+      const newProductId = `prod-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`; // Generate a more robust ID
       const { error } = await supabase
         .from('products')
-        .insert([{ ...productPayload, id: `prod-${Date.now()}` }]); // Generate a simple ID for new products
+        .insert([{ ...productPayload, id: newProductId }]); // Generate a simple ID for new products
 
       if (error) {
         toast.error("Failed to add product.", { description: error.message });
@@ -384,6 +417,31 @@ const ProductsManagement = () => {
 
   const confirmDeleteProduct = useCallback(async () => {
     if (deletingProductId) {
+      // First, get the product to delete its images from storage
+      const productToDelete = products.find(p => p.id === deletingProductId);
+      if (productToDelete && productToDelete.images && productToDelete.images.length > 0) {
+        const filePathsToDelete = productToDelete.images.map(url => {
+          // Extract the path from the public URL
+          const urlParts = url.split('/public/storage/v1/object/public/product_images/');
+          return urlParts.length > 1 ? urlParts[1] : null;
+        }).filter(path => path !== null) as string[];
+
+        if (filePathsToDelete.length > 0) {
+          const { error: deleteStorageError } = await supabase.storage
+            .from('product_images')
+            .remove(filePathsToDelete);
+
+          if (deleteStorageError) {
+            console.error("Error deleting product images from storage:", deleteStorageError);
+            toast.error("Failed to delete some product images from storage.", { description: deleteStorageError.message });
+            // Continue with product deletion even if image deletion fails
+          } else {
+            toast.info("Product images deleted from storage.");
+          }
+        }
+      }
+
+      // Then, delete the product record from the database
       const { error } = await supabase
         .from('products')
         .delete()
@@ -398,7 +456,7 @@ const ProductsManagement = () => {
         fetchProducts(); // Re-fetch products to update the list
       }
     }
-  }, [deletingProductId, fetchProducts]);
+  }, [deletingProductId, products, fetchProducts]);
 
   return (
     <motion.div
@@ -564,7 +622,7 @@ const ProductsManagement = () => {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the product "{product.name}".
+                                    This action cannot be undone. This will permanently delete the product "{product.name}" and its associated images from storage.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
