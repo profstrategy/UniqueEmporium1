@@ -123,7 +123,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignUp} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
-            {/* Removed logo from here */}
+            <UniqueEmporiumLogo className="h-[60px] w-auto mb-[10px]" /> {/* Logo for Sign Up */}
             <h1 className="font-bold text-[19px] text-foreground">Create Your Unique Account</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">
@@ -226,9 +226,9 @@ export default function AuthForm() {
                 : "transform translate-y-0"
             }`}
           >
-            {/* Sign Up Prompt (Top half) */}
+            {/* Sign Up Prompt (Top half) - Shown when Sign-In form is active */}
             <div className="absolute top-0 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
-              <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> {/* Added logo here */}
+              {/* Logo removed as per request: when on sign-in form, logo should not appear on overlay */}
               <h1 className="font-bold text-2xl">Start Your Journey!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Enter your details and discover unique wholesale fashion.
@@ -241,9 +241,9 @@ export default function AuthForm() {
               </button>
             </div>
 
-            {/* Sign In Prompt (Bottom half) */}
+            {/* Sign In Prompt (Bottom half) - Shown when Sign-Up form is active */}
             <div className="absolute top-1/2 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
-              <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> {/* Logo for Sign In Prompt */}
+              <UniqueEmporiumLogo className="h-16 w-auto mb-[10px]" /> {/* Logo added back as per request */}
               <h1 className="font-bold text-2xl">Welcome Back!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Log in to manage your orders and explore new collections.
@@ -306,7 +306,7 @@ export default function AuthForm() {
             Icon={Mail}
             value={signUpEmail}
             onChange={(e) => setSignUpEmail(e.target.value)}
-          />
+            />
           <InputField
             type="password"
             placeholder="Password"
