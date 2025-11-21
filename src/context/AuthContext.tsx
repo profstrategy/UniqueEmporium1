@@ -34,24 +34,57 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setSession(newSession);
     setUser(newUser);
     setIsAdmin(newUser?.role === 'admin');
-    setIsLoading(false);
+    setIsLoading(false); // Set isLoading to false only after all auth state is determined
   };
 
   useEffect(() => {
     let isMounted = true;
 
+    const handleAuthChange = async (currentSession: Session | null) => {
+      if (!isMounted) return;
+
+      if (currentSession) {
+        // Fetch profile immediately if session exists
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, role')
+          .eq('id', currentSession.user.id)
+          .single();
+
+        if (!isMounted) return;
+
+        if (error) {
+          console.error('Profile fetch error during auth change:', error);
+          // If profile fetch fails, still set basic user from session
+          setAuthState(currentSession, currentSession.user);
+        } else if (profile) {
+          // Merge profile data with session user data
+          setAuthState(currentSession, {
+            ...currentSession.user,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            role: profile.role
+          });
+        } else {
+          // No profile found, but session exists. Treat as basic user.
+          setAuthState(currentSession, currentSession.user);
+        }
+      } else {
+        // No session, clear auth state
+        setAuthState(null, null);
+      }
+    };
+
     // Initial session check
     supabase.auth.getSession().then(({ data }) => {
       if (!isMounted) return;
-      setSession(data.session);
-      // setIsLoading(false); // Moved to CheckAuth for profile loading
+      handleAuthChange(data.session); // Process initial session
     });
 
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
       if (!isMounted) return;
-      setSession(newSession);
-      // setIsLoading(false); // Moved to CheckAuth for profile loading
+      handleAuthChange(newSession); // Process subsequent changes
     });
 
     return () => {
