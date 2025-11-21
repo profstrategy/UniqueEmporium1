@@ -123,7 +123,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignUp} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
-            <UniqueEmporiumLogo className="h-20 w-auto mb-[10px]" /> {/* Logo for Sign Up */}
+            <UniqueEmporiumLogo className="h-[60px] w-auto mb-[10px]" /> {/* Logo for Sign Up */}
             <h1 className="font-bold text-[19px] text-foreground">Create Your Unique Account</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">
@@ -176,7 +176,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignIn} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
-            <UniqueEmporiumLogo className="h-20 w-auto mb-[10px]" /> {/* Logo for Sign In */}
+            <UniqueEmporiumLogo className="h-[60px] w-auto mb-[10px]" /> {/* Logo for Sign In */}
             <h1 className="font-bold text-[19px] text-foreground">Sign In to Your Emporium</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">Or use your email account</span>
@@ -278,7 +278,7 @@ export default function AuthForm() {
         }`}
       >
         <form onSubmit={handleSignUp} className="bg-white flex flex-col p-12 h-full justify-center items-center text-center">
-          <UniqueEmporiumLogo className="h-24 w-auto mb-[10px]" /> {/* Logo for Sign Up */}
+          <UniqueEmporiumLogo className="h-[80px] w-auto mb-[10px]" /> {/* Logo for Sign Up */}
           <h1 className="font-bold m-0 text-[19px] text-foreground">Create Your Unique Account</h1>
           <SocialLinks />
           <span className="text-xs mb-2 text-muted-foreground">
@@ -331,7 +331,7 @@ export default function AuthForm() {
         }`}
       >
         <form onSubmit={handleSignIn} className="flex flex-col p-12 h-full justify-center items-center text-center">
-          <UniqueEmporiumLogo className="h-24 w-auto mb-[10px]" /> {/* Logo for Sign In */}
+          <UniqueEmporiumLogo className="h-[80px] w-auto mb-[10px]" /> {/* Logo for Sign In */}
           <h1 className="font-bold m-0 text-[19px] text-foreground">Sign In to Your Emporium</h1>
           <SocialLinks />
           <span className="text-xs mb-2 text-muted-foreground">Or sign in using E-Mail Address</span>
