@@ -2,12 +2,13 @@ import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import LoadingPage from '@/components/common/LoadingPage';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'; // Import useSearchParams
 
 export default function CheckAuth({ children }: { children: React.ReactNode }) {
-  const { session, setAuthState, isLoading, user, isAdmin } = useAuth(); // Added isAdmin
+  const { session, setAuthState, isLoading, user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams(); // Initialize useSearchParams
   const hasRedirected = useRef(false);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
       }
 
       // If session exists but user profile isn't fully loaded in context yet
-      if (session && (!user || !user.role)) { // Check for user.role to ensure profile is loaded
+      if (session && (!user || !user.role)) {
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('first_name, last_name, role')
@@ -34,7 +35,7 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
 
         if (error) {
           console.error('Profile fetch error:', error);
-          setAuthState(session, session.user); // Set basic user if profile fetch fails
+          setAuthState(session, session.user);
         } else if (profile) {
           setAuthState(session, {
             ...session.user,
@@ -43,18 +44,20 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
             role: profile.role
           });
         } else {
-          // Profile might not exist immediately after signup, set basic user
           setAuthState(session, session.user);
         }
-        return; // Important: return after setting state to let useEffect re-run with updated state
+        return;
       }
 
+      // Determine if the user is currently in the password recovery flow
+      const isPasswordRecovery = searchParams.get("type") === "recovery";
+
       // After user is loaded (or if already loaded), handle redirection
-      if (isMounted && user && !isLoading && location.pathname === '/auth' && !hasRedirected.current) {
+      // ONLY redirect if NOT in password recovery AND on the /auth page AND not already redirected
+      if (isMounted && user && !isLoading && location.pathname === '/auth' && !isPasswordRecovery && !hasRedirected.current) {
         if (isAdmin) {
           navigate('/admin', { replace: true });
         } else {
-          // Redirect to the 'from' state if available, otherwise to home page
           const from = (location.state as { from?: string })?.from;
           navigate(from || '/', { replace: true });
         }
@@ -67,7 +70,7 @@ export default function CheckAuth({ children }: { children: React.ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [session, user, isLoading, isAdmin, setAuthState, navigate, location.pathname, location.state]); // Added isAdmin and location.state to dependencies
+  }, [session, user, isLoading, isAdmin, setAuthState, navigate, location.pathname, location.state, searchParams]); // Added searchParams to dependencies
 
   if (isLoading) return <LoadingPage />;
 
