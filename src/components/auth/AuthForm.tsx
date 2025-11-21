@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext.tsx"; // Import useAuth
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client"; // Import supabase client
+import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx"; // Import the logo
 
 // Helper component for social links
 const SocialLinks = () => (
@@ -122,6 +123,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignUp} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
+            <UniqueEmporiumLogo className="h-20 w-auto mb-4" /> {/* Logo for Sign Up */}
             <h1 className="font-bold text-2xl text-foreground">Create Your Unique Account</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">
@@ -174,6 +176,7 @@ export default function AuthForm() {
           }`}
         >
           <form onSubmit={handleSignIn} className="flex flex-col p-8 h-full w-full justify-center items-center text-center">
+            <UniqueEmporiumLogo className="h-20 w-auto mb-4" /> {/* Logo for Sign In */}
             <h1 className="font-bold text-2xl text-foreground">Sign In to Your Emporium</h1>
             <SocialLinks />
             <span className="text-xs mb-2 text-muted-foreground">Or use your email account</span>
@@ -225,6 +228,7 @@ export default function AuthForm() {
           >
             {/* Sign Up Prompt (Top half) */}
             <div className="absolute top-0 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
+              <UniqueEmporiumLogo className="h-16 w-auto mb-2" /> {/* Logo for Sign Up Prompt */}
               <h1 className="font-bold text-2xl">Start Your Journey!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Enter your details and discover unique wholesale fashion.
@@ -239,6 +243,7 @@ export default function AuthForm() {
 
             {/* Sign In Prompt (Bottom half) */}
             <div className="absolute top-1/2 left-0 w-full h-[50%] flex flex-col items-center justify-center text-center px-8 py-[0.4rem]">
+              <UniqueEmporiumLogo className="h-16 w-auto mb-2" /> {/* Logo for Sign In Prompt */}
               <h1 className="font-bold text-2xl">Welcome Back!</h1>
               <p className="text-sm font-light leading-5 tracking-wider my-4">
                 Log in to manage your orders and explore new collections.
@@ -273,6 +278,7 @@ export default function AuthForm() {
         }`}
       >
         <form onSubmit={handleSignUp} className="bg-white flex flex-col p-12 h-full justify-center items-center text-center">
+          <UniqueEmporiumLogo className="h-24 w-auto mb-6" /> {/* Logo for Sign Up */}
           <h1 className="font-bold m-0 text-2xl text-foreground">Create Your Unique Account</h1>
           <SocialLinks />
           <span className="text-xs mb-2 text-muted-foreground">
@@ -325,6 +331,7 @@ export default function AuthForm() {
         }`}
       >
         <form onSubmit={handleSignIn} className="flex flex-col p-12 h-full justify-center items-center text-center">
+          <UniqueEmporiumLogo className="h-24 w-auto mb-6" /> {/* Logo for Sign In */}
           <h1 className="font-bold m-0 text-2xl text-foreground">Sign In to Your Emporium</h1>
           <SocialLinks />
           <span className="text-xs mb-2 text-muted-foreground">Or sign in using E-Mail Address</span>
@@ -372,6 +379,7 @@ export default function AuthForm() {
               isActive ? "translate-y-0" : "translate-y-[-20%]"
             }`}
           >
+            <UniqueEmporiumLogo className="h-20 w-auto mb-4" /> {/* Logo for Sign In Prompt */}
             <h1 className="font-bold m-0 text-3xl">Welcome Back!</h1>
             <p className="text-sm font-light leading-5 tracking-wider my-5">
               Log in to manage your orders and explore new collections.
@@ -391,6 +399,7 @@ export default function AuthForm() {
               isActive ? "translate-y-[20%]" : "translate-y-0"
             }`}
           >
+            <UniqueEmporiumLogo className="h-20 w-auto mb-4" /> {/* Logo for Sign Up Prompt */}
             <h1 className="font-bold m-0 text-3xl">Start Your Journey!</h1>
             <p className="text-sm font-light leading-5 tracking-wider my-5">
               Sign up if you still don't have an account to discover unique wholesale fashion.
