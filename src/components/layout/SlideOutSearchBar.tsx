@@ -129,13 +129,13 @@ const SlideOutSearchBar = ({ isOpen, onClose }: SlideOutSearchBarProps) => {
                     {suggestions.map((product) => (
                       <li
                         key={product.id}
-                        className="flex items-center p-3 hover:bg-muted/50 cursor-pointer transition-colors rounded-xl"
+                        className="flex items-center p-3 hover:bg-muted/50 cursor-pointer transition-colors rounded-full"
                         onClick={() => handleSuggestionClick(product.id)}
                       >
                         <ImageWithFallback
                           src={product.images[0]}
                           alt={product.name}
-                          containerClassName="h-10 w-10 rounded-md overflow-hidden flex-shrink-0 mr-3"
+                          containerClassName="h-10 w-10 rounded-full overflow-hidden flex-shrink-0 mr-3"
                           fallbackLogoClassName="h-6 w-6"
                         />
                         <div className="flex-grow">
