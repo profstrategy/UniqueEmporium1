@@ -4,10 +4,11 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { motion, Easing } from "framer-motion";
+import * as LucideIcons from "lucide-react"; // Import all Lucide icons
 
 interface DetailedSpecGroup {
   group: string;
-  items: { label: string; value: string; icon?: string }[]; // Changed icon type to string
+  items: { label: string; value: string; icon?: string }[];
 }
 
 interface ProductSpecsTabProps {
@@ -24,6 +25,11 @@ const itemVariants = {
   visible: { opacity: 1, x: 0 },
 };
 
+// Type guard to check if a string is a valid Lucide icon key
+const isLucideIconKey = (key: string): key is keyof typeof LucideIcons => {
+  return key in LucideIcons;
+};
+
 const ProductSpecsTab = ({ detailedSpecs }: ProductSpecsTabProps) => {
   return (
     <Card className="rounded-2xl shadow-sm">
@@ -33,15 +39,19 @@ const ProductSpecsTab = ({ detailedSpecs }: ProductSpecsTabProps) => {
             <motion.div key={group.group} variants={groupVariants} initial="hidden" animate="visible">
               <h3 className="font-poppins font-semibold text-lg text-foreground mb-4">{group.group}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
-                {group.items.map((item, itemIndex) => (
-                  <motion.div key={item.label} variants={itemVariants} className="flex justify-between items-center py-2 border-b border-border">
-                    <div className="flex items-center">
-                      {item.icon && React.createElement(item.icon, { className: "h-4 w-4 text-primary mr-2 flex-shrink-0" })}
-                      <span className="text-muted-foreground mr-2">{item.label}:</span>
-                    </div>
-                    <span className="text-foreground font-medium">{item.value}</span>
-                  </motion.div>
-                ))}
+                {group.items.map((item, itemIndex) => {
+                  // Explicitly cast to React.ElementType after the type guard
+                  const IconComponent = item.icon && isLucideIconKey(item.icon) ? LucideIcons[item.icon] as React.ElementType : null;
+                  return (
+                    <motion.div key={item.label} variants={itemVariants} className="flex justify-between items-center py-2 border-b border-border">
+                      <div className="flex items-center">
+                        {IconComponent && <IconComponent className="h-4 w-4 text-primary mr-2 flex-shrink-0" />}
+                        <span className="text-muted-foreground mr-2">{item.label}:</span>
+                      </div>
+                      <span className="text-foreground font-medium">{item.value}</span>
+                    </motion.div>
+                  );
+                })}
               </div>
               {groupIndex < detailedSpecs.length - 1 && <Separator className="mt-8" />}
             </motion.div>

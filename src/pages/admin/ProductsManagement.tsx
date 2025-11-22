@@ -54,7 +54,7 @@ import { ProductDetails } from "@/data/products.ts";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { useForm, useFieldArray } from "react-hook-form"; // Import useFieldArray
+import { useForm, useFieldArray, Control, FieldErrors } from "react-hook-form"; // Import Control and FieldErrors
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -157,13 +157,13 @@ const ProductsManagement = () => {
   // useFieldArray for Key Features
   const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray({
     control,
-    name: "keyFeatures" as const, // Fix 1: Add 'as const'
+    name: "keyFeatures" as const,
   });
 
   // useFieldArray for Detailed Specs Groups
   const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray({
     control,
-    name: "detailedSpecs" as const, // Fix 1: Add 'as const'
+    name: "detailedSpecs" as const,
   });
 
   const currentImageFiles = watch("newImageFiles");
@@ -539,8 +539,8 @@ const ProductsManagement = () => {
                   <SelectItem value="all">All Product Statuses</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
+                  </SelectContent>
+                </Select>
               <Button onClick={handleAddProductClick} className="w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" /> Add Product
               </Button>
@@ -1141,15 +1141,15 @@ const ProductsManagement = () => {
 
 // Nested Field Array Component for Detailed Specs Items
 interface NestedFieldArrayProps {
-  control: any;
-  name: string;
-  errors: any;
+  control: Control<ProductFormData>; // Explicitly type control
+  name: `detailedSpecs.${number}.items`; // Explicitly type name as a path
+  errors: FieldErrors<ProductFormData>; // Explicitly type errors
 }
 
 const NestedFieldArray = ({ control, name, errors }: NestedFieldArrayProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: name as `detailedSpecs.${number}.items`, // Type assertion for nested array
+    name, // Use the correctly typed name prop directly
   });
 
   return (
