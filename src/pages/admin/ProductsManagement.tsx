@@ -156,14 +156,14 @@ const ProductsManagement = () => {
 
   // useFieldArray for Key Features
   const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray({
-    control,
-    name: "keyFeatures" as const,
+    control: control as Control<ProductFormData>, // Explicit cast here
+    name: "keyFeatures",
   });
 
   // useFieldArray for Detailed Specs Groups
   const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray({
-    control,
-    name: "detailedSpecs" as const,
+    control: control as Control<ProductFormData>, // Explicit cast here
+    name: "detailedSpecs",
   });
 
   const currentImageFiles = watch("newImageFiles");
