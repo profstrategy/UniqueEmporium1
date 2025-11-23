@@ -1,64 +1,21 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, Easing } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import React, { useState, useMemo, useEffect } from "react";
+import { motion, Easing } from "framer-motion";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import {
-  Package,
-  Search,
-  Filter,
-  Plus,
-  Edit,
-  Trash2,
-  CheckCircle2,
-  XCircle,
-  ChevronLeft,
-  ChevronRight,
-  Loader2,
-  ImageIcon,
-  ChevronFirst,
-  ChevronLast,
-  MinusCircle, // Added for removing dynamic fields
-  PlusCircle, // Added for adding dynamic fields
-} from "lucide-react";
+import { AlertDialog } from "@/components/ui/alert-dialog";
+import { Plus, Edit } from "lucide-react";
 import { ProductDetails } from "@/data/products.ts";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { useForm, useFieldArray, Control, FieldErrors, FieldPath } from "react-hook-form"; // Import FieldPath
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { supabase } from "@/integrations/supabase/client";
-import { AdminCategory } from "./CategoriesManagement.tsx";
+import { useAdminProducts } from "@/hooks/useAdminProducts";
+import ProductForm, { ProductFormData } from "@/components/admin/products/ProductForm.tsx"; // Corrected import path
+import ProductTable from "@/components/admin/products/ProductTable.tsx"; // Corrected import path
+import DeleteProductAlertDialog from "@/components/admin/products/DeleteProductAlertDialog.tsx"; // Corrected import path
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -76,42 +33,17 @@ const staggerContainer = {
   },
 };
 
-// Form Schema for Add/Edit Product
-const productFormSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1, "Product Name is required"),
-  category: z.string().min(1, "Category is required"),
-  price: z.coerce.number().min(1, "Price is required and must be positive"),
-  originalPrice: z.coerce.number().optional().refine((val) => val === undefined || val > 0, "Original Price must be positive if provided"),
-  minOrderQuantity: z.coerce.number().min(1, "Minimum Order Quantity is required and must be positive"),
-  status: z.enum(["active", "inactive"]).default("active"),
-  limitedStock: z.boolean().default(false),
-  shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(),
-  fullDescription: z.string().min(1, "Full Description is required"),
-  images: z.array(z.string()).optional(),
-  newImageFiles: z.instanceof(FileList).optional(),
-  tag: z.string().optional(),
-  tagVariant: z.enum(["default", "secondary", "destructive", "outline"]).optional(),
-  rating: z.coerce.number().min(0).max(5).default(4.5),
-  reviewCount: z.coerce.number().min(0).default(0),
-  styleNotes: z.string().optional(),
-  keyFeatures: z.array(z.string().min(1, "Feature cannot be empty")),
-  detailedSpecs: z.array(z.object({
-    group: z.string().min(1, "Group name is required"),
-    items: z.array(z.object({
-      label: z.string().min(1, "Label is required"),
-      value: z.string().min(1, "Value is required"),
-      icon: z.string().optional(),
-    })),
-  })),
-  reviews: z.array(z.any()).optional(),
-  relatedProducts: z.array(z.string()).optional(),
-});
-
-type ProductFormData = z.infer<typeof productFormSchema>;
-
 const ProductsManagement = () => {
-  const [products, setProducts] = useState<ProductDetails[]>([]);
+  const {
+    products,
+    isLoadingProducts,
+    availableCategories,
+    isLoadingCategories,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+  } = useAdminProducts();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterStockStatus, setFilterStockStatus] = useState("all");
@@ -124,132 +56,7 @@ const ProductsManagement = () => {
   const [editingProduct, setEditingProduct] = useState<ProductDetails | null>(null);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [availableCategories, setAvailableCategories] = useState<AdminCategory[]>([]);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<ProductFormData>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      status: "active",
-      limitedStock: false,
-      rating: 4.5,
-      reviewCount: 0,
-      keyFeatures: [],
-      reviews: [],
-      relatedProducts: [],
-      tag: "",
-      tagVariant: "default",
-      images: [],
-      newImageFiles: undefined,
-      shortDescription: "",
-      fullDescription: "",
-      styleNotes: "",
-      detailedSpecs: [],
-    }
-  });
-
-  // useFieldArray for Key Features
-  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray<ProductFormData, "keyFeatures">({
-    control: control,
-    name: "keyFeatures",
-  });
-
-  // useFieldArray for Detailed Specs Groups
-  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray<ProductFormData, "detailedSpecs">({
-    control: control,
-    name: "detailedSpecs",
-  });
-
-  const currentImageFiles = watch("newImageFiles");
-  const currentImages = watch("images");
-  const currentLimitedStock = watch("limitedStock");
-  const currentProductStatus = watch("status");
-  const currentTagVariant = watch("tagVariant");
-
-  // Effect to update image preview when newImageFiles changes
-  React.useEffect(() => {
-    if (currentImageFiles && currentImageFiles.length > 0) {
-      const file = currentImageFiles[0];
-      if (file instanceof File) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    } else if (currentImages && currentImages.length > 0) {
-      setImagePreview(currentImages[0]);
-    } else {
-      setImagePreview(null);
-    }
-  }, [currentImageFiles, currentImages]);
-
-  const fetchProducts = useCallback(async () => {
-    setIsLoadingProducts(true);
-    const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-
-    if (error) {
-      console.error("Error fetching products:", error);
-      toast.error("Failed to load products.", { description: error.message });
-      setProducts([]);
-    } else {
-      const fetchedProducts: ProductDetails[] = data.map((p: any) => ({
-        id: p.id,
-        name: p.name,
-        category: p.category,
-        images: p.images || [],
-        price: p.price,
-        originalPrice: p.original_price,
-        discountPercentage: p.discount_percentage,
-        rating: p.rating,
-        reviewCount: p.review_count,
-        tag: p.tag,
-        tagVariant: p.tag_variant,
-        limitedStock: p.limited_stock,
-        minOrderQuantity: p.min_order_quantity,
-        status: p.status,
-        shortDescription: p.short_description,
-        fullDescription: p.full_description,
-        keyFeatures: p.key_features || [],
-        styleNotes: p.style_notes || "",
-        detailedSpecs: p.detailed_specs || [],
-        reviews: p.reviews || [],
-        relatedProducts: p.related_products || [],
-      }));
-      setProducts(fetchedProducts);
-    }
-    setIsLoadingProducts(false);
-  }, []);
-
-  const fetchCategories = useCallback(async () => {
-    const { data, error } = await supabase.from('categories').select('id, name').order('name', { ascending: true });
-    if (error) {
-      console.error("Error fetching categories for product form:", error);
-      toast.error("Failed to load categories for product form.");
-      setAvailableCategories([]);
-    } else {
-      setAvailableCategories(data as AdminCategory[]);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, [fetchProducts, fetchCategories]);
-
-
-  const formatCurrency = (amount: number) => {
-    return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
-  };
+  const [deletingProductName, setDeletingProductName] = useState<string>("");
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
@@ -289,195 +96,40 @@ const ProductsManagement = () => {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  
-  const goToFirstPage = () => setCurrentPage(1);
-  const goToLastPage = () => setCurrentPage(totalPages);
-  const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
-  const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
-
   const handleAddProductClick = () => {
-    reset({
-      status: "active",
-      limitedStock: false,
-      rating: 4.5,
-      reviewCount: 0,
-      keyFeatures: [],
-      reviews: [],
-      relatedProducts: [],
-      tag: "",
-      tagVariant: "default",
-      images: [],
-      newImageFiles: undefined,
-      shortDescription: "",
-      fullDescription: "",
-      styleNotes: "",
-      detailedSpecs: [],
-    });
-    setImagePreview(null);
+    setEditingProduct(null); // Clear any previous editing state
     setIsAddModalOpen(true);
   };
 
   const handleEditProductClick = (product: ProductDetails) => {
     setEditingProduct(product);
-    reset({
-      ...product,
-      originalPrice: product.originalPrice,
-      minOrderQuantity: product.minOrderQuantity,
-      fullDescription: product.fullDescription,
-      keyFeatures: product.keyFeatures || [],
-      styleNotes: product.styleNotes || "",
-      detailedSpecs: product.detailedSpecs || [],
-      reviews: product.reviews,
-      relatedProducts: product.relatedProducts,
-      tag: product.tag || "",
-      tagVariant: product.tagVariant || "default",
-      images: product.images,
-      newImageFiles: undefined,
-      shortDescription: product.shortDescription || "",
-    });
-    setImagePreview(product.images?.[0] || null);
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteProductClick = (productId: string) => {
+  const handleDeleteProductClick = (productId: string, productName: string) => {
     setDeletingProductId(productId);
+    setDeletingProductName(productName);
     setIsDeleteAlertOpen(true);
   };
 
-  const handleAddOrUpdateProduct = async (data: ProductFormData) => {
-    let imageUrls: string[] = data.images || [];
-
-    if (data.newImageFiles && data.newImageFiles.length > 0) {
-      const uploadPromises = Array.from(data.newImageFiles).map(async (file) => {
-        const fileExtension = file.name.split('.').pop();
-        const filePath = `products/${data.id || `new-${Date.now()}`}/${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('product_images')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false,
-          });
-
-        if (uploadError) {
-          console.error(`Error uploading image ${file.name}:`, uploadError);
-          toast.error(`Failed to upload image: ${file.name}.`, { description: uploadError.message });
-          return null;
-        } else {
-          const { data: publicUrlData } = supabase.storage.from('product_images').getPublicUrl(uploadData.path);
-          return publicUrlData.publicUrl;
-        }
-      });
-
-      const results = await Promise.all(uploadPromises);
-      const successfulUploads = results.filter(url => url !== null) as string[];
-
-      if (successfulUploads.length > 0) {
-        imageUrls = successfulUploads;
-      } else if (data.images && data.images.length > 0) {
-        imageUrls = data.images;
-      } else {
-        imageUrls = [];
-      }
-    }
-
-    let discountPercentage: number | undefined;
-    if (data.originalPrice && data.price < data.originalPrice) {
-      discountPercentage = Math.round(((data.originalPrice - data.price) / data.originalPrice) * 100);
-    }
-
-    const productPayload = {
-      name: data.name,
-      category: data.category,
-      price: data.price,
-      original_price: data.originalPrice,
-      discount_percentage: discountPercentage,
-      min_order_quantity: data.minOrderQuantity,
-      status: data.status,
-      limited_stock: data.limitedStock,
-      short_description: data.shortDescription,
-      full_description: data.fullDescription,
-      images: imageUrls,
-      tag: data.tag,
-      tag_variant: data.tagVariant,
-      rating: data.rating,
-      review_count: data.reviewCount,
-      style_notes: data.styleNotes,
-      key_features: data.keyFeatures,
-      detailed_specs: data.detailedSpecs,
-      reviews: data.reviews,
-      related_products: data.relatedProducts,
-    };
-
-    if (editingProduct) {
-      const { error } = await supabase
-        .from('products')
-        .update(productPayload)
-        .eq('id', editingProduct.id);
-
-      if (error) {
-        toast.error("Failed to update product.", { description: error.message });
-      } else {
-        toast.success(`Product "${data.name}" updated successfully!`);
-        setIsEditModalOpen(false);
-        setEditingProduct(null);
-        fetchProducts();
-      }
-    } else {
-      const newProductId = `prod-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-      const { error } = await supabase
-        .from('products')
-        .insert([{ ...productPayload, id: newProductId }]);
-
-      if (error) {
-        toast.error("Failed to add product.", { description: error.message });
-      } else {
-        toast.success(`Product "${data.name}" added successfully!`);
-        setIsAddModalOpen(false);
-        fetchProducts();
-      }
+  const confirmDeleteProduct = async () => {
+    if (deletingProductId) {
+      await deleteProduct(deletingProductId);
+      setIsDeleteAlertOpen(false);
+      setDeletingProductId(null);
+      setDeletingProductName("");
     }
   };
 
-  const confirmDeleteProduct = useCallback(async () => {
-    if (deletingProductId) {
-      const productToDelete = products.find(p => p.id === deletingProductId);
-      if (productToDelete && productToDelete.images && productToDelete.images.length > 0) {
-        const filePathsToDelete = productToDelete.images.map(url => {
-          const urlParts = url.split('/public/storage/v1/object/public/product_images/');
-          return urlParts.length > 1 ? urlParts[1] : null;
-        }).filter(path => path !== null) as string[];
-
-        if (filePathsToDelete.length > 0) {
-          const { error: deleteStorageError } = await supabase.storage
-            .from('product_images')
-            .remove(filePathsToDelete);
-
-          if (deleteStorageError) {
-            console.error("Error deleting product images from storage:", deleteStorageError);
-            toast.error("Failed to delete some product images from storage.", { description: deleteStorageError.message });
-          } else {
-            toast.info("Product images deleted from storage.");
-          }
-        }
-      }
-
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', deletingProductId);
-
-      if (error) {
-        toast.error("Failed to delete product.", { description: error.message });
-      } else {
-        toast.info(`Product ${deletingProductId} deleted.`);
-        setDeletingProductId(null);
-        setIsDeleteAlertOpen(false);
-        fetchProducts();
-      }
+  const handleFormSubmit = async (data: ProductFormData) => {
+    if (editingProduct) {
+      await updateProduct(editingProduct.id, data);
+      setIsEditModalOpen(false);
+    } else {
+      await addProduct(data);
+      setIsAddModalOpen(false);
     }
-  }, [deletingProductId, products, fetchProducts]);
+  };
 
   return (
     <motion.div
@@ -493,228 +145,28 @@ const ProductsManagement = () => {
         Manage your product catalog, including adding, editing, and deleting items.
       </motion.p>
 
-      <Card className="rounded-xl shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold flex items-center gap-2">
-            <Package className="h-5 w-5 text-primary" /> All Products
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="min-w-0 p-0">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b p-4">
-            <div className="relative flex-grow w-full md:w-auto">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search by Product Name or ID..."
-                className="w-full pl-9"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              <Select value={filterCategory} onValueChange={setFilterCategory}>
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Filter by Category" />
-                </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {availableCategories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.name}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-              </Select>
-              <Select value={filterStockStatus} onValueChange={setFilterStockStatus}>
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Filter by Stock Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Stock Statuses</SelectItem>
-                  <SelectItem value="in-stock">In Stock</SelectItem>
-                  <SelectItem value="limited-stock">Limited Stock</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={filterProductStatus} onValueChange={setFilterProductStatus}>
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Filter by Product Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Product Statuses</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              <Button onClick={handleAddProductClick} className="w-full sm:w-auto">
-                <Plus className="mr-2 h-4 w-4" /> Add Product
-              </Button>
-            </div>
-          </div>
-
-          {isLoadingProducts ? (
-            <div className="flex items-center justify-center py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="ml-3 text-muted-foreground">Loading products...</p>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-10 text-muted-foreground">
-              <Filter className="h-12 w-12 mx-auto mb-4" />
-              <p>No products found matching your filters.</p>
-              <Button onClick={() => { setSearchTerm(""); setFilterCategory("all"); setFilterStockStatus("all"); setFilterProductStatus("all"); }} className="mt-4">
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            <div className="overflow-x-auto w-full">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Image</TableHead>
-                    <TableHead className="w-[150px]">Product ID</TableHead>
-                    <TableHead>Product Name</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>MOQ</TableHead>
-                    <TableHead>Price/Unit</TableHead>
-                    <TableHead>Price/MOQ</TableHead>
-                    <TableHead>Stock Status</TableHead>
-                    <TableHead>Product Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <AnimatePresence>
-                    {currentProducts.map((product) => (
-                      <motion.tr
-                        key={product.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <TableCell>
-                          <ImageWithFallback
-                            src={product.images[0]}
-                            alt={product.name}
-                            containerClassName="h-10 w-10 rounded-md overflow-hidden border"
-                            fallbackLogoClassName="h-6 w-6"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium text-xs">{product.id}</TableCell>
-                        <TableCell className="font-medium">{product.name}</TableCell>
-                        <TableCell>{product.category}</TableCell>
-                        <TableCell>{product.minOrderQuantity}</TableCell>
-                        <TableCell>{formatCurrency(product.price / product.minOrderQuantity)}</TableCell>
-                        <TableCell>{formatCurrency(product.price)}</TableCell>
-                        <TableCell>
-                          <Badge variant={product.limitedStock ? "destructive" : "default"}>
-                            {product.limitedStock ? "Ltd. stock" : "In Stock"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={product.status === "active" ? "default" : "secondary"}>
-                            {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end space-x-2">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button variant="outline" size="icon" onClick={() => handleEditProductClick(product)}>
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Edit Product</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                            <AlertDialog>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <AlertDialogTrigger asChild>
-                                      <Button variant="outline" size="icon" onClick={() => handleDeleteProductClick(product.id)}>
-                                        <Trash2 className="h-4 w-4 text-red-600" />
-                                      </Button>
-                                    </AlertDialogTrigger>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Delete Product</TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the product "{product.name}" and its associated images from storage.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={confirmDeleteProduct}>
-                                    Continue
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
-                      </motion.tr>
-                    ))}
-                  </AnimatePresence>
-                </TableBody>
-              </Table>
-            </div>
-          )}
-
-          {/* Pagination Controls */}
-          {filteredProducts.length > productsPerPage && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t">
-              <div className="text-sm text-muted-foreground">
-                Showing {indexOfFirstProduct + 1} to {Math.min(indexOfLastProduct, filteredProducts.length)} of {filteredProducts.length} products
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={goToFirstPage}
-                  disabled={currentPage === 1}
-                  className="hidden sm:flex"
-                >
-                  <ChevronFirst className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={goToPrevPage}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={goToNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={goToLastPage}
-                  disabled={currentPage === totalPages}
-                  className="hidden sm:flex"
-                >
-                  <ChevronLast className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <ProductTable
+        products={currentProducts}
+        isLoadingProducts={isLoadingProducts || isLoadingCategories}
+        searchTerm={searchTerm}
+        onSearchChange={(e) => setSearchTerm(e.target.value)}
+        filterCategory={filterCategory}
+        onFilterCategoryChange={setFilterCategory}
+        filterStockStatus={filterStockStatus}
+        onFilterStockStatusChange={setFilterStockStatus}
+        filterProductStatus={filterProductStatus}
+        onFilterProductStatusChange={setFilterProductStatus}
+        availableCategories={availableCategories}
+        onAddProduct={handleAddProductClick}
+        onEditProduct={handleEditProductClick}
+        onDeleteProduct={handleDeleteProductClick}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        goToFirstPage={() => setCurrentPage(1)}
+        goToPrevPage={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+        goToNextPage={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+        goToLastPage={() => setCurrentPage(totalPages)}
+      />
 
       {/* Add Product Dialog */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
@@ -727,203 +179,12 @@ const ProductsManagement = () => {
               Enter the details for a new product to add to your catalog.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(handleAddOrUpdateProduct)} className="space-y-6 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Product Name</Label>
-                <Input id="name" {...register("name")} className={cn(errors.name && "border-destructive")} />
-                {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select onValueChange={(value) => setValue("category", value)} value={watch("category")}>
-                  <SelectTrigger className={cn(errors.category && "border-destructive")}>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableCategories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.name}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.category && <p className="text-destructive text-sm">{errors.category.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="price">Price (for MOQ)</Label>
-                <Input id="price" type="number" step="0.01" {...register("price")} className={cn(errors.price && "border-destructive")} />
-                {errors.price && <p className="text-destructive text-sm">{errors.price.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="originalPrice">Original Price (Optional, for discount)</Label>
-                <Input id="originalPrice" type="number" step="0.01" {...register("originalPrice")} className={cn(errors.originalPrice && "border-destructive")} />
-                {errors.originalPrice && <p className="text-destructive text-sm">{errors.originalPrice.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="minOrderQuantity">Min Order Quantity</Label>
-                <Input id="minOrderQuantity" type="number" {...register("minOrderQuantity")} className={cn(errors.minOrderQuantity && "border-destructive")} />
-                {errors.minOrderQuantity && <p className="text-destructive text-sm">{errors.minOrderQuantity.message}</p>}
-              </div>
-            </div>
-
-            {/* New: Concise Description */}
-            <div className="space-y-2">
-              <Label htmlFor="shortDescription">Concise Description (Max 500 chars)</Label>
-              <Textarea id="shortDescription" rows={2} {...register("shortDescription")} className={cn(errors.shortDescription && "border-destructive")} />
-              {errors.shortDescription && <p className="text-destructive text-sm">{errors.shortDescription.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="fullDescription">Full Product Description</Label>
-              <Textarea id="fullDescription" rows={4} {...register("fullDescription")} className={cn(errors.fullDescription && "border-destructive")} />
-              {errors.fullDescription && <p className="text-destructive text-sm">{errors.fullDescription.message}</p>}
-            </div>
-
-            {/* New: Key Features */}
-            <div className="space-y-2 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Key Features</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendKeyFeature("")}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Feature
-                </Button>
-              </div>
-              {keyFeaturesFields.map((field, index) => (
-                <div key={field.id} className="flex items-center space-x-2">
-                  <Input
-                    {...register(`keyFeatures.${index}` as const)}
-                    placeholder="e.g., High-quality fabric"
-                    className={cn(errors.keyFeatures?.[index] && "border-destructive")}
-                  />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyFeature(index)}>
-                    <MinusCircle className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              ))}
-              {errors.keyFeatures && <p className="text-destructive text-sm">{errors.keyFeatures.message}</p>}
-            </div>
-
-            {/* New: Detailed Specifications */}
-            <div className="space-y-4 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Detailed Specifications</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendDetailedSpecGroup({ group: "", items: [{ label: "", value: "" }] })}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Spec Group
-                </Button>
-              </div>
-              {detailedSpecsGroups.map((groupField, groupIndex) => (
-                <Card key={groupField.id} className="p-4 space-y-3 border-l-2 border-primary/50">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      {...register(`detailedSpecs.${groupIndex}.group` as const)}
-                      placeholder="Group Name (e.g., Material, Dimensions)"
-                      className={cn(errors.detailedSpecs?.[groupIndex]?.group && "border-destructive")}
-                    />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeDetailedSpecGroup(groupIndex)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                  {errors.detailedSpecs?.[groupIndex]?.group && <p className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
-
-                  <div className="space-y-2 pl-4 border-l border-border">
-                    <Label className="text-sm">Items in Group</Label>
-                    <NestedFieldArray control={control} name={`detailedSpecs.${groupIndex}.items`} errors={errors} />
-                  </div>
-                </Card>
-              ))}
-              {errors.detailedSpecs && <p className="text-destructive text-sm">{errors.detailedSpecs.message}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="tag">Product Tag (e.g., "New Arrival", "Best Seller")</Label>
-                <Input id="tag" {...register("tag")} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tagVariant">Tag Style</Label>
-                <Select onValueChange={(value) => setValue("tagVariant", value as "default" | "secondary" | "destructive" | "outline")} value={currentTagVariant}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tag style" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="secondary">Secondary</SelectItem>
-                    <SelectItem value="destructive">Destructive</SelectItem>
-                    <SelectItem value="outline">Outline</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <div className="space-y-2">
-                <Label htmlFor="newImageFiles">Upload Product Images (Max 5)</Label>
-                <Input
-                  id="newImageFiles"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  {...register("newImageFiles")}
-                />
-                <p className="text-xs text-muted-foreground">Upload up to 5 images. Only the first image will be used for preview.</p>
-              </div>
-              <div className="space-y-2">
-                <Label>Image Preview</Label>
-                <div className="h-24 w-24 rounded-md border flex items-center justify-center overflow-hidden bg-muted">
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Image Preview" className="h-full w-full object-cover" />
-                  ) : (
-                    <ImageIcon className="h-10 w-10 text-muted-foreground" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="limitedStock-toggle"
-                  checked={currentLimitedStock}
-                  onCheckedChange={(checked) => setValue("limitedStock", checked)}
-                />
-                <Label htmlFor="limitedStock-toggle">Limited Stock: {currentLimitedStock ? "Yes" : "No"}</Label>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="product-status">Product Status</Label>
-                <Select onValueChange={(value) => setValue("status", value as "active" | "inactive")} value={currentProductStatus}>
-                  <SelectTrigger className={cn(errors.status && "border-destructive")}>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.status && <p className="text-destructive text-sm">{errors.status.message}</p>}
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
-                  </>
-                ) : (
-                  "Add Product"
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
+          <ProductForm
+            onSubmit={handleFormSubmit}
+            onCancel={() => setIsAddModalOpen(false)}
+            availableCategories={availableCategories}
+            isSubmitting={false} // isSubmitting will be managed internally by ProductForm
+          />
         </DialogContent>
       </Dialog>
 
@@ -938,254 +199,26 @@ const ProductsManagement = () => {
               Update the details for this product.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(handleAddOrUpdateProduct)} className="space-y-6 py-4">
-            <input type="hidden" {...register("id")} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Product Name</Label>
-                <Input id="name" {...register("name")} className={cn(errors.name && "border-destructive")} />
-                {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select onValueChange={(value) => setValue("category", value)} value={watch("category")}>
-                  <SelectTrigger className={cn(errors.category && "border-destructive")}>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableCategories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.name}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.category && <p className="text-destructive text-sm">{errors.category.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="price">Price (for MOQ)</Label>
-                <Input id="price" type="number" step="0.01" {...register("price")} className={cn(errors.price && "border-destructive")} />
-                {errors.price && <p className="text-destructive text-sm">{errors.price.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="originalPrice">Original Price (Optional, for discount)</Label>
-                <Input id="originalPrice" type="number" step="0.01" {...register("originalPrice")} className={cn(errors.originalPrice && "border-destructive")} />
-                {errors.originalPrice && <p className="text-destructive text-sm">{errors.originalPrice.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="minOrderQuantity">Min Order Quantity</Label>
-                <Input id="minOrderQuantity" type="number" {...register("minOrderQuantity")} className={cn(errors.minOrderQuantity && "border-destructive")} />
-                {errors.minOrderQuantity && <p className="text-destructive text-sm">{errors.minOrderQuantity.message}</p>}
-              </div>
-            </div>
-
-            {/* New: Concise Description */}
-            <div className="space-y-2">
-              <Label htmlFor="shortDescription">Concise Description (Max 500 chars)</Label>
-              <Textarea id="shortDescription" rows={2} {...register("shortDescription")} className={cn(errors.shortDescription && "border-destructive")} />
-              {errors.shortDescription && <p className="text-destructive text-sm">{errors.shortDescription.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="fullDescription">Full Product Description</Label>
-              <Textarea id="fullDescription" rows={4} {...register("fullDescription")} className={cn(errors.fullDescription && "border-destructive")} />
-              {errors.fullDescription && <p className="text-destructive text-sm">{errors.fullDescription.message}</p>}
-            </div>
-
-            {/* New: Key Features */}
-            <div className="space-y-2 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Key Features</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendKeyFeature("")}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Feature
-                </Button>
-              </div>
-              {keyFeaturesFields.map((field, index) => (
-                <div key={field.id} className="flex items-center space-x-2">
-                  <Input
-                    {...register(`keyFeatures.${index}` as const)}
-                    placeholder="e.g., High-quality fabric"
-                    className={cn(errors.keyFeatures?.[index] && "border-destructive")}
-                  />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyFeature(index)}>
-                    <MinusCircle className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              ))}
-              {errors.keyFeatures && <p className="text-destructive text-sm">{errors.keyFeatures.message}</p>}
-            </div>
-
-            {/* New: Detailed Specifications */}
-            <div className="space-y-4 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Detailed Specifications</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendDetailedSpecGroup({ group: "", items: [{ label: "", value: "" }] })}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Spec Group
-                </Button>
-              </div>
-              {detailedSpecsGroups.map((groupField, groupIndex) => (
-                <Card key={groupField.id} className="p-4 space-y-3 border-l-2 border-primary/50">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      {...register(`detailedSpecs.${groupIndex}.group` as const)}
-                      placeholder="Group Name (e.g., Material, Dimensions)"
-                      className={cn(errors.detailedSpecs?.[groupIndex]?.group && "border-destructive")}
-                    />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeDetailedSpecGroup(groupIndex)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                  {errors.detailedSpecs?.[groupIndex]?.group && <p className className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
-
-                  <div className="space-y-2 pl-4 border-l border-border">
-                    <Label className="text-sm">Items in Group</Label>
-                    <NestedFieldArray control={control} name={`detailedSpecs.${groupIndex}.items`} errors={errors} />
-                  </div>
-                </Card>
-              ))}
-              {errors.detailedSpecs && <p className="text-destructive text-sm">{errors.detailedSpecs.message}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="tag">Product Tag (e.g., "New Arrival", "Best Seller")</Label>
-                <Input id="tag" {...register("tag")} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tagVariant">Tag Style</Label>
-                <Select onValueChange={(value) => setValue("tagVariant", value as "default" | "secondary" | "destructive" | "outline")} value={currentTagVariant}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tag style" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="secondary">Secondary</SelectItem>
-                    <SelectItem value="destructive">Destructive</SelectItem>
-                    <SelectItem value="outline">Outline</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <div className="space-y-2">
-                <Label htmlFor="newImageFiles">Upload New Product Images (Max 5)</Label>
-                <Input
-                  id="newImageFiles"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  {...register("newImageFiles")}
-                />
-                <p className="text-xs text-muted-foreground">Upload new images to replace existing ones. Only the first image will be used for preview.</p>
-              </div>
-              <div className="space-y-2">
-                <Label>Image Preview</Label>
-                <div className="h-24 w-24 rounded-md border flex items-center justify-center overflow-hidden bg-muted">
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Image Preview" className="h-full w-full object-cover" />
-                  ) : (
-                    <ImageIcon className="h-10 w-10 text-muted-foreground" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="limitedStock-toggle-edit"
-                  checked={currentLimitedStock}
-                  onCheckedChange={(checked) => setValue("limitedStock", checked)}
-                />
-                <Label htmlFor="limitedStock-toggle-edit">Limited Stock: {currentLimitedStock ? "Yes" : "No"}</Label>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="product-status-edit">Product Status</Label>
-                <Select onValueChange={(value) => setValue("status", value as "active" | "inactive")} value={currentProductStatus}>
-                  <SelectTrigger className={cn(errors.status && "border-destructive")}>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.status && <p className="text-destructive text-sm">{errors.status.message}</p>}
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
-                  </>
-                ) : (
-                  "Save Changes"
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
+          <ProductForm
+            initialData={editingProduct}
+            onSubmit={handleFormSubmit}
+            onCancel={() => setIsEditModalOpen(false)}
+            availableCategories={availableCategories}
+            isSubmitting={false} // isSubmitting will be managed internally by ProductForm
+          />
         </DialogContent>
       </Dialog>
+
+      {/* Delete Product Confirmation Dialog */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <DeleteProductAlertDialog
+          isOpen={isDeleteAlertOpen}
+          onOpenChange={setIsDeleteAlertOpen}
+          onConfirm={confirmDeleteProduct}
+          productName={deletingProductName}
+        />
+      </AlertDialog>
     </motion.div>
-  );
-};
-
-// Nested Field Array Component for Detailed Specs Items
-interface NestedFieldArrayProps {
-  control: Control<ProductFormData>;
-  name: `detailedSpecs.${number}.items`;
-  errors: FieldErrors<ProductFormData>;
-}
-
-const NestedFieldArray = ({ control, name, errors }: NestedFieldArrayProps) => {
-  type ItemType = ProductFormData['detailedSpecs'][number]['items'][number]; // Infer type of individual item
-
-  const { fields, append, remove } = useFieldArray<ProductFormData, typeof name, "id">({
-    control,
-    name,
-    keyName: "id",
-  });
-
-  return (
-    <div className="space-y-2">
-      {fields.map((itemField, itemIndex) => (
-        <div key={itemField.id} className="flex items-center space-x-2">
-          <Input
-            {...control.register(`${name}.${itemIndex}.label` as const)}
-            placeholder="Label (e.g., Color)"
-            className={cn(errors?.[name]?.[itemIndex]?.label && "border-destructive")}
-          />
-          <Input
-            {...control.register(`${name}.${itemIndex}.value` as const)}
-            placeholder="Value (e.g., Black)"
-            className={cn(errors?.[name]?.[itemIndex]?.value && "border-destructive")}
-          />
-          <Input
-            {...control.register(`${name}.${itemIndex}.icon` as const)}
-            placeholder="Icon (Lucide name, optional)"
-            className="w-32"
-          />
-          <Button type="button" variant="ghost" size="icon" onClick={() => remove(itemIndex)}>
-            <MinusCircle className="h-4 w-4 text-destructive" />
-          </Button>
-        </div>
-      ))}
-      <Button type="button" variant="outline" size="sm" onClick={() => append({ label: "", value: "", icon: "" })}>
-        <PlusCircle className="mr-2 h-4 w-4" /> Add Item
-      </Button>
-    </div>
   );
 };
 
