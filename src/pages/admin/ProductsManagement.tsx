@@ -155,14 +155,16 @@ const ProductsManagement = () => {
   });
 
   // useFieldArray for Key Features
-  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray({
-    control: control as Control<ProductFormData>, // Explicit cast here
+  // Explicitly define generics to resolve type constraint error
+  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray<ProductFormData, "keyFeatures">({
+    control,
     name: "keyFeatures",
   });
 
   // useFieldArray for Detailed Specs Groups
-  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray({
-    control: control as Control<ProductFormData>, // Explicit cast here
+  // Explicitly define generics
+  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray<ProductFormData, "detailedSpecs">({
+    control,
     name: "detailedSpecs",
   });
 
