@@ -8,25 +8,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { ProductDetails } from "@/data/products.ts";
 import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
-import { fetchProductsFromSupabase } from "@/integrations/supabase/products";
-
-// Hand-pick some products to represent "Top Selling" by name
-const topSellingProductNames = [
-  "SHEIN Elegant Floral Maxi Gown",
-  "Vintage 90s Graphic T-Shirt",
-  "Ladies' Casual Chic Fashion Bundle",
-  "Kids' Stylish Distressed Denim Jeans",
-  "Luxury Thrift Silk Scarf (Designer)",
-  "Men's Urban Streetwear Fashion Bundle",
-];
-
-const getTopSellingProducts = async (): Promise<Product[]> => {
-  const allLiveProducts = await fetchProductsFromSupabase();
-  const products = topSellingProductNames
-    .map(name => allLiveProducts.find(p => p.name === name))
-    .filter((product): product is ProductDetails => product !== undefined);
-  return products;
-};
+import { fetchTopSellingProducts } from "@/integrations/supabase/products"; // Import the new dynamic fetch function
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
@@ -56,8 +38,12 @@ const TopSellingProductsSection = () => {
 
   useEffect(() => {
     setLoading(true);
-    getTopSellingProducts().then(products => {
+    // Fetch top 10 products sold in the last 90 days dynamically
+    fetchTopSellingProducts(10, 90).then(products => {
       setProductsToDisplay(products);
+      setLoading(false);
+    }).catch(err => {
+      console.error("Failed to fetch top selling products:", err);
       setLoading(false);
     });
   }, []);
