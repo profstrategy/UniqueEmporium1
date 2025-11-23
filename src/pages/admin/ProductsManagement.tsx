@@ -44,7 +44,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-  Image as ImageIcon,
+  ImageIcon,
   ChevronFirst,
   ChevronLast,
   MinusCircle, // Added for removing dynamic fields
@@ -54,7 +54,7 @@ import { ProductDetails } from "@/data/products.ts";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { useForm, useFieldArray, Control, FieldErrors } from "react-hook-form"; // Import Control and FieldErrors
+import { useForm, useFieldArray, Control, FieldErrors, FieldPath } from "react-hook-form"; // Import FieldPath
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -86,7 +86,7 @@ const productFormSchema = z.object({
   minOrderQuantity: z.coerce.number().min(1, "Minimum Order Quantity is required and must be positive"),
   status: z.enum(["active", "inactive"]).default("active"),
   limitedStock: z.boolean().default(false),
-  shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(), // New: Concise description
+  shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(),
   fullDescription: z.string().min(1, "Full Description is required"),
   images: z.array(z.string()).optional(),
   newImageFiles: z.instanceof(FileList).optional(),
@@ -95,15 +95,15 @@ const productFormSchema = z.object({
   rating: z.coerce.number().min(0).max(5).default(4.5),
   reviewCount: z.coerce.number().min(0).default(0),
   styleNotes: z.string().optional(),
-  keyFeatures: z.array(z.string().min(1, "Feature cannot be empty")).optional(), // New: Key Features
-  detailedSpecs: z.array(z.object({ // New: Detailed Specifications
+  keyFeatures: z.array(z.string().min(1, "Feature cannot be empty")),
+  detailedSpecs: z.array(z.object({
     group: z.string().min(1, "Group name is required"),
     items: z.array(z.object({
       label: z.string().min(1, "Label is required"),
       value: z.string().min(1, "Value is required"),
-      icon: z.string().optional(), // Store Lucide icon name as string
+      icon: z.string().optional(),
     })),
-  })).optional(),
+  })),
   reviews: z.array(z.any()).optional(),
   relatedProducts: z.array(z.string()).optional(),
 });
@@ -134,7 +134,7 @@ const ProductsManagement = () => {
     reset,
     setValue,
     watch,
-    control, // Added control for useFieldArray
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
@@ -148,21 +148,24 @@ const ProductsManagement = () => {
       relatedProducts: [],
       tag: "",
       tagVariant: "default",
-      shortDescription: "", // Default for new field
-      styleNotes: "", // Default for new field
-      detailedSpecs: [], // Default for new field
+      images: [],
+      newImageFiles: undefined,
+      shortDescription: "",
+      fullDescription: "",
+      styleNotes: "",
+      detailedSpecs: [],
     }
   });
 
   // useFieldArray for Key Features
-  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray({
-    control: control as Control<ProductFormData>, // Explicit cast here
+  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray<ProductFormData, "keyFeatures">({
+    control: control,
     name: "keyFeatures",
   });
 
   // useFieldArray for Detailed Specs Groups
-  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray({
-    control: control as Control<ProductFormData>, // Explicit cast here
+  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray<ProductFormData, "detailedSpecs">({
+    control: control,
     name: "detailedSpecs",
   });
 
@@ -214,7 +217,7 @@ const ProductsManagement = () => {
         limitedStock: p.limited_stock,
         minOrderQuantity: p.min_order_quantity,
         status: p.status,
-        shortDescription: p.short_description, // Map new field
+        shortDescription: p.short_description,
         fullDescription: p.full_description,
         keyFeatures: p.key_features || [],
         styleNotes: p.style_notes || "",
@@ -306,10 +309,10 @@ const ProductsManagement = () => {
       tagVariant: "default",
       images: [],
       newImageFiles: undefined,
-      shortDescription: "", // Reset new field
-      fullDescription: "", // Reset full description
-      styleNotes: "", // Reset new field
-      detailedSpecs: [], // Reset new field
+      shortDescription: "",
+      fullDescription: "",
+      styleNotes: "",
+      detailedSpecs: [],
     });
     setImagePreview(null);
     setIsAddModalOpen(true);
@@ -322,16 +325,16 @@ const ProductsManagement = () => {
       originalPrice: product.originalPrice,
       minOrderQuantity: product.minOrderQuantity,
       fullDescription: product.fullDescription,
-      keyFeatures: product.keyFeatures || [], // Ensure array is not null/undefined
-      styleNotes: product.styleNotes || "", // Ensure string is not null/undefined
-      detailedSpecs: product.detailedSpecs || [], // Ensure array is not null/undefined
+      keyFeatures: product.keyFeatures || [],
+      styleNotes: product.styleNotes || "",
+      detailedSpecs: product.detailedSpecs || [],
       reviews: product.reviews,
       relatedProducts: product.relatedProducts,
       tag: product.tag || "",
       tagVariant: product.tagVariant || "default",
       images: product.images,
       newImageFiles: undefined,
-      shortDescription: product.shortDescription || "", // Populate new field
+      shortDescription: product.shortDescription || "",
     });
     setImagePreview(product.images?.[0] || null);
     setIsEditModalOpen(true);
@@ -393,7 +396,7 @@ const ProductsManagement = () => {
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
-      short_description: data.shortDescription, // New field
+      short_description: data.shortDescription,
       full_description: data.fullDescription,
       images: imageUrls,
       tag: data.tag,
@@ -401,8 +404,8 @@ const ProductsManagement = () => {
       rating: data.rating,
       review_count: data.reviewCount,
       style_notes: data.styleNotes,
-      key_features: data.keyFeatures, // New field
-      detailed_specs: data.detailedSpecs, // New field
+      key_features: data.keyFeatures,
+      detailed_specs: data.detailedSpecs,
       reviews: data.reviews,
       related_products: data.relatedProducts,
     };
@@ -1038,7 +1041,7 @@ const ProductsManagement = () => {
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
-                  {errors.detailedSpecs?.[groupIndex]?.group && <p className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
+                  {errors.detailedSpecs?.[groupIndex]?.group && <p className className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
 
                   <div className="space-y-2 pl-4 border-l border-border">
                     <Label className="text-sm">Items in Group</Label>
@@ -1141,15 +1144,18 @@ const ProductsManagement = () => {
 
 // Nested Field Array Component for Detailed Specs Items
 interface NestedFieldArrayProps {
-  control: Control<ProductFormData>; // Explicitly type control
-  name: `detailedSpecs.${number}.items`; // Explicitly type name as a path
-  errors: FieldErrors<ProductFormData>; // Explicitly type errors
+  control: Control<ProductFormData>;
+  name: `detailedSpecs.${number}.items`;
+  errors: FieldErrors<ProductFormData>;
 }
 
 const NestedFieldArray = ({ control, name, errors }: NestedFieldArrayProps) => {
-  const { fields, append, remove } = useFieldArray({
+  type ItemType = ProductFormData['detailedSpecs'][number]['items'][number]; // Infer type of individual item
+
+  const { fields, append, remove } = useFieldArray<ProductFormData, typeof name, "id">({
     control,
-    name, // Use the correctly typed name prop directly
+    name,
+    keyName: "id",
   });
 
   return (
