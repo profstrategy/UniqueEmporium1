@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { Menu, X, Search, Heart, ChevronDown, Shirt, Baby, Gem, ShoppingBag, User, LayoutDashboard, LogIn, LogOut, Loader2 } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import CartIcon from "@/components/common/CartIcon.tsx";
 import SlideOutSearchBar from "./SlideOutSearchBar.tsx";
@@ -17,32 +17,47 @@ import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 import { cn } from "@/lib/utils";
+import { fetchActiveCategories, PublicCategory } from "@/integrations/supabase/categories"; // Import Supabase fetcher
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
   setIsCartDrawerOpen: (isOpen: boolean) => void;
 }
 
-const categories = [
-  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
-  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
-  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
-  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
-  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
-  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
-  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
-  { name: "Others", icon: Gem, link: "/products?category=Others" },
-];
+// Map category names to appropriate Lucide icons
+const categoryIconMap: { [key: string]: React.ElementType } = {
+  "Kids": Baby,
+  "Kids Patpat": Baby,
+  "Children Jeans": Baby,
+  "Children Shirts": Baby,
+  "Men Vintage Shirts": Shirt,
+  "Amazon Ladies": ShoppingBag,
+  "SHEIN Gowns": Shirt,
+  "Others": Gem,
+};
 
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const [categories, setCategories] = useState<PublicCategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
   const { user, isAdmin, signOut } = useAuth();
+
+  const loadCategories = useCallback(async () => {
+    setIsLoadingCategories(true);
+    const fetchedCategories = await fetchActiveCategories();
+    setCategories(fetchedCategories);
+    setIsLoadingCategories(false);
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -101,21 +116,32 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
               <DropdownMenuContent
                 className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-xl shadow-lg"
               >
-                {categories.map((category) => (
-                  <DropdownMenuItem 
-                    key={category.name} 
-                    asChild 
-                    className="rounded-full p-2 hover:bg-accent"
-                  >
-                    <Link 
-                      to={category.link} 
-                      className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
-                    >
-                      <category.icon className="h-4 w-4" />
-                      {category.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
+                {isLoadingCategories ? (
+                  <div className="col-span-2 flex justify-center p-4">
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  </div>
+                ) : categories.length === 0 ? (
+                  <div className="col-span-2 text-center text-muted-foreground text-sm p-2">No active categories.</div>
+                ) : (
+                  categories.map((category) => {
+                    const Icon = categoryIconMap[category.name] || Gem;
+                    return (
+                      <DropdownMenuItem 
+                        key={category.id} 
+                        asChild 
+                        className="rounded-full p-2 hover:bg-accent"
+                      >
+                        <Link 
+                          to={`/products?category=${encodeURIComponent(category.name)}`} 
+                          className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
+                        >
+                          <Icon className="h-4 w-4" />
+                          {category.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

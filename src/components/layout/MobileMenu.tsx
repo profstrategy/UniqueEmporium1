@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, LogIn } from "lucide-react";
+import { Heart, Shirt, Baby, Gem, ShoppingBag, Info, Mail, List, User, LogOut, Home, LayoutDashboard, LogIn, Loader2 } from "lucide-react";
 import Badge from "@/components/common/Badge.tsx";
 import { motion, Easing } from "framer-motion";
 import { useCart } from "@/context/CartContext.tsx";
@@ -30,6 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { fetchActiveCategories, PublicCategory } from "@/integrations/supabase/categories"; // Import Supabase fetcher
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -38,27 +39,41 @@ interface MobileMenuProps {
   itemCount: number;
 }
 
-const categories = [
-  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
-  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
-  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
-  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
-  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
-  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
-  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
-  { name: "Others", icon: Gem, link: "/products?category=Others" },
-];
+// Map category names to appropriate Lucide icons
+const categoryIconMap: { [key: string]: React.ElementType } = {
+  "Kids": Baby,
+  "Kids Patpat": Baby,
+  "Children Jeans": Baby,
+  "Children Shirts": Baby,
+  "Men Vintage Shirts": Shirt,
+  "Amazon Ladies": ShoppingBag,
+  "SHEIN Gowns": Shirt,
+  "Others": Gem,
+};
 
 const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuProps) => {
   const navigate = useNavigate();
-  const location = useLocation(); // Initialize useLocation
+  const location = useLocation();
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
-  const { user, isAdmin, signOut } = useAuth(); // Use AuthContext
+  const { user, isAdmin, signOut } = useAuth();
+  const [categories, setCategories] = useState<PublicCategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
-  const handleLinkClick = (path: string, state?: any) => { // Updated signature to accept state
+  const loadCategories = useCallback(async () => {
+    setIsLoadingCategories(true);
+    const fetchedCategories = await fetchActiveCategories();
+    setCategories(fetchedCategories);
+    setIsLoadingCategories(false);
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
+  const handleLinkClick = (path: string, state?: any) => {
     onClose();
-    navigate(path, { state }); // Pass state to navigate
+    navigate(path, { state });
   };
 
   const handleLogout = async () => {
@@ -133,19 +148,28 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pb-0">
-                  <div className="grid grid-cols-2 gap-2 px-2">
-                    {categories.map((category) => (
-                      <Button
-                        key={category.name}
-                        variant="ghost"
-                        className="flex flex-col h-auto py-3 justify-center items-center text-center text-xs text-foreground hover:bg-primary/70 rounded-full"
-                        onClick={() => handleLinkClick(category.link)}
-                      >
-                        <category.icon className="h-5 w-5 mb-1" />
-                        {category.name}
-                      </Button>
-                    ))}
-                  </div>
+                  {isLoadingCategories ? (
+                    <div className="flex justify-center py-4">
+                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2 px-2">
+                      {categories.map((category) => {
+                        const Icon = categoryIconMap[category.name] || Gem;
+                        return (
+                          <Button
+                            key={category.id}
+                            variant="ghost"
+                            className="flex flex-col h-auto py-3 justify-center items-center text-center text-xs text-foreground hover:bg-primary/70 rounded-full"
+                            onClick={() => handleLinkClick(`/products?category=${encodeURIComponent(category.name)}`)}
+                          >
+                            <Icon className="h-5 w-5 mb-1" />
+                            {category.name}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -195,7 +219,7 @@ const MobileMenu = ({ isOpen, onClose, favoriteCount, itemCount }: MobileMenuPro
               <AlertDialogTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/70 rounded-full"
+                  className="justify-start text-base py-1 text-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
                 >
                   <LogOut className="mr-2 h-5 w-5" /> Logout
                 </Button>
