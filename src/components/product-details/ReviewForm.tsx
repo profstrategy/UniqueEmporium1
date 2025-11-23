@@ -24,7 +24,11 @@ interface ReviewFormProps {
 
 const reviewSchema = z.object({
   rating: z.coerce.number().min(1, "Rating is required").max(5, "Rating must be between 1 and 5"),
-  title: z.string().min(5, "Title must be at least 5 characters"),
+  title: z.string()
+    .min(5, "Title must be at least 5 characters")
+    .refine(val => val.trim().split(/\s+/).length <= 3, {
+      message: "Review Title cannot exceed 3 words.",
+    }),
   comment: z.string().min(20, "Comment must be at least 20 characters"),
 });
 
