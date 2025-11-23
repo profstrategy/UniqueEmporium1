@@ -47,14 +47,12 @@ import {
   Image as ImageIcon,
   ChevronFirst,
   ChevronLast,
-  MinusCircle, // Added for removing dynamic fields
-  PlusCircle, // Added for adding dynamic fields
 } from "lucide-react";
 import { ProductDetails } from "@/data/products.ts";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { useForm, useFieldArray, Control, FieldErrors } from "react-hook-form"; // Import Control and FieldErrors
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -76,7 +74,7 @@ const staggerContainer = {
   },
 };
 
-// Form Schema for Add/Edit Product
+// Form Schema for Add/Edit Product (Updated: Removed keyFeatures and detailedSpecs)
 const productFormSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "Product Name is required"),
@@ -86,7 +84,7 @@ const productFormSchema = z.object({
   minOrderQuantity: z.coerce.number().min(1, "Minimum Order Quantity is required and must be positive"),
   status: z.enum(["active", "inactive"]).default("active"),
   limitedStock: z.boolean().default(false),
-  shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(), // New: Concise description
+  shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(),
   fullDescription: z.string().min(1, "Full Description is required"),
   images: z.array(z.string()).optional(),
   newImageFiles: z.instanceof(FileList).optional(),
@@ -95,15 +93,6 @@ const productFormSchema = z.object({
   rating: z.coerce.number().min(0).max(5).default(4.5),
   reviewCount: z.coerce.number().min(0).default(0),
   styleNotes: z.string().optional(),
-  keyFeatures: z.array(z.string().min(1, "Feature cannot be empty")).optional(), // New: Key Features
-  detailedSpecs: z.array(z.object({ // New: Detailed Specifications
-    group: z.string().min(1, "Group name is required"),
-    items: z.array(z.object({
-      label: z.string().min(1, "Label is required"),
-      value: z.string().min(1, "Value is required"),
-      icon: z.string().optional(), // Store Lucide icon name as string
-    })),
-  })).optional(),
   reviews: z.array(z.any()).optional(),
   relatedProducts: z.array(z.string()).optional(),
 });
@@ -134,7 +123,7 @@ const ProductsManagement = () => {
     reset,
     setValue,
     watch,
-    control, // Added control for useFieldArray
+    // Removed control as useFieldArray is no longer used
     formState: { errors, isSubmitting },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
@@ -143,30 +132,17 @@ const ProductsManagement = () => {
       limitedStock: false,
       rating: 4.5,
       reviewCount: 0,
-      keyFeatures: [],
       reviews: [],
       relatedProducts: [],
       tag: "",
       tagVariant: "default",
-      shortDescription: "", // Default for new field
-      styleNotes: "", // Default for new field
-      detailedSpecs: [], // Default for new field
+      shortDescription: "",
+      styleNotes: "",
+      // Removed keyFeatures and detailedSpecs from default values
     }
   });
 
-  // useFieldArray for Key Features
-  // Explicitly define generics to resolve type constraint error
-  const { fields: keyFeaturesFields, append: appendKeyFeature, remove: removeKeyFeature } = useFieldArray<ProductFormData, "keyFeatures">({
-    control,
-    name: "keyFeatures",
-  });
-
-  // useFieldArray for Detailed Specs Groups
-  // Explicitly define generics
-  const { fields: detailedSpecsGroups, append: appendDetailedSpecGroup, remove: removeDetailedSpecGroup } = useFieldArray<ProductFormData, "detailedSpecs">({
-    control,
-    name: "detailedSpecs",
-  });
+  // Removed useFieldArray definitions
 
   const currentImageFiles = watch("newImageFiles");
   const currentImages = watch("images");
@@ -216,11 +192,11 @@ const ProductsManagement = () => {
         limitedStock: p.limited_stock,
         minOrderQuantity: p.min_order_quantity,
         status: p.status,
-        shortDescription: p.short_description, // Map new field
+        shortDescription: p.short_description,
         fullDescription: p.full_description,
-        keyFeatures: p.key_features || [],
+        keyFeatures: p.key_features || [], // Keep mapping for existing DB data compatibility
         styleNotes: p.style_notes || "",
-        detailedSpecs: p.detailed_specs || [],
+        detailedSpecs: p.detailed_specs || [], // Keep mapping for existing DB data compatibility
         reviews: p.reviews || [],
         relatedProducts: p.related_products || [],
       }));
@@ -301,17 +277,16 @@ const ProductsManagement = () => {
       limitedStock: false,
       rating: 4.5,
       reviewCount: 0,
-      keyFeatures: [],
       reviews: [],
       relatedProducts: [],
       tag: "",
       tagVariant: "default",
       images: [],
       newImageFiles: undefined,
-      shortDescription: "", // Reset new field
-      fullDescription: "", // Reset full description
-      styleNotes: "", // Reset new field
-      detailedSpecs: [], // Reset new field
+      shortDescription: "",
+      fullDescription: "",
+      styleNotes: "",
+      // Removed keyFeatures and detailedSpecs from reset
     });
     setImagePreview(null);
     setIsAddModalOpen(true);
@@ -324,16 +299,16 @@ const ProductsManagement = () => {
       originalPrice: product.originalPrice,
       minOrderQuantity: product.minOrderQuantity,
       fullDescription: product.fullDescription,
-      keyFeatures: product.keyFeatures || [], // Ensure array is not null/undefined
-      styleNotes: product.styleNotes || "", // Ensure string is not null/undefined
-      detailedSpecs: product.detailedSpecs || [], // Ensure array is not null/undefined
       reviews: product.reviews,
       relatedProducts: product.relatedProducts,
       tag: product.tag || "",
       tagVariant: product.tagVariant || "default",
       images: product.images,
       newImageFiles: undefined,
-      shortDescription: product.shortDescription || "", // Populate new field
+      shortDescription: product.shortDescription || "",
+      styleNotes: product.styleNotes || "",
+      // Note: keyFeatures and detailedSpecs are still present in the ProductDetails interface
+      // but are excluded from the form schema and payload now.
     });
     setImagePreview(product.images?.[0] || null);
     setIsEditModalOpen(true);
@@ -395,7 +370,7 @@ const ProductsManagement = () => {
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
-      short_description: data.shortDescription, // New field
+      short_description: data.shortDescription,
       full_description: data.fullDescription,
       images: imageUrls,
       tag: data.tag,
@@ -403,8 +378,7 @@ const ProductsManagement = () => {
       rating: data.rating,
       review_count: data.reviewCount,
       style_notes: data.styleNotes,
-      key_features: data.keyFeatures, // New field
-      detailed_specs: data.detailedSpecs, // New field
+      // Removed key_features and detailed_specs from payload
       reviews: data.reviews,
       related_products: data.relatedProducts,
     };
@@ -772,7 +746,7 @@ const ProductsManagement = () => {
               </div>
             </div>
 
-            {/* New: Concise Description */}
+            {/* Concise Description */}
             <div className="space-y-2">
               <Label htmlFor="shortDescription">Concise Description (Max 500 chars)</Label>
               <Textarea id="shortDescription" rows={2} {...register("shortDescription")} className={cn(errors.shortDescription && "border-destructive")} />
@@ -785,59 +759,14 @@ const ProductsManagement = () => {
               {errors.fullDescription && <p className="text-destructive text-sm">{errors.fullDescription.message}</p>}
             </div>
 
-            {/* New: Key Features */}
-            <div className="space-y-2 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Key Features</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendKeyFeature("")}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Feature
-                </Button>
-              </div>
-              {keyFeaturesFields.map((field, index) => (
-                <div key={field.id} className="flex items-center space-x-2">
-                  <Input
-                    {...register(`keyFeatures.${index}` as const)}
-                    placeholder="e.g., High-quality fabric"
-                    className={cn(errors.keyFeatures?.[index] && "border-destructive")}
-                  />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyFeature(index)}>
-                    <MinusCircle className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              ))}
-              {errors.keyFeatures && <p className="text-destructive text-sm">{errors.keyFeatures.message}</p>}
+            {/* Style Notes */}
+            <div className="space-y-2">
+              <Label htmlFor="styleNotes">Style Notes (Optional)</Label>
+              <Textarea id="styleNotes" rows={2} {...register("styleNotes")} />
             </div>
 
-            {/* New: Detailed Specifications */}
-            <div className="space-y-4 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Detailed Specifications</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendDetailedSpecGroup({ group: "", items: [{ label: "", value: "" }] })}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Spec Group
-                </Button>
-              </div>
-              {detailedSpecsGroups.map((groupField, groupIndex) => (
-                <Card key={groupField.id} className="p-4 space-y-3 border-l-2 border-primary/50">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      {...register(`detailedSpecs.${groupIndex}.group` as const)}
-                      placeholder="Group Name (e.g., Material, Dimensions)"
-                      className={cn(errors.detailedSpecs?.[groupIndex]?.group && "border-destructive")}
-                    />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeDetailedSpecGroup(groupIndex)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                  {errors.detailedSpecs?.[groupIndex]?.group && <p className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
-
-                  <div className="space-y-2 pl-4 border-l border-border">
-                    <Label className="text-sm">Items in Group</Label>
-                    <NestedFieldArray control={control} name={`detailedSpecs.${groupIndex}.items`} errors={errors} />
-                  </div>
-                </Card>
-              ))}
-              {errors.detailedSpecs && <p className="text-destructive text-sm">{errors.detailedSpecs.message}</p>}
-            </div>
+            {/* Removed Key Features Section */}
+            {/* Removed Detailed Specifications Section */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -984,7 +913,7 @@ const ProductsManagement = () => {
               </div>
             </div>
 
-            {/* New: Concise Description */}
+            {/* Concise Description */}
             <div className="space-y-2">
               <Label htmlFor="shortDescription">Concise Description (Max 500 chars)</Label>
               <Textarea id="shortDescription" rows={2} {...register("shortDescription")} className={cn(errors.shortDescription && "border-destructive")} />
@@ -997,59 +926,14 @@ const ProductsManagement = () => {
               {errors.fullDescription && <p className="text-destructive text-sm">{errors.fullDescription.message}</p>}
             </div>
 
-            {/* New: Key Features */}
-            <div className="space-y-2 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Key Features</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendKeyFeature("")}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Feature
-                </Button>
-              </div>
-              {keyFeaturesFields.map((field, index) => (
-                <div key={field.id} className="flex items-center space-x-2">
-                  <Input
-                    {...register(`keyFeatures.${index}` as const)}
-                    placeholder="e.g., High-quality fabric"
-                    className={cn(errors.keyFeatures?.[index] && "border-destructive")}
-                  />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => removeKeyFeature(index)}>
-                    <MinusCircle className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              ))}
-              {errors.keyFeatures && <p className="text-destructive text-sm">{errors.keyFeatures.message}</p>}
+            {/* Style Notes */}
+            <div className="space-y-2">
+              <Label htmlFor="styleNotes">Style Notes (Optional)</Label>
+              <Textarea id="styleNotes" rows={2} {...register("styleNotes")} />
             </div>
 
-            {/* New: Detailed Specifications */}
-            <div className="space-y-4 border p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <Label className="text-base">Detailed Specifications</Label>
-                <Button type="button" variant="outline" size="sm" onClick={() => appendDetailedSpecGroup({ group: "", items: [{ label: "", value: "" }] })}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Spec Group
-                </Button>
-              </div>
-              {detailedSpecsGroups.map((groupField, groupIndex) => (
-                <Card key={groupField.id} className="p-4 space-y-3 border-l-2 border-primary/50">
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      {...register(`detailedSpecs.${groupIndex}.group` as const)}
-                      placeholder="Group Name (e.g., Material, Dimensions)"
-                      className={cn(errors.detailedSpecs?.[groupIndex]?.group && "border-destructive")}
-                    />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeDetailedSpecGroup(groupIndex)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                  {errors.detailedSpecs?.[groupIndex]?.group && <p className="text-destructive text-sm">{errors.detailedSpecs?.[groupIndex]?.group?.message}</p>}
-
-                  <div className="space-y-2 pl-4 border-l border-border">
-                    <Label className="text-sm">Items in Group</Label>
-                    <NestedFieldArray control={control} name={`detailedSpecs.${groupIndex}.items`} errors={errors} />
-                  </div>
-                </Card>
-              ))}
-              {errors.detailedSpecs && <p className="text-destructive text-sm">{errors.detailedSpecs.message}</p>}
-            </div>
+            {/* Removed Key Features Section */}
+            {/* Removed Detailed Specifications Section */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -1141,48 +1025,6 @@ const ProductsManagement = () => {
   );
 };
 
-// Nested Field Array Component for Detailed Specs Items
-interface NestedFieldArrayProps {
-  control: Control<ProductFormData>; // Explicitly type control
-  name: `detailedSpecs.${number}.items`; // Explicitly type name as a path
-  errors: FieldErrors<ProductFormData>; // Explicitly type errors
-}
-
-const NestedFieldArray = ({ control, name, errors }: NestedFieldArrayProps) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name, // Use the correctly typed name prop directly
-  });
-
-  return (
-    <div className="space-y-2">
-      {fields.map((itemField, itemIndex) => (
-        <div key={itemField.id} className="flex items-center space-x-2">
-          <Input
-            {...control.register(`${name}.${itemIndex}.label` as const)}
-            placeholder="Label (e.g., Color)"
-            className={cn(errors?.[name]?.[itemIndex]?.label && "border-destructive")}
-          />
-          <Input
-            {...control.register(`${name}.${itemIndex}.value` as const)}
-            placeholder="Value (e.g., Black)"
-            className={cn(errors?.[name]?.[itemIndex]?.value && "border-destructive")}
-          />
-          <Input
-            {...control.register(`${name}.${itemIndex}.icon` as const)}
-            placeholder="Icon (Lucide name, optional)"
-            className="w-32"
-          />
-          <Button type="button" variant="ghost" size="icon" onClick={() => remove(itemIndex)}>
-            <MinusCircle className="h-4 w-4 text-destructive" />
-          </Button>
-        </div>
-      ))}
-      <Button type="button" variant="outline" size="sm" onClick={() => append({ label: "", value: "", icon: "" })}>
-        <PlusCircle className="mr-2 h-4 w-4" /> Add Item
-      </Button>
-    </div>
-  );
-};
+// Removed NestedFieldArray component as it is no longer needed.
 
 export default ProductsManagement;

@@ -30,9 +30,9 @@ export async function fetchProductsFromSupabase(): Promise<ProductDetails[]> {
     minOrderQuantity: p.min_order_quantity,
     status: p.status,
     fullDescription: p.full_description,
-    keyFeatures: p.key_features || [],
+    keyFeatures: p.key_features || [], // Keep mapping for existing DB data compatibility
     styleNotes: p.style_notes || "",
-    detailedSpecs: p.detailed_specs || [],
+    detailedSpecs: p.detailed_specs || [], // Keep mapping for existing DB data compatibility
     reviews: p.reviews || [],
     relatedProducts: p.related_products || [],
   }));
@@ -72,9 +72,9 @@ export async function fetchProductByIdFromSupabase(id: string): Promise<ProductD
     minOrderQuantity: data.min_order_quantity,
     status: data.status,
     fullDescription: data.full_description,
-    keyFeatures: data.key_features || [],
+    keyFeatures: data.key_features || [], // Keep mapping for existing DB data compatibility
     styleNotes: data.style_notes || "",
-    detailedSpecs: data.detailed_specs || [],
+    detailedSpecs: data.detailed_specs || [], // Keep mapping for existing DB data compatibility
     reviews: data.reviews || [],
     relatedProducts: data.related_products || [],
   };
