@@ -17,22 +17,22 @@ import { useFavorites } from "@/context/FavoritesContext.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import UniqueEmporiumLogo from "@/components/logo/UniqueEmporiumLogo.tsx";
 import { cn } from "@/lib/utils";
+import { useCategories } from "@/hooks/useCategories"; // Import the new hook
 
 interface HeaderProps {
   isCartDrawerOpen: boolean;
   setIsCartDrawerOpen: (isOpen: boolean) => void;
 }
 
-const categories = [
-  { name: "Kids", icon: Baby, link: "/products?category=Kids" },
-  { name: "Kids Patpat", icon: Baby, link: "/products?category=Kids Patpat" },
-  { name: "Children Jeans", icon: Baby, link: "/products?category=Children Jeans" },
-  { name: "Children Shirts", icon: Baby, link: "/products?category=Children Shirts" },
-  { name: "Men Vintage Shirts", icon: Shirt, link: "/products?category=Men Vintage Shirts" },
-  { name: "Amazon Ladies", icon: ShoppingBag, link: "/products?category=Amazon Ladies" },
-  { name: "SHEIN Gowns", icon: Shirt, link: "/products?category=SHEIN Gowns" },
-  { name: "Others", icon: Gem, link: "/products?category=Others" },
-];
+// Map category names to Lucide icons (same logic as CategoriesSection)
+const getCategoryIcon = (categoryName: string) => {
+  const lowerName = categoryName.toLowerCase();
+  if (lowerName.includes("kid") || lowerName.includes("child")) return Baby;
+  if (lowerName.includes("men") || lowerName.includes("shirt")) return Shirt;
+  if (lowerName.includes("amazon")) return ShoppingBag;
+  if (lowerName.includes("shein") || lowerName.includes("gown")) return Shirt;
+  return Gem; // Default icon
+};
 
 const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,6 +43,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
   const { totalItems } = useCart();
   const { totalFavorites } = useFavorites();
   const { user, isAdmin, signOut } = useAuth();
+  const { categories, isLoading } = useCategories(); // Use the new hook
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -99,23 +100,33 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-xl shadow-lg"
+                className="w-64 p-2 grid grid-cols-2 gap-2 bg-card border rounded-xl shadow-lg max-h-[70vh] overflow-y-auto"
               >
-                {categories.map((category) => (
-                  <DropdownMenuItem 
-                    key={category.name} 
-                    asChild 
-                    className="rounded-full p-2 hover:bg-accent"
-                  >
-                    <Link 
-                      to={category.link} 
-                      className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
-                    >
-                      <category.icon className="h-4 w-4" />
-                      {category.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
+                {isLoading ? (
+                  <div className="col-span-2 text-center py-2 text-muted-foreground">Loading...</div>
+                ) : categories.length === 0 ? (
+                  <div className="col-span-2 text-center py-2 text-muted-foreground">No categories</div>
+                ) : (
+                  categories.map((category) => {
+                    const IconComponent = getCategoryIcon(category.name);
+                    return (
+                      <DropdownMenuItem 
+                        key={category.id} 
+                        asChild 
+                        className="rounded-full p-2 hover:bg-accent"
+                      >
+                        <Link 
+                          to={`/products?category=${encodeURIComponent(category.name)}`} 
+                          className="flex items-center gap-2 cursor-pointer w-full h-full p-2"
+                          onClick={closeMobileMenu} // Close menu on click
+                        >
+                          <IconComponent className="h-4 w-4 flex-shrink-0" />
+                          <span className="truncate">{category.name}</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

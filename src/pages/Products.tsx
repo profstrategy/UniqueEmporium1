@@ -13,17 +13,11 @@ import RecommendedProductsSection from "@/components/recommended-products/Recomm
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
 import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 import { fetchProductsFromSupabase } from "@/integrations/supabase/products";
+import { useCategories } from "@/hooks/useCategories"; // Import the new hook
 
 const categories = [
   { name: "All Categories", value: "all" },
-  { name: "Kids", value: "Kids", icon: Baby },
-  { name: "Kids Patpat", value: "Kids Patpat", icon: Baby },
-  { name: "Children Jeans", value: "Children Jeans", icon: Baby },
-  { name: "Children Shirts", value: "Children Shirts", icon: Baby },
-  { name: "Men Vintage Shirts", value: "Men Vintage Shirts", icon: Shirt },
-  { name: "Amazon Ladies", value: "Amazon Ladies", icon: ShoppingBag },
-  { name: "SHEIN Gowns", value: "SHEIN Gowns", icon: Shirt },
-  { name: "Others", value: "Others", icon: Gem },
+  // Dynamic categories will be added here
 ];
 
 const sortOptions = [
@@ -65,6 +59,8 @@ const Products = () => {
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
   const [allAvailableProducts, setAllAvailableProducts] = useState<ProductDetails[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  
+  const { categories: dynamicCategories, isLoading: isLoadingCategories } = useCategories(); // Use the new hook
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -165,6 +161,12 @@ const Products = () => {
     loadRecentlyViewed();
   }, [recentlyViewedProductIds]);
 
+  // Combine static "All Categories" with dynamic categories for the filter dropdown
+  const allFilterCategories = [
+    { name: "All Categories", value: "all" },
+    ...dynamicCategories.map(cat => ({ name: cat.name, value: cat.name }))
+  ];
+
   return (
     <div className="max-w-7xl mx-auto py-12 pt-8 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
@@ -221,12 +223,12 @@ const Products = () => {
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              {allFilterCategories.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
 
           {/* Sort By Select */}
@@ -270,7 +272,7 @@ const Products = () => {
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
+                {allFilterCategories.map((cat) => (
                   <SelectItem key={cat.value} value={cat.value}>
                     {cat.name}
                   </SelectItem>
@@ -304,11 +306,11 @@ const Products = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="text-muted-foreground text-center mb-8"
       >
-        {isLoadingProducts ? "Loading products..." : `Showing ${displayedProducts.length} of ${allAvailableProducts.length} unique wears`}
+        {isLoadingProducts || isLoadingCategories ? "Loading..." : `Showing ${displayedProducts.length} of ${allAvailableProducts.length} unique wears`}
       </motion.p>
 
       {/* Product Grid Display */}
-      {isLoadingProducts ? (
+      {isLoadingProducts || isLoadingCategories ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <ProductCardSkeleton key={i} />
