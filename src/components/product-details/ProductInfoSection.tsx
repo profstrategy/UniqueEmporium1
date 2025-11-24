@@ -77,10 +77,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const unitPrice = product.price / product.minOrderQuantity;
   const originalUnitPrice = product.originalPrice ? product.originalPrice / product.minOrderQuantity : undefined;
 
-  // Determine which description to display for the summary on the product details page
-  const displayDescription = product.fullDescription
-    ? product.fullDescription.split('.')[0] + '.' // Take the first sentence of fullDescription
-    : 'No description available.';
+  // Determine which description to display
+  const displayDescription = product.shortDescription || (product.fullDescription ? product.fullDescription.split('.')[0] + '.' : 'No description available.');
 
   return (
     <div className="space-y-6">
