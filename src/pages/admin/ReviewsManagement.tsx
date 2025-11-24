@@ -94,7 +94,7 @@ const ReviewsManagement = () => {
         is_verified_buyer,
         created_at,
         profiles(first_name, last_name, email),
-        products(name)
+        products!product_reviews_product_id_fkey(name) -- Explicitly specify the foreign key
       `)
       .order('created_at', { ascending: false });
 
@@ -107,7 +107,7 @@ const ReviewsManagement = () => {
         id: review.id,
         user_id: review.user_id,
         product_id: review.product_id,
-        product_name: review.products?.name || 'N/A',
+        product_name: review.products?.name || 'N/A', // Now we can get the product name
         customer_name: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'N/A',
         customer_email: review.profiles?.email || 'N/A',
         rating: review.rating,

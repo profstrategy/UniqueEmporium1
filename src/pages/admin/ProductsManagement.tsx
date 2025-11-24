@@ -13,9 +13,9 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Plus, Edit } from "lucide-react";
 import { ProductDetails } from "@/data/products.ts";
 import { useAdminProducts } from "@/hooks/useAdminProducts";
-import ProductForm, { ProductFormData } from "@/components/admin/products/ProductForm.tsx"; // Corrected import path
-import ProductTable from "@/components/admin/products/ProductTable.tsx"; // Corrected import path
-import DeleteProductAlertDialog from "@/components/admin/products/DeleteProductAlertDialog.tsx"; // Corrected import path
+import ProductForm, { ProductFormData } from "@/components/admin/products/ProductForm.tsx";
+import ProductTable from "@/components/admin/products/ProductTable.tsx";
+import DeleteProductAlertDialog from "@/components/admin/products/DeleteProductAlertDialog.tsx";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -49,7 +49,7 @@ const ProductsManagement = () => {
   const [filterStockStatus, setFilterStockStatus] = useState("all");
   const [filterProductStatus, setFilterProductStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 10;
+  const productsPerPage = 10; // Define productsPerPage here
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -121,13 +121,14 @@ const ProductsManagement = () => {
     }
   };
 
-  const handleFormSubmit = async (data: ProductFormData) => {
+  const handleFormSubmit = async (data: ProductFormData, newFiles: File[]) => { // Updated signature
+    let success = false;
     if (editingProduct) {
-      await updateProduct(editingProduct.id, data);
-      setIsEditModalOpen(false);
+      success = await updateProduct(editingProduct.id, data, newFiles); // Pass newFiles
+      if (success) setIsEditModalOpen(false);
     } else {
-      await addProduct(data);
-      setIsAddModalOpen(false);
+      success = await addProduct(data, newFiles); // Pass newFiles
+      if (success) setIsAddModalOpen(false);
     }
   };
 
@@ -166,6 +167,8 @@ const ProductsManagement = () => {
         goToPrevPage={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
         goToNextPage={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
         goToLastPage={() => setCurrentPage(totalPages)}
+        totalFilteredProductsCount={filteredProducts.length} // Pass the total filtered count
+        productsPerPage={productsPerPage} // Pass productsPerPage
       />
 
       {/* Add Product Dialog */}
@@ -183,7 +186,7 @@ const ProductsManagement = () => {
             onSubmit={handleFormSubmit}
             onCancel={() => setIsAddModalOpen(false)}
             availableCategories={availableCategories}
-            isSubmitting={false} // isSubmitting will be managed internally by ProductForm
+            // isSubmitting prop removed
           />
         </DialogContent>
       </Dialog>
@@ -204,20 +207,18 @@ const ProductsManagement = () => {
             onSubmit={handleFormSubmit}
             onCancel={() => setIsEditModalOpen(false)}
             availableCategories={availableCategories}
-            isSubmitting={false} // isSubmitting will be managed internally by ProductForm
+            // isSubmitting prop removed
           />
         </DialogContent>
       </Dialog>
 
       {/* Delete Product Confirmation Dialog */}
-      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
-        <DeleteProductAlertDialog
-          isOpen={isDeleteAlertOpen}
-          onOpenChange={setIsDeleteAlertOpen}
-          onConfirm={confirmDeleteProduct}
-          productName={deletingProductName}
-        />
-      </AlertDialog>
+      <DeleteProductAlertDialog
+        isOpen={isDeleteAlertOpen}
+        onOpenChange={setIsDeleteAlertOpen}
+        onConfirm={confirmDeleteProduct}
+        productName={deletingProductName}
+      />
     </motion.div>
   );
 };

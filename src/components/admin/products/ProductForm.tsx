@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useForm, useFieldArray, Control } from "react-hook-form"; // Import Control
+import React, { useEffect, useState, useCallback } from "react";
+import { useForm, useFieldArray, Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
@@ -13,9 +13,9 @@ import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ImageUploadPreview from "./ImageUploadPreview.tsx"; // Corrected import path
-import NestedDetailedSpecs from "./NestedDetailedSpecs.tsx"; // Corrected import path
-import { AdminCategory } from "@/pages/admin/CategoriesManagement.tsx"; // Corrected import path
+import ImageUploadPreview from "./ImageUploadPreview.tsx";
+import NestedDetailedSpecs from "./NestedDetailedSpecs.tsx";
+import { AdminCategory } from "@/pages/admin/CategoriesManagement.tsx";
 
 // Zod Schema for Product Form
 export const productFormSchema = z.object({
@@ -29,14 +29,14 @@ export const productFormSchema = z.object({
   limitedStock: z.boolean().default(false),
   shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(),
   fullDescription: z.string().min(1, "Full Description is required"),
-  images: z.array(z.string()).optional(),
-  newImageFiles: z.instanceof(FileList).optional(),
+  images: z.array(z.string()).optional(), // Existing image URLs (from DB)
+  // newImageFiles is handled separately as FileList is not directly validated by Zod for file content
   tag: z.string().optional(),
   tagVariant: z.enum(["default", "secondary", "destructive", "outline"]).optional(),
   rating: z.coerce.number().min(0).max(5).default(4.5),
   reviewCount: z.coerce.number().min(0).default(0),
   styleNotes: z.string().optional(),
-  keyFeatures: z.array(z.object({ value: z.string().min(1, "Feature cannot be empty") })), // Changed to array of objects
+  keyFeatures: z.array(z.object({ value: z.string().min(1, "Feature cannot be empty") })),
   detailedSpecs: z.array(z.object({
     group: z.string().min(1, "Group name is required"),
     items: z.array(z.object({
@@ -53,10 +53,10 @@ export type ProductFormData = z.infer<typeof productFormSchema>;
 
 interface ProductFormProps {
   initialData?: ProductFormData | null;
-  onSubmit: (data: ProductFormData) => Promise<void>;
+  onSubmit: (data: ProductFormData, newFiles: File[]) => Promise<void>; // Modified onSubmit signature
   onCancel: () => void;
   availableCategories: AdminCategory[];
-  isSubmitting: boolean;
+  // Removed isSubmitting prop, as it's managed internally by react-hook-form
 }
 
 const ProductForm = ({
@@ -64,7 +64,6 @@ const ProductForm = ({
   onSubmit,
   onCancel,
   availableCategories,
-  isSubmitting,
 }: ProductFormProps) => {
   const {
     register,
@@ -73,25 +72,25 @@ const ProductForm = ({
     setValue,
     watch,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting }, // Destructure isSubmitting from formState
   } = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
     defaultValues: initialData ? {
       ...initialData,
-      keyFeatures: initialData.keyFeatures?.map(f => ({ value: f })) || [], // Map to new structure
+      keyFeatures: initialData.keyFeatures || [],
       detailedSpecs: initialData.detailedSpecs || [],
+      images: initialData.images || [], // Ensure images array is initialized
     } : {
       status: "active",
       limitedStock: false,
       rating: 4.5,
       reviewCount: 0,
-      keyFeatures: [], // Initialize as empty array of objects
+      keyFeatures: [],
       reviews: [],
       relatedProducts: [],
       tag: "",
       tagVariant: "default",
-      images: [],
-      newImageFiles: undefined,
+      images: [], // Initialize empty array for existing images
       shortDescription: "",
       fullDescription: "",
       styleNotes: "",
@@ -109,63 +108,47 @@ const ProductForm = ({
     name: "detailedSpecs",
   });
 
-  const currentImageFiles = watch("newImageFiles");
-  const currentImages = watch("images");
   const currentLimitedStock = watch("limitedStock");
   const currentProductStatus = watch("status");
   const currentTagVariant = watch("tagVariant");
+  const currentExistingImageUrls = watch("images") || []; // Watch the 'images' field for existing URLs
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [newlySelectedFiles, setNewlySelectedFiles] = useState<File[]>([]); // State to hold actual File objects
 
+  // Effect to initialize existing image URLs from initialData
   useEffect(() => {
-    if (initialData) {
-      reset({
-        ...initialData,
-        keyFeatures: initialData.keyFeatures?.map(f => ({ value: f })) || [], // Map to new structure
-        detailedSpecs: initialData.detailedSpecs || [],
-      });
-      setImagePreviewUrl(initialData.images?.[0] || null);
+    if (initialData?.images) {
+      setValue("images", initialData.images);
     } else {
-      reset({
-        status: "active",
-        limitedStock: false,
-        rating: 4.5,
-        reviewCount: 0,
-        keyFeatures: [],
-        reviews: [],
-        relatedProducts: [],
-        tag: "",
-        tagVariant: "default",
-        images: [],
-        newImageFiles: undefined,
-        shortDescription: "",
-        fullDescription: "",
-        styleNotes: "",
-        detailedSpecs: [],
-      });
-      setImagePreviewUrl(null);
+      setValue("images", []);
     }
-  }, [initialData, reset]);
+    setNewlySelectedFiles([]); // Clear new files on initial load/reset
+  }, [initialData, setValue]);
 
-  useEffect(() => {
-    if (currentImageFiles && currentImageFiles.length > 0) {
-      const file = currentImageFiles[0];
-      if (file instanceof File) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreviewUrl(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    } else if (currentImages && currentImages.length > 0) {
-      setImagePreviewUrl(currentImages[0]);
-    } else {
-      setImagePreviewUrl(null);
+  // Callback to handle new file selections from ImageUploadPreview
+  const handleFilesSelected = useCallback((files: FileList | null) => {
+    if (files) {
+      setNewlySelectedFiles(prev => [...prev, ...Array.from(files)]);
     }
-  }, [currentImageFiles, currentImages]);
+  }, []);
+
+  // Callback to remove an existing image (from DB)
+  const handleRemoveExistingImage = useCallback((urlToRemove: string) => {
+    setValue("images", currentExistingImageUrls.filter(url => url !== urlToRemove));
+  }, [currentExistingImageUrls, setValue]);
+
+  // Callback to remove a newly selected file (before upload)
+  const handleRemoveNewFile = useCallback((indexToRemove: number) => {
+    setNewlySelectedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
+  }, []);
+
+  // Override the default handleSubmit to include the newlySelectedFiles
+  const onSubmitHandler = async (data: ProductFormData) => {
+    await onSubmit(data, newlySelectedFiles);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
+    <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-6 py-4">
       <input type="hidden" {...register("id")} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -276,33 +259,35 @@ const ProductForm = ({
         {errors.detailedSpecs && <p className="text-destructive text-sm">{errors.detailedSpecs.message}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="tag">Product Tag (e.g., "New Arrival", "Best Seller")</Label>
-          <Input id="tag" {...register("tag")} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="tagVariant">Tag Style</Label>
-          <Select onValueChange={(value) => setValue("tagVariant", value as "default" | "secondary" | "destructive" | "outline")} value={currentTagVariant}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select tag style" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="default">Default</SelectItem>
-              <SelectItem value="secondary">Secondary</SelectItem>
-              <SelectItem value="destructive">Destructive</SelectItem>
-              <SelectItem value="outline">Outline</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="tag">Product Tag (e.g., "New Arrival", "Best Seller")</Label>
+        <Input id="tag" {...register("tag")} />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="tagVariant">Tag Style</Label>
+        <Select onValueChange={(value) => setValue("tagVariant", value as "default" | "secondary" | "destructive" | "outline")} value={currentTagVariant}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select tag style" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="default">Default</SelectItem>
+            <SelectItem value="secondary">Secondary</SelectItem>
+            <SelectItem value="destructive">Destructive</SelectItem>
+            <SelectItem value="outline">Outline</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <ImageUploadPreview
         register={register}
-        imagePreviewUrl={imagePreviewUrl}
+        existingImageUrls={currentExistingImageUrls}
+        newlySelectedFiles={newlySelectedFiles}
+        onRemoveExistingImage={handleRemoveExistingImage}
+        onRemoveNewFile={handleRemoveNewFile}
+        onFilesSelected={handleFilesSelected}
         errors={errors}
         label="Upload Product Images (Max 5)"
-        description="Upload up to 5 images. Only the first image will be used for preview."
+        description="Add new images or remove existing ones. New uploads will be added to the current set."
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -333,7 +318,7 @@ const ProductForm = ({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}> {/* Use isSubmitting here */}
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
