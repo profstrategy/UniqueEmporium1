@@ -3,8 +3,8 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ImageIcon, XCircle } from "lucide-react"; // Added XCircle icon
-import { Button } from "@/components/ui/button"; // Import Button
+import { ImageIcon, XCircle, PlusCircle } from "lucide-react"; // Added PlusCircle icon
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ImageUploadPreviewProps {
@@ -25,20 +25,22 @@ const ImageUploadPreview = ({
   description,
 }: ImageUploadPreviewProps) => {
   return (
-    <div className="flex flex-col gap-4"> {/* Changed to flex-col for vertical stacking */}
+    <div className="flex flex-col gap-4">
       <div className="space-y-2">
-        <Label htmlFor="newImageFiles">{label}</Label>
+        {/* The actual file input is hidden, but still functional via the Label */}
+        <Label htmlFor="newImageFiles" className="sr-only">{label}</Label>
         <Input
           id="newImageFiles"
           type="file"
           accept="image/*"
           multiple
           {...register("newImageFiles")}
+          className="hidden" // Visually hide the input
         />
         <p className="text-xs text-muted-foreground">{description}</p>
         {errors.newImageFiles && <p className="text-destructive text-sm">{errors.newImageFiles.message}</p>}
       </div>
-      <div className="space-y-2"> {/* This is the container for image previews */}
+      <div className="space-y-2">
         <Label>Image Previews</Label>
         <div className="flex flex-wrap gap-2">
           {imagePreviewUrls.length > 0 ? (
@@ -57,10 +59,17 @@ const ImageUploadPreview = ({
               </div>
             ))
           ) : (
-            <div className="h-24 w-24 rounded-md border flex items-center justify-center overflow-hidden bg-muted">
-              <ImageIcon className="h-10 w-10 text-muted-foreground" />
-            </div>
+            // This block is now removed as the "Add Image" button is always present
+            null
           )}
+          {/* Always show the clickable "+" button to add images */}
+          <Label
+            htmlFor="newImageFiles"
+            className="h-24 w-24 rounded-md border border-dashed flex flex-col items-center justify-center cursor-pointer text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+          >
+            <PlusCircle className="h-8 w-8" />
+            <span className="text-sm mt-1">Add Image</span>
+          </Label>
         </div>
       </div>
     </div>
