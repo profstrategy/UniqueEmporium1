@@ -13,9 +13,9 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Plus, Edit } from "lucide-react";
 import { ProductDetails } from "@/data/products.ts";
 import { useAdminProducts } from "@/hooks/useAdminProducts";
-import ProductForm, { ProductFormData } from "@/components/admin/products/ProductForm.tsx"; // Corrected import path
-import ProductTable from "@/components/admin/products/ProductTable.tsx"; // Corrected import path
-import DeleteProductAlertDialog from "@/components/admin/products/DeleteProductAlertDialog.tsx"; // Corrected import path
+import ProductForm, { ProductFormData } from "@/components/admin/products/ProductForm.tsx";
+import ProductTable from "@/components/admin/products/ProductTable.tsx";
+import DeleteProductAlertDialog from "@/components/admin/products/DeleteProductAlertDialog.tsx";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -121,12 +121,12 @@ const ProductsManagement = () => {
     }
   };
 
-  const handleFormSubmit = async (data: ProductFormData) => {
+  const handleFormSubmit = async (data: ProductFormData, newFiles: File[]) => { // Updated signature
     if (editingProduct) {
-      await updateProduct(editingProduct.id, data);
+      await updateProduct(editingProduct.id, data, newFiles); // Pass newFiles
       setIsEditModalOpen(false);
     } else {
-      await addProduct(data);
+      await addProduct(data, newFiles); // Pass newFiles
       setIsAddModalOpen(false);
     }
   };
@@ -210,7 +210,6 @@ const ProductsManagement = () => {
       </Dialog>
 
       {/* Delete Product Confirmation Dialog */}
-      {/* Removed the outer AlertDialog wrapper */}
       <DeleteProductAlertDialog
         isOpen={isDeleteAlertOpen}
         onOpenChange={setIsDeleteAlertOpen}
