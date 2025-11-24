@@ -36,6 +36,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import ReviewDetailsDialog from "@/components/admin/reviews/ReviewDetailsDialog"; // Import the new dialog
 
 // Define the AdminReview interface based on your database structure and joined data
 export interface AdminReview {
@@ -45,6 +46,7 @@ export interface AdminReview {
   product_name: string; // From products table
   customer_name: string; // From profiles table
   customer_email: string; // From profiles table
+  customer_phone: string; // Added customer phone
   rating: number;
   title: string;
   comment: string;
@@ -80,6 +82,10 @@ const ReviewsManagement = () => {
   const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 
+  // State for the Review Details Dialog
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [viewingReview, setViewingReview] = useState<AdminReview | null>(null);
+
   const fetchReviews = useCallback(async () => {
     setIsLoadingReviews(true);
     const { data, error } = await supabase
@@ -93,8 +99,8 @@ const ReviewsManagement = () => {
         comment,
         is_verified_buyer,
         created_at,
-        profiles(first_name, last_name, email),
-        products!product_reviews_product_id_fkey(name) -- Explicitly specify the foreign key
+        profiles!product_reviews_user_id_fkey(first_name, last_name, email, phone), // Include phone
+        products!product_reviews_product_id_fkey(name)
       `)
       .order('created_at', { ascending: false });
 
@@ -107,9 +113,10 @@ const ReviewsManagement = () => {
         id: review.id,
         user_id: review.user_id,
         product_id: review.product_id,
-        product_name: review.products?.name || 'N/A', // Now we can get the product name
+        product_name: review.products?.name || 'N/A',
         customer_name: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'N/A',
         customer_email: review.profiles?.email || 'N/A',
+        customer_phone: review.profiles?.phone || 'N/A', // Map the phone number
         rating: review.rating,
         title: review.title,
         comment: review.comment,
@@ -136,6 +143,7 @@ const ReviewsManagement = () => {
           review.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           review.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           review.customer_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          review.customer_phone.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by phone
           review.id.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -190,6 +198,12 @@ const ReviewsManagement = () => {
       }
     }
   }, [deletingReviewId, fetchReviews]);
+
+  // Handler to open the Review Details Dialog
+  const handleViewDetailsClick = (review: AdminReview) => {
+    setViewingReview(review);
+    setIsDetailsModalOpen(true);
+  };
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -308,8 +322,14 @@ const ReviewsManagement = () => {
                         <TableCell className="font-medium text-xs">{review.id}</TableCell>
                         <TableCell className="font-medium">{review.product_name}</TableCell>
                         <TableCell>
-                          <div className="font-medium">{review.customer_name}</div>
-                          <div className="text-sm text-muted-foreground">{review.customer_email}</div>
+                          {/* Clickable area for customer name to open dialog */}
+                          <div 
+                            className="cursor-pointer hover:bg-muted/50 p-1 -m-1 rounded-md transition-colors"
+                            onClick={() => handleViewDetailsClick(review)}
+                          >
+                            <div className="font-medium">{review.customer_name}</div>
+                            <div className="text-sm text-muted-foreground">{review.customer_email}</div>
+                          </div>
                         </TableCell>
                         <TableCell>{renderStars(review.rating)}</TableCell>
                         <TableCell className="max-w-[200px] truncate">{review.title}</TableCell>
@@ -325,7 +345,7 @@ const ReviewsManagement = () => {
                         <TableCell>{new Date(review.created_at).toLocaleDateString()}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end space-x-2">
-                            <AlertDialog> {/* Added AlertDialog wrapper */}
+                            <AlertDialog>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
@@ -352,7 +372,7 @@ const ReviewsManagement = () => {
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
-                            </AlertDialog> {/* Closed AlertDialog wrapper */}
+                            </AlertDialog>
                           </div>
                         </TableCell>
                       </motion.tr>
@@ -414,6 +434,15 @@ const ReviewsManagement = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Review Details Dialog */}
+      {viewingReview && (
+        <ReviewDetailsDialog
+          review={viewingReview}
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+        />
+      )}
     </motion.div>
   );
 };
