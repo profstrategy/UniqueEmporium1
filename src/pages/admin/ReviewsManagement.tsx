@@ -88,7 +88,7 @@ const ReviewsManagement = () => {
 
   const fetchReviews = useCallback(async () => {
     setIsLoadingReviews(true);
-    // Fixed: Removed the inline comment from the select query string
+    // Updated query using explicit joins to avoid schema cache issues
     const { data, error } = await supabase
       .from('product_reviews')
       .select(`
@@ -100,8 +100,15 @@ const ReviewsManagement = () => {
         comment,
         is_verified_buyer,
         created_at,
-        profiles!product_reviews_user_id_fkey(first_name, last_name, email, phone),
-        products!product_reviews_product_id_fkey(name)
+        profiles:user_id (
+          first_name,
+          last_name,
+          email,
+          phone
+        ),
+        products:product_id (
+          name
+        )
       `)
       .order('created_at', { ascending: false });
 
