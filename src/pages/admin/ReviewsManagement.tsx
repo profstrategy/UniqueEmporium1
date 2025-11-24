@@ -82,19 +82,12 @@ const ReviewsManagement = () => {
 
   const fetchReviews = useCallback(async () => {
     setIsLoadingReviews(true);
+    // Joining only profiles table to debug
     const { data, error } = await supabase
       .from('product_reviews')
       .select(`
-        id,
-        user_id,
-        product_id,
-        rating,
-        title,
-        comment,
-        is_verified_buyer,
-        created_at,
-        profiles(first_name, last_name, email),
-        products(name)
+        *,
+        profiles(first_name, last_name, email)
       `)
       .order('created_at', { ascending: false });
 
@@ -107,9 +100,9 @@ const ReviewsManagement = () => {
         id: review.id,
         user_id: review.user_id,
         product_id: review.product_id,
-        product_name: review.products?.name || 'N/A', // Get product name from joined data
-        customer_name: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'N/A', // Get customer name from joined data
-        customer_email: review.profiles?.email || 'N/A', // Get customer email from joined data
+        product_name: review.product_id, // Placeholder for product name
+        customer_name: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'N/A',
+        customer_email: review.profiles?.email || 'N/A',
         rating: review.rating,
         title: review.title,
         comment: review.comment,
