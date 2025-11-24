@@ -115,7 +115,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
       </div>
 
       {/* Price */}
-      <div className="flex items-baseline gap-3">
+      <div className="flex items-baseline gap-3 flex-wrap">
         <p className="font-poppins text-3xl md:text-4xl font-bold text-primary">
           {formatCurrency(product.price)}
         </p>
