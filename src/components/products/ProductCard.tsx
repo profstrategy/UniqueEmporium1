@@ -30,8 +30,6 @@ export interface Product {
   tagVariant?: "default" | "secondary" | "destructive" | "outline";
   limitedStock?: boolean;
   minOrderQuantity: number; // Added minOrderQuantity
-  shortDescription?: string; // Added shortDescription
-  fullDescription?: string; // Added fullDescription
 }
 
 interface ProductCardProps {
@@ -103,9 +101,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
   };
 
   const favorited = isFavorited(product.id);
-
-  // Determine which description to display
-  const displayDescription = product.shortDescription || (product.fullDescription ? product.fullDescription.split('.')[0] + '.' : 'No description available.');
 
   return (
     <motion.div
@@ -255,11 +250,6 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               {product.name}
             </h3>
           </Link>
-
-          {/* Short Description / Truncated Full Description */}
-          <p className="text-xs text-muted-foreground line-clamp-2 mb-1">
-            {displayDescription}
-          </p>
 
           {/* Price Display (Unit Price) */}
           <div className="flex items-center gap-2 mb-1">
