@@ -14,8 +14,8 @@ interface UseAdminProductsResult {
   isLoadingCategories: boolean;
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
-  addProduct: (data: ProductFormData, newFiles: File[]) => Promise<boolean>; // Updated signature
-  updateProduct: (id: string, data: ProductFormData, newFiles: File[]) => Promise<boolean>; // Updated signature
+  addProduct: (data: ProductFormData) => Promise<boolean>;
+  updateProduct: (id: string, data: ProductFormData) => Promise<boolean>;
   deleteProduct: (id: string) => Promise<boolean>;
 }
 
@@ -51,7 +51,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
         status: p.status,
         shortDescription: p.short_description,
         fullDescription: p.full_description,
-        keyFeatures: (p.key_features || []).map((feature: string) => ({ value: feature })),
+        keyFeatures: (p.key_features || []).map((feature: string) => ({ value: feature })), // Map to new structure
         styleNotes: p.style_notes || "",
         detailedSpecs: p.detailed_specs || [],
         reviews: p.reviews || [],
@@ -80,10 +80,10 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     fetchCategories();
   }, [fetchProducts, fetchCategories]);
 
-  const uploadImages = async (files: File[], productId: string): Promise<string[]> => { // Changed FileList to File[]
-    if (files.length === 0) return [];
+  const uploadImages = async (files: FileList | undefined, productId: string): Promise<string[]> => {
+    if (!files || files.length === 0) return [];
 
-    const uploadPromises = files.map(async (file) => {
+    const uploadPromises = Array.from(files).map(async (file) => {
       const fileExtension = file.name.split('.').pop();
       const filePath = `products/${productId}/${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
 
@@ -108,20 +108,13 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     return results.filter(url => url !== null) as string[];
   };
 
-  const getFilePathFromUrl = (url: string): string | null => {
-    // Assuming Supabase public URL format: https://<project_id>.supabase.co/storage/v1/object/public/<bucket_name>/<path_to_file>
-    const urlParts = url.split('/storage/v1/object/public/product_images/');
-    return urlParts.length > 1 ? urlParts[1] : null;
-  };
-
-  const addProduct = useCallback(async (data: ProductFormData, newFiles: File[]): Promise<boolean> => { // Updated signature
+  const addProduct = useCallback(async (data: ProductFormData): Promise<boolean> => {
     const newProductId = `prod-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     let imageUrls: string[] = [];
 
-    // Upload new images
-    if (newFiles.length > 0) {
-      imageUrls = await uploadImages(newFiles, newProductId);
-      if (imageUrls.length === 0 && newFiles.length > 0) {
+    if (data.newImageFiles && data.newImageFiles.length > 0) {
+      imageUrls = await uploadImages(data.newImageFiles, newProductId);
+      if (imageUrls.length === 0) {
         toast.error("Failed to upload product images. Product not added.");
         return false;
       }
@@ -144,13 +137,13 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       limited_stock: data.limitedStock,
       short_description: data.shortDescription,
       full_description: data.fullDescription,
-      images: imageUrls, // Store all newly uploaded image URLs
+      images: imageUrls,
       tag: data.tag,
       tag_variant: data.tagVariant,
       rating: data.rating,
       review_count: data.reviewCount,
       style_notes: data.styleNotes,
-      key_features: data.keyFeatures.map(f => f.value),
+      key_features: data.keyFeatures.map(f => f.value), // Map back to string[] for DB
       detailed_specs: data.detailedSpecs,
       reviews: data.reviews,
       related_products: data.relatedProducts,
@@ -168,48 +161,15 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     }
   }, [fetchProducts]);
 
-  const updateProduct = useCallback(async (id: string, data: ProductFormData, newFiles: File[]): Promise<boolean> => { // Updated signature
-    const originalProduct = products.find(p => p.id === id);
-    if (!originalProduct) {
-      toast.error("Original product not found for update.");
-      return false;
-    }
+  const updateProduct = useCallback(async (id: string, data: ProductFormData): Promise<boolean> => {
+    let imageUrls: string[] = data.images || [];
 
-    let finalImageUrls: string[] = data.images || []; // This now contains the *desired* set of existing image URLs from the form
-
-    // 1. Identify images to delete from storage
-    const imagesToDeleteFromStorage: string[] = [];
-    originalProduct.images.forEach(originalUrl => {
-      if (!finalImageUrls.includes(originalUrl)) { // If an original URL is NOT in the final list, it means it was removed
-        const filePath = getFilePathFromUrl(originalUrl);
-        if (filePath) imagesToDeleteFromStorage.push(filePath);
-      }
-    });
-
-    if (imagesToDeleteFromStorage.length > 0) {
-      const { error: deleteStorageError } = await supabase.storage
-        .from('product_images')
-        .remove(imagesToDeleteFromStorage);
-
-      if (deleteStorageError) {
-        console.error("Error deleting old product images from storage:", deleteStorageError);
-        toast.error("Failed to delete some old product images from storage.", { description: deleteStorageError.message });
-      } else {
-        toast.info("Old product images removed from storage.");
+    if (data.newImageFiles && data.newImageFiles.length > 0) {
+      const uploadedNewImages = await uploadImages(data.newImageFiles, id);
+      if (uploadedNewImages.length > 0) {
+        imageUrls = uploadedNewImages; // Replace existing images with new uploads
       }
     }
-
-    // 2. Upload new images
-    let newlyUploadedUrls: string[] = [];
-    if (newFiles.length > 0) { // Use newFiles here
-      newlyUploadedUrls = await uploadImages(newFiles, id);
-      if (newlyUploadedUrls.length === 0 && newFiles.length > 0) {
-        toast.error("Failed to upload new product images. Product update may be incomplete.");
-      }
-    }
-
-    // 3. Combine retained existing URLs and newly uploaded URLs for the final list
-    finalImageUrls = finalImageUrls.concat(newlyUploadedUrls);
 
     let discountPercentage: number | undefined;
     if (data.originalPrice && data.price < data.originalPrice) {
@@ -227,13 +187,13 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       limited_stock: data.limitedStock,
       short_description: data.shortDescription,
       full_description: data.fullDescription,
-      images: finalImageUrls, // This is the crucial part: the final list of image URLs
+      images: imageUrls,
       tag: data.tag,
       tag_variant: data.tagVariant,
       rating: data.rating,
       review_count: data.reviewCount,
       style_notes: data.styleNotes,
-      key_features: data.keyFeatures.map(f => f.value),
+      key_features: data.keyFeatures.map(f => f.value), // Map back to string[] for DB
       detailed_specs: data.detailedSpecs,
       reviews: data.reviews,
       related_products: data.relatedProducts,
@@ -252,12 +212,15 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       fetchProducts();
       return true;
     }
-  }, [products, fetchProducts]);
+  }, [fetchProducts]);
 
   const deleteProduct = useCallback(async (id: string): Promise<boolean> => {
     const productToDelete = products.find(p => p.id === id);
     if (productToDelete && productToDelete.images && productToDelete.images.length > 0) {
-      const filePathsToDelete = productToDelete.images.map(url => getFilePathFromUrl(url)).filter(path => path !== null) as string[];
+      const filePathsToDelete = productToDelete.images.map(url => {
+        const urlParts = url.split('/public/storage/v1/object/public/product_images/');
+        return urlParts.length > 1 ? urlParts[1] : null;
+      }).filter(path => path !== null) as string[];
 
       if (filePathsToDelete.length > 0) {
         const { error: deleteStorageError } = await supabase.storage

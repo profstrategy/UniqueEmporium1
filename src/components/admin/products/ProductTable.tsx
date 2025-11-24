@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  // AlertDialogTrigger, // Removed AlertDialogTrigger import
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -51,8 +51,6 @@ interface ProductTableProps {
   goToPrevPage: () => void;
   goToNextPage: () => void;
   goToLastPage: () => void;
-  totalFilteredProductsCount: number; // Added new prop
-  productsPerPage: number; // Added new prop
 }
 
 const fadeInUp = {
@@ -81,8 +79,6 @@ const ProductTable = ({
   goToPrevPage,
   goToNextPage,
   goToLastPage,
-  totalFilteredProductsCount, // Destructure new prop
-  productsPerPage, // Destructure new prop
 }: ProductTableProps) => {
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
@@ -151,7 +147,7 @@ const ProductTable = ({
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="ml-3 text-muted-foreground">Loading products...</p>
           </div>
-        ) : totalFilteredProductsCount === 0 ? ( /* Updated condition */
+        ) : products.length === 0 ? (
           <div className="text-center py-10 text-muted-foreground">
             <Filter className="h-12 w-12 mx-auto mb-4" />
             <p>No products found matching your filters.</p>
@@ -225,10 +221,11 @@ const ProductTable = ({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                {/* Removed AlertDialogTrigger here */}
-                                <Button variant="outline" size="icon" onClick={() => onDeleteProduct(product.id, product.name)}>
-                                  <Trash2 className="h-4 w-4 text-red-600" />
-                                </Button>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="outline" size="icon" onClick={() => onDeleteProduct(product.id, product.name)}>
+                                    <Trash2 className="h-4 w-4 text-red-600" />
+                                  </Button>
+                                </AlertDialogTrigger>
                               </TooltipTrigger>
                               <TooltipContent>Delete Product</TooltipContent>
                             </Tooltip>
@@ -244,10 +241,10 @@ const ProductTable = ({
         )}
 
         {/* Pagination Controls */}
-        {totalFilteredProductsCount > 0 && ( /* Updated condition */
+        {products.length > 0 && ( // Only show pagination if there are products
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Showing {(currentPage - 1) * productsPerPage + 1} to {Math.min(currentPage * productsPerPage, totalFilteredProductsCount)} of {totalFilteredProductsCount} products
+              Showing {(currentPage - 1) * 10 + 1} to {Math.min(currentPage * 10, products.length)} of {products.length} products
             </div>
             <div className="flex items-center space-x-2">
               <Button

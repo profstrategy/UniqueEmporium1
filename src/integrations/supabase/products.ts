@@ -29,7 +29,6 @@ export async function fetchProductsFromSupabase(): Promise<ProductDetails[]> {
     limitedStock: p.limited_stock,
     minOrderQuantity: p.min_order_quantity,
     status: p.status,
-    shortDescription: p.short_description, // Added this line
     fullDescription: p.full_description,
     keyFeatures: (p.key_features || []).map((feature: string) => ({ value: feature })), // Map to new structure
     styleNotes: p.style_notes || "",
@@ -72,7 +71,6 @@ export async function fetchProductByIdFromSupabase(id: string): Promise<ProductD
     limitedStock: data.limited_stock,
     minOrderQuantity: data.min_order_quantity,
     status: data.status,
-    shortDescription: data.short_description, // Added this line
     fullDescription: data.full_description,
     keyFeatures: (data.key_features || []).map((feature: string) => ({ value: feature })), // Map to new structure
     styleNotes: data.style_notes || "",

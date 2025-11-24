@@ -18,18 +18,6 @@ export interface Product {
   status: "active" | "inactive"; // Added status field
 }
 
-// Define the Review interface here to be consistent across the app
-export interface Review {
-  id: string;
-  user_id: string; // Added user_id
-  author: string;
-  rating: number;
-  date: string;
-  title: string;
-  comment: string;
-  isVerifiedBuyer: boolean;
-}
-
 export interface ProductDetails extends Product {
   shortDescription?: string; // Fix 3: Added shortDescription
   fullDescription: string;
@@ -39,7 +27,15 @@ export interface ProductDetails extends Product {
     group: string;
     items: { label: string; value: string; icon?: string }[]; // Fix 2: Changed icon type to string
   }[];
-  reviews: Review[]; // Use the defined Review interface
+  reviews: {
+    id: string;
+    author: string;
+    rating: number;
+    date: string;
+    title: string;
+    comment: string;
+    isVerifiedBuyer: boolean;
+  }[];
   relatedProducts: string[];
 }
 

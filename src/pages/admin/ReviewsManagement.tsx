@@ -36,15 +36,6 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import ReviewDetailsDialog from "@/components/admin/reviews/ReviewDetailsDialog"; // Removed .tsx extension
 
 // Define the AdminReview interface based on your database structure and joined data
 export interface AdminReview {
@@ -54,7 +45,6 @@ export interface AdminReview {
   product_name: string; // From products table
   customer_name: string; // From profiles table
   customer_email: string; // From profiles table
-  customer_phone: string; // Added customer phone
   rating: number;
   title: string;
   comment: string;
@@ -89,8 +79,6 @@ const ReviewsManagement = () => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
-  const [isReviewDetailsModalOpen, setIsReviewDetailsModalOpen] = useState(false); // New state for dialog
-  const [selectedReview, setSelectedReview] = useState<AdminReview | null>(null); // New state for selected review
 
   const fetchReviews = useCallback(async () => {
     setIsLoadingReviews(true);
@@ -105,8 +93,8 @@ const ReviewsManagement = () => {
         comment,
         is_verified_buyer,
         created_at,
-        profiles(first_name, last_name, email, phone), // Added phone here
-        products!product_reviews_product_id_fkey(name)
+        profiles(first_name, last_name, email),
+        products(name)
       `)
       .order('created_at', { ascending: false });
 
@@ -122,7 +110,6 @@ const ReviewsManagement = () => {
         product_name: review.products?.name || 'N/A',
         customer_name: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'N/A',
         customer_email: review.profiles?.email || 'N/A',
-        customer_phone: review.profiles?.phone || 'N/A', // Mapped phone here
         rating: review.rating,
         title: review.title,
         comment: review.comment,
@@ -184,11 +171,6 @@ const ReviewsManagement = () => {
   const handleDeleteReviewClick = (reviewId: string) => {
     setDeletingReviewId(reviewId);
     setIsDeleteAlertOpen(true);
-  };
-
-  const handleViewReviewDetails = (review: AdminReview) => { // New handler
-    setSelectedReview(review);
-    setIsReviewDetailsModalOpen(true);
   };
 
   const confirmDeleteReview = useCallback(async () => {
@@ -326,21 +308,8 @@ const ReviewsManagement = () => {
                         <TableCell className="font-medium text-xs">{review.id}</TableCell>
                         <TableCell className="font-medium">{review.product_name}</TableCell>
                         <TableCell>
-                          {/* DialogTrigger for customer name */}
-                          <Dialog open={isReviewDetailsModalOpen && selectedReview?.id === review.id} onOpenChange={setIsReviewDetailsModalOpen}>
-                            <DialogTrigger asChild>
-                              <div
-                                className="cursor-pointer hover:bg-muted/50 p-1 -m-1 rounded-md transition-colors"
-                                onClick={() => handleViewReviewDetails(review)}
-                              >
-                                <div className="font-medium">{review.customer_name}</div>
-                                <div className="text-sm text-muted-foreground">{review.customer_email}</div>
-                              </div>
-                            </DialogTrigger>
-                            {selectedReview && selectedReview.id === review.id && (
-                              <ReviewDetailsDialog review={selectedReview} onClose={() => setIsReviewDetailsModalOpen(false)} />
-                            )}
-                          </Dialog>
+                          <div className="font-medium">{review.customer_name}</div>
+                          <div className="text-sm text-muted-foreground">{review.customer_email}</div>
                         </TableCell>
                         <TableCell>{renderStars(review.rating)}</TableCell>
                         <TableCell className="max-w-[200px] truncate">{review.title}</TableCell>
