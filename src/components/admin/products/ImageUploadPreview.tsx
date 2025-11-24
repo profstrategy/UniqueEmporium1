@@ -3,13 +3,14 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ImageIcon } from "lucide-react";
-import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
+import { ImageIcon, XCircle } from "lucide-react"; // Added XCircle icon
+import { Button } from "@/components/ui/button"; // Import Button
 import { cn } from "@/lib/utils";
 
 interface ImageUploadPreviewProps {
   register: any; // from react-hook-form
-  imagePreviewUrls: string[]; // Changed to array of URLs
+  imagePreviewUrls: string[]; // Array of all image URLs (existing + new)
+  onRemoveImage: (url: string) => void; // Callback to remove an image
   errors: any; // from react-hook-form
   label: string;
   description: string;
@@ -17,7 +18,8 @@ interface ImageUploadPreviewProps {
 
 const ImageUploadPreview = ({
   register,
-  imagePreviewUrls, // Changed to array of URLs
+  imagePreviewUrls,
+  onRemoveImage,
   errors,
   label,
   description,
@@ -30,7 +32,7 @@ const ImageUploadPreview = ({
           id="newImageFiles"
           type="file"
           accept="image/*"
-          multiple // Added multiple attribute
+          multiple
           {...register("newImageFiles")}
         />
         <p className="text-xs text-muted-foreground">{description}</p>
@@ -38,11 +40,20 @@ const ImageUploadPreview = ({
       </div>
       <div className="space-y-2">
         <Label>Image Previews</Label>
-        <div className="flex flex-wrap gap-2"> {/* Display multiple images */}
+        <div className="flex flex-wrap gap-2">
           {imagePreviewUrls.length > 0 ? (
             imagePreviewUrls.map((url, index) => (
-              <div key={index} className="h-24 w-24 rounded-md border flex items-center justify-center overflow-hidden bg-muted">
+              <div key={url} className="relative h-24 w-24 rounded-md border flex items-center justify-center overflow-hidden bg-muted">
                 <img src={url} alt={`Image Preview ${index + 1}`} className="h-full w-full object-cover" />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-background/80 text-destructive hover:bg-background"
+                  onClick={() => onRemoveImage(url)}
+                >
+                  <XCircle className="h-4 w-4" />
+                </Button>
               </div>
             ))
           ) : (
