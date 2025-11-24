@@ -77,6 +77,8 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const unitPrice = product.price / product.minOrderQuantity;
   const originalUnitPrice = product.originalPrice ? product.originalPrice / product.minOrderQuantity : undefined;
 
+  // Determine which description to display
+  const displayDescription = product.shortDescription || product.fullDescription.split('.')[0] + '.';
 
   return (
     <div className="space-y-6">
@@ -90,7 +92,7 @@ const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
         {product.name}
       </h1>
 
-      <p className="text-base md:text-lg text-muted-foreground">{product.fullDescription.split('.')[0]}.</p>
+      <p className="text-base md:text-lg text-muted-foreground">{displayDescription}</p>
 
       {/* Rating & Reviews */}
       <div className="flex items-center gap-3">
