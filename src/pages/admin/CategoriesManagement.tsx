@@ -59,11 +59,16 @@ import ImageWithFallback from "@/components/common/ImageWithFallback";
 export interface AdminCategory {
   id: string;
   name: string;
-  product_count: number;
+  product_count: number; // This is the static count from the categories table
   status: "active" | "inactive";
   created_at?: string;
   updated_at?: string;
-  image_url?: string; // Added image_url
+  image_url?: string;
+}
+
+// Extended interface for display with live count
+interface CategoryWithLiveCount extends AdminCategory {
+  live_product_count?: number; // The dynamically fetched count
 }
 
 const fadeInUp = {
@@ -87,13 +92,13 @@ const categoryFormSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "Category Name is required"),
   status: z.enum(["active", "inactive"]).default("active"),
-  image_url: z.string().optional(), // Added image_url
+  image_url: z.string().optional(),
 });
 
 type CategoryFormData = z.infer<typeof categoryFormSchema>;
 
 const CategoriesManagement = () => {
-  const [categories, setCategories] = useState<(AdminCategory & { live_product_count?: number })[]>([]);
+  const [categoriesWithCounts, setCategoriesWithCounts] = useState<CategoryWithLiveCount[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -137,59 +142,57 @@ const CategoriesManagement = () => {
 
       if (categoriesError) throw categoriesError;
 
-      // 2. Fetch live product counts for each category
-      const categoryIds = categoriesData.map(cat => cat.id);
+      // 2. Fetch live product counts for all categories using the RPC function
       let liveCountsMap: Record<string, number> = {};
 
-      if (categoryIds.length > 0) {
-        // Using RPC or a more complex query might be needed if direct group by isn't supported as shown.
-        // Let's fetch all products and count them client-side for simplicity, 
-        // or use a more standard approach if your Supabase setup allows.
-        // This example uses a client-side count after fetching products per category.
-        
-        // Fetch products grouped by category
-        const { data: productsData, error: productsError } = await supabase.rpc('get_category_product_counts');
-        
-        if (productsError) {
-            console.error("Error fetching product counts via RPC:", productsError);
-            toast.error("Failed to load accurate product counts via RPC.");
-            // Fallback to individual counts or assume 0
-            // Initialize countsMap with 0 if fetch fails
-            liveCountsMap = categoryIds.reduce((acc, id) => { acc[id] = 0; return acc; }, {} as Record<string, number>);
-        } else if (productsData) {
-            // productsData is expected to be an array of { category_id: string, product_count: number }
-            liveCountsMap = productsData.reduce((acc, item) => {
-                acc[item.category_id] = item.product_count;
-                return acc;
-            }, {} as Record<string, number>);
+      if (categoriesData && categoriesData.length > 0) {
+        // Call the RPC function to get counts for all active products grouped by category
+        const { data: countsData, error: countsError } = await supabase.rpc('get_category_product_counts');
+
+        if (countsError) {
+          console.error("Error fetching product counts via RPC:", countsError);
+          toast.error("Failed to load accurate product counts via RPC.");
+          // Initialize countsMap with 0 if fetch fails
+          liveCountsMap = categoriesData.reduce((acc, cat) => { acc[cat.id] = 0; return acc; }, {} as Record<string, number>);
         } else {
-             // If RPC returns no data, initialize counts to 0
-            liveCountsMap = categoryIds.reduce((acc, id) => { acc[id] = 0; return acc; }, {} as Record<string, number>);
+          // If data is returned and is an array, process it
+          if (countsData && Array.isArray(countsData)) {
+            // countsData is expected to be an array like [{ category_id: 'cat1', product_count: 5 }, ...]
+            liveCountsMap = countsData.reduce((acc, item) => {
+              // Map category_id to product_count
+              acc[item.category_id] = item.product_count;
+              return acc;
+            }, {} as Record<string, number>);
+          } else {
+            // If RPC returns no data or unexpected format, initialize to 0
+            console.warn("RPC 'get_category_product_counts' returned unexpected data:", countsData);
+            liveCountsMap = categoriesData.reduce((acc, cat) => { acc[cat.id] = 0; return acc; }, {} as Record<string, number>);
+          }
         }
-        
-        // Ensure all categories are represented in the map
-        categoryIds.forEach(id => {
-            if (liveCountsMap[id] === undefined) {
-                liveCountsMap[id] = 0;
-            }
+
+        // Ensure all categories from the list are represented in the map, even if count is 0
+        categoriesData.forEach(cat => {
+          if (liveCountsMap[cat.id] === undefined) {
+            liveCountsMap[cat.id] = 0; // Default to 0 if not found in counts
+          }
         });
-        
       } else {
-          // Handle case where there are no categories
-          liveCountsMap = {};
+        // Handle case where there are no categories
+        liveCountsMap = {};
       }
 
       // 3. Combine category data with live counts
-      const categoriesWithLiveCounts = categoriesData.map(cat => ({
+      const categoriesWithLiveCounts: CategoryWithLiveCount[] = (categoriesData || []).map(cat => ({
         ...cat,
-        live_product_count: liveCountsMap[cat.id] ?? 0 // Use live count, fallback to 0 if somehow missing
+        // Use the live count fetched from the RPC function
+        live_product_count: liveCountsMap[cat.id] ?? 0 // Fallback to 0 if somehow missing
       }));
 
-      setCategories(categoriesWithLiveCounts);
+      setCategoriesWithCounts(categoriesWithLiveCounts);
     } catch (error: any) {
       console.error("Error fetching categories or counts:", error);
-      toast.error("Failed to load categories or product counts.", { description: error.message });
-      setCategories([]);
+      toast.error("Failed to load categories or product counts.", { description: error.message || "An unexpected error occurred." });
+      setCategoriesWithCounts([]);
     } finally {
       setIsLoadingCategories(false);
     }
@@ -200,7 +203,7 @@ const CategoriesManagement = () => {
   }, [fetchCategories]);
 
   const filteredCategories = useMemo(() => {
-    let filtered = categories;
+    let filtered = categoriesWithCounts;
 
     if (searchTerm) {
       filtered = filtered.filter(
@@ -217,7 +220,7 @@ const CategoriesManagement = () => {
     }
 
     return filtered;
-  }, [categories, searchTerm, filterStatus]);
+  }, [categoriesWithCounts, searchTerm, filterStatus]);
 
   // Pagination logic
   const indexOfLastCategory = currentPage * categoriesPerPage;
@@ -245,7 +248,7 @@ const CategoriesManagement = () => {
       id: category.id,
       name: category.name,
       status: category.status,
-      image_url: category.image_url || "", // Set image_url
+      image_url: category.image_url || "",
     });
     setImagePreview(category.image_url || null);
     setSelectedImageFile(null);
@@ -274,11 +277,11 @@ const CategoriesManagement = () => {
   const handleRemoveImage = () => {
     setImagePreview(null);
     setSelectedImageFile(null);
-    setValue("image_url", ""); // Clear form value
+    setValue("image_url", "");
   };
 
   const handleAddOrUpdateCategory = async (data: CategoryFormData) => {
-    let imageUrl = data.image_url; // Start with existing URL
+    let imageUrl = data.image_url;
     
     // If a new file is selected, upload it
     if (selectedImageFile) {
@@ -286,7 +289,7 @@ const CategoriesManagement = () => {
       const filePath = `categories/${data.name.replace(/\s+/g, '_')}_${Date.now()}.${fileExtension}`;
       
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('category_images') // Assuming a bucket named 'category_images'
+        .from('category_images')
         .upload(filePath, selectedImageFile, {
           cacheControl: '3600',
           upsert: false,
@@ -304,11 +307,10 @@ const CategoriesManagement = () => {
     const categoryPayload = {
       name: data.name,
       status: data.status,
-      image_url: imageUrl, // Use the final URL (new or existing)
+      image_url: imageUrl,
     };
 
     if (editingCategory) {
-      // Update existing category
       const { error } = await supabase
         .from('categories')
         .update(categoryPayload)
@@ -320,10 +322,9 @@ const CategoriesManagement = () => {
         toast.success(`Category "${data.name}" updated successfully!`);
         setIsEditModalOpen(false);
         setEditingCategory(null);
-        fetchCategories(); // Refetch after update
+        fetchCategories();
       }
     } else {
-      // Add new category
       const newId = data.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
       const { error } = await supabase
         .from('categories')
@@ -334,7 +335,7 @@ const CategoriesManagement = () => {
       } else {
         toast.success(`Category "${data.name}" added successfully!`);
         setIsAddModalOpen(false);
-        fetchCategories(); // Refetch after add
+        fetchCategories();
       }
     }
   };
@@ -352,10 +353,10 @@ const CategoriesManagement = () => {
         toast.info(`Category ${deletingCategoryId} deleted.`);
         setDeletingCategoryId(null);
         setIsDeleteAlertOpen(false);
-        fetchCategories(); // Refetch after delete
+        fetchCategories();
       }
     }
-  }, [deletingCategoryId, fetchCategories]); // Add fetchCategories to dependency array
+  }, [deletingCategoryId, fetchCategories]);
 
   return (
     <motion.div
@@ -453,7 +454,11 @@ const CategoriesManagement = () => {
                         </TableCell>
                         <TableCell className="font-medium text-xs">{category.id}</TableCell>
                         <TableCell className="font-medium">{category.name}</TableCell>
-                        <TableCell>{category.live_product_count !== undefined ? category.live_product_count : 'N/A'}</TableCell> {/* Use live count */}
+                        {/* --- This is the key change: Display live_product_count --- */}
+                        <TableCell className="font-medium">
+                          {category.live_product_count !== undefined ? category.live_product_count : 'N/A'}
+                        </TableCell>
+                        {/* ---------------------------------------------------------- */}
                         <TableCell>
                           <Badge variant={category.status === "active" ? "default" : "destructive"}>
                             {category.status.charAt(0).toUpperCase() + category.status.slice(1)}
