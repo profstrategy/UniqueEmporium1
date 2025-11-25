@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 interface ProductTabsProps {
   product: ProductDetailsType;
+  totalReviewsCount: number; // New prop for live review count
 }
 
 const tabContentVariants = {
@@ -18,7 +19,7 @@ const tabContentVariants = {
   visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
-const ProductTabs = ({ product }: ProductTabsProps) => {
+const ProductTabs = ({ product, totalReviewsCount }: ProductTabsProps) => {
   const [activeTab, setActiveTab] = React.useState("description");
 
   return (
@@ -49,7 +50,7 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
             "flex-1"
           )}
         >
-          Reviews ({product.reviews.length})
+          Reviews ({totalReviewsCount}) {/* Use the new totalReviewsCount prop */}
         </TabsTrigger>
       </TabsList>
       <AnimatePresence mode="wait">
@@ -92,7 +93,7 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
               exit="hidden"
               key="reviews-tab"
             >
-              <ProductReviewsTab reviews={product.reviews} productId={product.id} />
+              <ProductReviewsTab productId={product.id} /> {/* Removed reviews prop */}
             </motion.div>
           </TabsContent>
         )}

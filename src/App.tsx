@@ -40,6 +40,7 @@ const DashboardHome = lazy(() => import("./pages/account/DashboardHome.tsx"));
 const ProfilePage = lazy(() => import("./pages/account/ProfilePage.tsx"));
 const OrderHistoryPage = lazy(() => import("./pages/account/OrderHistoryPage.tsx"));
 const PaymentReceiptsPage = lazy(() => import("./pages/account/PaymentReceiptsPage.tsx"));
+const OrderDetailsPage = lazy(() => import("./pages/account/OrderDetailsPage.tsx")); // New import
 
 // Admin Dashboard Pages
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout.tsx"));
@@ -153,6 +154,7 @@ const MainAppContent = () => {
               <Route index element={<DashboardHome />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="orders" element={<OrderHistoryPage />} />
+              <Route path="orders/:orderId" element={<OrderDetailsPage />} /> {/* New route for order details */}
               <Route path="receipts" element={<PaymentReceiptsPage />} />
             </Route>
             

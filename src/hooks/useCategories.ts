@@ -11,7 +11,7 @@ export interface Category {
   status: string;
   created_at?: string;
   updated_at?: string;
-  image_url?: string; // If you add image support later
+  image_url?: string; // Added image_url
 }
 
 export const useCategories = () => {
@@ -22,7 +22,7 @@ export const useCategories = () => {
     setIsLoading(true);
     const { data, error } = await supabase
       .from('categories')
-      .select('id, name, product_count') // Fetch only necessary fields
+      .select('id, name, product_count, image_url') // Fetch image_url
       .eq('status', 'active') // Only fetch active categories
       .order('name', { ascending: true });
 
