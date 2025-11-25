@@ -140,7 +140,7 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                       variant="link" 
                       size="sm" 
                       asChild 
-                      className="p-0 h-auto text-secondary text-xs mt-1" {/* Changed text-primary to text-secondary */}
+                      className="p-0 h-auto text-secondary text-xs mt-1"
                       onClick={onClose} // Close the dialog when this button is clicked
                     >
                       <Link to={`/products/${item.product_id}?tab=reviews`}>
