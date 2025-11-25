@@ -24,7 +24,6 @@ interface Review {
 }
 
 interface ProductReviewsTabProps {
-  reviews: Review[];
   productId: string; // productId is now required
 }
 

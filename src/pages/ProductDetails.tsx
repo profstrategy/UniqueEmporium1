@@ -16,6 +16,7 @@ import { ArrowLeft } from "lucide-react";
 import ProductDetailsSkeleton from "@/components/product-details/ProductDetailsSkeleton.tsx";
 import { fetchProductByIdFromSupabase } from "@/integrations/supabase/products";
 import { Product } from "@/components/products/ProductCard.tsx";
+import { supabase } from "@/integrations/supabase/client"; // Import supabase client
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
@@ -32,15 +33,29 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recentlyViewedProductIds, setRecentlyViewedProductIds] = useState<string[]>([]);
+  const [totalReviewsCount, setTotalReviewsCount] = useState(0); // New state for live review count
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    const loadProduct = async () => {
+    const loadProductAndReviews = async () => {
       if (productId) {
         const fetchedProduct = await fetchProductByIdFromSupabase(productId);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
+
+          // Fetch live review count from product_reviews table
+          const { count, error: countError } = await supabase
+            .from('product_reviews')
+            .select('*', { count: 'exact', head: true })
+            .eq('product_id', productId);
+
+          if (countError) {
+            console.error("Error fetching review count:", countError);
+            setTotalReviewsCount(0); // Default to 0 on error
+          } else {
+            setTotalReviewsCount(count || 0);
+          }
 
           setRecentlyViewedProductIds((prevIds) => {
             const currentViewed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) || "[]") as string[];
@@ -59,7 +74,7 @@ const ProductDetails = () => {
       }
       setLoading(false);
     };
-    loadProduct();
+    loadProductAndReviews();
   }, [productId]);
 
   useEffect(() => {
@@ -150,7 +165,7 @@ const ProductDetails = () => {
           viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as Easing }}
         >
-          <ProductTabs product={product} />
+          <ProductTabs product={product} totalReviewsCount={totalReviewsCount} /> {/* Pass totalReviewsCount */}
         </motion.div>
 
         {/* Recommended Products Section */}
