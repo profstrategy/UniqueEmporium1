@@ -48,7 +48,7 @@ const AdminLayout = () => {
       )}
 
       {/* Main Content Area */}
-      <main className={cn("flex-grow p-4 md:p-8 lg:p-10", isMobile && "pt-20")}> {/* Add padding-top on mobile to avoid overlap with menu button */}
+      <main className={cn("flex-grow p-4 md:p-8 md:pl-20 lg:p-10", isMobile && "pt-20")}> {/* Reverted pt-32 to pt-20 for mobile, added md:pl-20 for tablets */}
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
