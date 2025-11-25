@@ -186,10 +186,8 @@ const OrderHistoryPage = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" asChild> {/* Added asChild */}
-                          <Link to={`/account/orders/${order.id}`}> {/* Added Link with dynamic path */}
-                            <Info className="h-4 w-4 mr-2" /> View Details
-                          </Link>
+                        <Button variant="outline" size="sm">
+                          <Info className="h-4 w-4 mr-2" /> View Details
                         </Button>
                       </TableCell>
                     </TableRow>
