@@ -93,7 +93,7 @@ const categoryFormSchema = z.object({
 type CategoryFormData = z.infer<typeof categoryFormSchema>;
 
 const CategoriesManagement = () => {
-  const [categories, setCategories] = useState<AdminCategory[]>([]);
+  const [categories, setCategories] = useState<(AdminCategory & { live_product_count?: number })[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -128,16 +128,71 @@ const CategoriesManagement = () => {
 
   const fetchCategories = useCallback(async () => {
     setIsLoadingCategories(true);
-    const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
+    try {
+      // 1. Fetch all categories
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories')
+        .select('id, name, product_count, status, created_at, updated_at, image_url')
+        .order('name', { ascending: true });
 
-    if (error) {
-      console.error("Error fetching categories:", error);
-      toast.error("Failed to load categories.", { description: error.message });
+      if (categoriesError) throw categoriesError;
+
+      // 2. Fetch live product counts for each category
+      const categoryIds = categoriesData.map(cat => cat.id);
+      let liveCountsMap: Record<string, number> = {};
+
+      if (categoryIds.length > 0) {
+        // Using RPC or a more complex query might be needed if direct group by isn't supported as shown.
+        // Let's fetch all products and count them client-side for simplicity, 
+        // or use a more standard approach if your Supabase setup allows.
+        // This example uses a client-side count after fetching products per category.
+        
+        // Fetch products grouped by category
+        const { data: productsData, error: productsError } = await supabase.rpc('get_category_product_counts');
+        
+        if (productsError) {
+            console.error("Error fetching product counts via RPC:", productsError);
+            toast.error("Failed to load accurate product counts via RPC.");
+            // Fallback to individual counts or assume 0
+            // Initialize countsMap with 0 if fetch fails
+            liveCountsMap = categoryIds.reduce((acc, id) => { acc[id] = 0; return acc; }, {} as Record<string, number>);
+        } else if (productsData) {
+            // productsData is expected to be an array of { category_id: string, product_count: number }
+            liveCountsMap = productsData.reduce((acc, item) => {
+                acc[item.category_id] = item.product_count;
+                return acc;
+            }, {} as Record<string, number>);
+        } else {
+             // If RPC returns no data, initialize counts to 0
+            liveCountsMap = categoryIds.reduce((acc, id) => { acc[id] = 0; return acc; }, {} as Record<string, number>);
+        }
+        
+        // Ensure all categories are represented in the map
+        categoryIds.forEach(id => {
+            if (liveCountsMap[id] === undefined) {
+                liveCountsMap[id] = 0;
+            }
+        });
+        
+      } else {
+          // Handle case where there are no categories
+          liveCountsMap = {};
+      }
+
+      // 3. Combine category data with live counts
+      const categoriesWithLiveCounts = categoriesData.map(cat => ({
+        ...cat,
+        live_product_count: liveCountsMap[cat.id] ?? 0 // Use live count, fallback to 0 if somehow missing
+      }));
+
+      setCategories(categoriesWithLiveCounts);
+    } catch (error: any) {
+      console.error("Error fetching categories or counts:", error);
+      toast.error("Failed to load categories or product counts.", { description: error.message });
       setCategories([]);
-    } else {
-      setCategories(data as AdminCategory[]);
+    } finally {
+      setIsLoadingCategories(false);
     }
-    setIsLoadingCategories(false);
   }, []);
 
   useEffect(() => {
@@ -265,7 +320,7 @@ const CategoriesManagement = () => {
         toast.success(`Category "${data.name}" updated successfully!`);
         setIsEditModalOpen(false);
         setEditingCategory(null);
-        fetchCategories();
+        fetchCategories(); // Refetch after update
       }
     } else {
       // Add new category
@@ -279,7 +334,7 @@ const CategoriesManagement = () => {
       } else {
         toast.success(`Category "${data.name}" added successfully!`);
         setIsAddModalOpen(false);
-        fetchCategories();
+        fetchCategories(); // Refetch after add
       }
     }
   };
@@ -297,10 +352,10 @@ const CategoriesManagement = () => {
         toast.info(`Category ${deletingCategoryId} deleted.`);
         setDeletingCategoryId(null);
         setIsDeleteAlertOpen(false);
-        fetchCategories();
+        fetchCategories(); // Refetch after delete
       }
     }
-  }, [deletingCategoryId, fetchCategories]);
+  }, [deletingCategoryId, fetchCategories]); // Add fetchCategories to dependency array
 
   return (
     <motion.div
@@ -398,7 +453,7 @@ const CategoriesManagement = () => {
                         </TableCell>
                         <TableCell className="font-medium text-xs">{category.id}</TableCell>
                         <TableCell className="font-medium">{category.name}</TableCell>
-                        <TableCell>{category.product_count}</TableCell>
+                        <TableCell>{category.live_product_count !== undefined ? category.live_product_count : 'N/A'}</TableCell> {/* Use live count */}
                         <TableCell>
                           <Badge variant={category.status === "active" ? "default" : "destructive"}>
                             {category.status.charAt(0).toUpperCase() + category.status.slice(1)}
