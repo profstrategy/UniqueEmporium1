@@ -130,7 +130,12 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                     <p className="text-sm text-muted-foreground">
                       {item.quantity} units @ {formatCurrency(item.unit_price)} / unit
                     </p>
-                    {/* New: Leave a Review Button */}
+                  </div>
+                  {/* New wrapper for price and button */}
+                  <div className="flex flex-col items-end">
+                    <p className="font-semibold text-foreground text-lg flex-shrink-0">
+                      {formatCurrency(item.quantity * item.unit_price)}
+                    </p>
                     <Button 
                       variant="link" 
                       size="sm" 
@@ -143,9 +148,6 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                       </Link>
                     </Button>
                   </div>
-                  <p className="font-semibold text-foreground text-lg flex-shrink-0">
-                    {formatCurrency(item.quantity * item.unit_price)}
-                  </p>
                 </div>
               ))}
             </div>
