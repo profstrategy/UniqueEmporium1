@@ -40,12 +40,12 @@ const AdminLayout = () => {
         </div>
 
       {/* Mobile Menu */}
-      {isMobile && (
-        <AdminMobileMenu
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-        />
-      )}
+      {/* Removed the 'isMobile &&' condition so the menu is always rendered,
+          and its visibility is controlled by the 'isOpen' prop. */}
+      <AdminMobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
 
       {/* Main Content Area */}
       <main className={cn("flex-grow p-4 md:p-8 md:pl-20 lg:p-10", isMobile && "pt-20")}> {/* Reverted pt-32 to pt-20 for mobile, added md:pl-20 for tablets */}
