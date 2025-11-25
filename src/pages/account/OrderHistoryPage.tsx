@@ -12,6 +12,7 @@ import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import OrderDetailsDialog from "@/components/account/OrderDetailsDialog.tsx"; // Import the new dialog
 
 // Define the order interface based on your database structure
 interface OrderItem {
@@ -22,7 +23,7 @@ interface OrderItem {
   image_url: string;
 }
 
-interface Order {
+export interface Order { // Exported for use in OrderDetailsDialog
   id: string;
   orderDate: string; // Changed to camelCase
   totalAmount: number; // Changed to camelCase
@@ -33,6 +34,7 @@ interface Order {
     address: string;
     city: string;
     state: string;
+    phone?: string; // Added phone to shipping address
   };
   deliveryMethod: string; // Changed to camelCase
 }
@@ -61,6 +63,8 @@ const OrderHistoryPage = () => {
   const { user, isLoading: isLoadingAuth } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -105,6 +109,11 @@ const OrderHistoryPage = () => {
 
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
+  };
+
+  const handleViewDetailsClick = (order: Order) => {
+    setSelectedOrder(order);
+    setIsDetailsModalOpen(true);
   };
 
   if (isLoadingAuth || isLoading) {
@@ -186,7 +195,7 @@ const OrderHistoryPage = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleViewDetailsClick(order)}>
                           <Info className="h-4 w-4 mr-2" /> View Details
                         </Button>
                       </TableCell>
@@ -198,6 +207,14 @@ const OrderHistoryPage = () => {
           )}
         </CardContent>
       </Card>
+
+      {selectedOrder && (
+        <OrderDetailsDialog
+          order={selectedOrder}
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+        />
+      )}
     </motion.div>
   );
 };
