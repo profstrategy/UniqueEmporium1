@@ -126,14 +126,14 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                     fallbackLogoClassName="h-8 w-8"
                   />
                   <div className="flex-grow">
-                    <p className="font-medium text-foreground text-sm">{item.product_name}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-[11.3px] sm:text-sm text-foreground">{item.product_name}</p>
+                    <p className="text-[10px] sm:text-sm text-muted-foreground">
                       {item.quantity} units @ {formatCurrency(item.unit_price)} / unit
                     </p>
                   </div>
                   {/* New wrapper for price and button */}
                   <div className="flex flex-col items-end">
-                    <p className="font-semibold text-foreground text-lg flex-shrink-0">
+                    <p className="font-semibold text-foreground text-xs sm:text-lg flex-shrink-0">
                       {formatCurrency(item.quantity * item.unit_price)}
                     </p>
                     <Button 
