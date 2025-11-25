@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogDescription,
+  DialogDescription, // Added DialogDescription
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -44,31 +44,22 @@ import {
   Loader2,
   ChevronFirst,
   ChevronLast,
-  Upload,
-  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/integrations/supabase/client";
-import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { supabase } from "@/integrations/supabase/client"; // Import Supabase client
 
 // Define the AdminCategory interface based on your database structure
 export interface AdminCategory {
   id: string;
   name: string;
-  product_count: number; // This is the static count from the categories table
+  product_count: number; // Changed to snake_case for consistency with DB
   status: "active" | "inactive";
   created_at?: string;
   updated_at?: string;
-  image_url?: string;
-}
-
-// Extended interface for display with live count
-interface CategoryWithLiveCount extends AdminCategory {
-  live_product_count?: number; // The dynamically fetched count
 }
 
 const fadeInUp = {
@@ -89,16 +80,15 @@ const staggerContainer = {
 
 // Form Schema for Add/Edit Category
 const categoryFormSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().optional(), // For editing
   name: z.string().min(1, "Category Name is required"),
   status: z.enum(["active", "inactive"]).default("active"),
-  image_url: z.string().optional(),
 });
 
 type CategoryFormData = z.infer<typeof categoryFormSchema>;
 
 const CategoriesManagement = () => {
-  const [categoriesWithCounts, setCategoriesWithCounts] = useState<CategoryWithLiveCount[]>([]);
+  const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,10 +100,7 @@ const CategoriesManagement = () => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
-  
-  // State for image preview and file handling
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+
 
   const {
     register,
@@ -125,7 +112,7 @@ const CategoriesManagement = () => {
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categoryFormSchema),
     defaultValues: {
-      status: "active",
+      status: "active", // Default status for new categories
     }
   });
 
@@ -133,77 +120,34 @@ const CategoriesManagement = () => {
 
   const fetchCategories = useCallback(async () => {
     setIsLoadingCategories(true);
-    try {
-      // 1. Fetch all categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('categories')
-        .select('id, name, product_count, status, created_at, updated_at, image_url')
-        .order('name', { ascending: true });
+    const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
 
-      if (categoriesError) throw categoriesError;
-
-      // 2. Fetch live product counts for all categories using the RPC function
-      let liveCountsMap: Record<string, number> = {};
-
-      if (categoriesData && categoriesData.length > 0) {
-        // Call the RPC function to get counts for all active products grouped by category
-        const { data: countsData, error: countsError } = await supabase.rpc('get_category_product_counts');
-
-        if (countsError) {
-          console.error("Error fetching product counts via RPC:", countsError);
-          toast.error("Failed to load accurate product counts via RPC.");
-          // Initialize countsMap with 0 if fetch fails
-          liveCountsMap = categoriesData.reduce((acc, cat) => { acc[cat.id] = 0; return acc; }, {} as Record<string, number>);
-        } else {
-          // If data is returned and is an array, process it
-          if (countsData && Array.isArray(countsData)) {
-            // countsData is expected to be an array like [{ category_id: 'cat1', product_count: 5 }, ...]
-            liveCountsMap = countsData.reduce((acc, item) => {
-              // Map category_id to product_count
-              acc[item.category_id] = item.product_count;
-              return acc;
-            }, {} as Record<string, number>);
-          } else {
-            // If RPC returns no data or unexpected format, initialize to 0
-            console.warn("RPC 'get_category_product_counts' returned unexpected data:", countsData);
-            liveCountsMap = categoriesData.reduce((acc, cat) => { acc[cat.id] = 0; return acc; }, {} as Record<string, number>);
-          }
-        }
-
-        // Ensure all categories from the list are represented in the map, even if count is 0
-        categoriesData.forEach(cat => {
-          if (liveCountsMap[cat.id] === undefined) {
-            liveCountsMap[cat.id] = 0; // Default to 0 if not found in counts
-          }
-        });
-      } else {
-        // Handle case where there are no categories
-        liveCountsMap = {};
-      }
-
-      // 3. Combine category data with live counts
-      const categoriesWithLiveCounts: CategoryWithLiveCount[] = (categoriesData || []).map(cat => ({
-        ...cat,
-        // Use the live count fetched from the RPC function
-        live_product_count: liveCountsMap[cat.id] ?? 0 // Fallback to 0 if somehow missing
+    if (error) {
+      console.error("Error fetching categories:", error);
+      toast.error("Failed to load categories.", { description: error.message });
+      setCategories([]);
+    } else {
+      // Map snake_case from DB to camelCase for AdminCategory interface
+      const fetchedCategories: AdminCategory[] = data.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        product_count: c.product_count,
+        status: c.status,
+        created_at: c.created_at,
+        updated_at: c.updated_at,
       }));
-
-      setCategoriesWithCounts(categoriesWithLiveCounts);
-    } catch (error: any) {
-      console.error("Error fetching categories or counts:", error);
-      toast.error("Failed to load categories or product counts.", { description: error.message || "An unexpected error occurred." });
-      setCategoriesWithCounts([]);
-    } finally {
-      setIsLoadingCategories(false);
+      setCategories(fetchedCategories);
     }
+    setIsLoadingCategories(false);
   }, []);
 
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
+
   const filteredCategories = useMemo(() => {
-    let filtered = categoriesWithCounts;
+    let filtered = categories;
 
     if (searchTerm) {
       filtered = filtered.filter(
@@ -220,7 +164,7 @@ const CategoriesManagement = () => {
     }
 
     return filtered;
-  }, [categoriesWithCounts, searchTerm, filterStatus]);
+  }, [categories, searchTerm, filterStatus]);
 
   // Pagination logic
   const indexOfLastCategory = currentPage * categoriesPerPage;
@@ -230,15 +174,14 @@ const CategoriesManagement = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   
+  // New pagination functions
   const goToFirstPage = () => setCurrentPage(1);
   const goToLastPage = () => setCurrentPage(totalPages);
   const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
   const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
 
   const handleAddCategoryClick = () => {
-    reset();
-    setImagePreview(null);
-    setSelectedImageFile(null);
+    reset(); // Clear form fields
     setIsAddModalOpen(true);
   };
 
@@ -248,10 +191,7 @@ const CategoriesManagement = () => {
       id: category.id,
       name: category.name,
       status: category.status,
-      image_url: category.image_url || "",
     });
-    setImagePreview(category.image_url || null);
-    setSelectedImageFile(null);
     setIsEditModalOpen(true);
   };
 
@@ -260,57 +200,15 @@ const CategoriesManagement = () => {
     setIsDeleteAlertOpen(true);
   };
 
-  // Handle image file selection
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Remove image preview and file
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setSelectedImageFile(null);
-    setValue("image_url", "");
-  };
-
   const handleAddOrUpdateCategory = async (data: CategoryFormData) => {
-    let imageUrl = data.image_url;
-    
-    // If a new file is selected, upload it
-    if (selectedImageFile) {
-      const fileExtension = selectedImageFile.name.split('.').pop();
-      const filePath = `categories/${data.name.replace(/\s+/g, '_')}_${Date.now()}.${fileExtension}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('category_images')
-        .upload(filePath, selectedImageFile, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        toast.error("Failed to upload category image.", { description: uploadError.message });
-        return;
-      } else {
-        const { data: publicUrlData } = supabase.storage.from('category_images').getPublicUrl(uploadData.path);
-        imageUrl = publicUrlData.publicUrl;
-      }
-    }
-
     const categoryPayload = {
       name: data.name,
       status: data.status,
-      image_url: imageUrl,
+      // product_count is managed by the database (e.g., via triggers or separate updates)
     };
 
     if (editingCategory) {
+      // Update existing category
       const { error } = await supabase
         .from('categories')
         .update(categoryPayload)
@@ -322,20 +220,22 @@ const CategoriesManagement = () => {
         toast.success(`Category "${data.name}" updated successfully!`);
         setIsEditModalOpen(false);
         setEditingCategory(null);
-        fetchCategories();
+        fetchCategories(); // Re-fetch categories to update the list
       }
     } else {
+      // Add new category
+      // Generate a simple slug-based ID for new categories
       const newId = data.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
       const { error } = await supabase
         .from('categories')
-        .insert([{ ...categoryPayload, id: newId, product_count: 0 }]);
+        .insert([{ ...categoryPayload, id: newId, product_count: 0 }]); // Default product_count to 0
 
       if (error) {
         toast.error("Failed to add category.", { description: error.message });
       } else {
         toast.success(`Category "${data.name}" added successfully!`);
         setIsAddModalOpen(false);
-        fetchCategories();
+        fetchCategories(); // Re-fetch categories to update the list
       }
     }
   };
@@ -353,7 +253,7 @@ const CategoriesManagement = () => {
         toast.info(`Category ${deletingCategoryId} deleted.`);
         setDeletingCategoryId(null);
         setIsDeleteAlertOpen(false);
-        fetchCategories();
+        fetchCategories(); // Re-fetch categories to update the list
       }
     }
   }, [deletingCategoryId, fetchCategories]);
@@ -422,11 +322,10 @@ const CategoriesManagement = () => {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto w-full"> {/* Added w-full to ensure the container takes full width */}
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Image</TableHead>
                     <TableHead className="w-[150px]">Category ID</TableHead>
                     <TableHead>Category Name</TableHead>
                     <TableHead>Products Count</TableHead>
@@ -444,21 +343,9 @@ const CategoriesManagement = () => {
                         exit={{ opacity: 0, x: -100 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <TableCell>
-                          <ImageWithFallback
-                            src={category.image_url}
-                            alt={category.name}
-                            containerClassName="h-10 w-10 rounded-md overflow-hidden border"
-                            fallbackLogoClassName="h-6 w-6"
-                          />
-                        </TableCell>
                         <TableCell className="font-medium text-xs">{category.id}</TableCell>
                         <TableCell className="font-medium">{category.name}</TableCell>
-                        {/* --- This is the key change: Display live_product_count --- */}
-                        <TableCell className="font-medium">
-                          {category.live_product_count !== undefined ? category.live_product_count : 'N/A'}
-                        </TableCell>
-                        {/* ---------------------------------------------------------- */}
+                        <TableCell>{category.product_count}</TableCell>
                         <TableCell>
                           <Badge variant={category.status === "active" ? "default" : "destructive"}>
                             {category.status.charAt(0).toUpperCase() + category.status.slice(1)}
@@ -584,39 +471,6 @@ const CategoriesManagement = () => {
               {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
             </div>
 
-            {/* Image Upload Section */}
-            <div className="space-y-2">
-              <Label htmlFor="categoryImage">Category Image</Label>
-              <div className="flex items-center space-x-4">
-                <Input
-                  id="categoryImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-                <Label
-                  htmlFor="categoryImage"
-                  className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                >
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                      <p className="text-xs text-gray-500">Upload Image</p>
-                    </div>
-                  )}
-                </Label>
-                {imagePreview && (
-                  <Button type="button" variant="ghost" size="icon" onClick={handleRemoveImage}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              <Input type="hidden" {...register("image_url")} value={imagePreview || ""} />
-            </div>
-
             <div className="flex items-center space-x-2">
               <Switch
                 id="status-toggle"
@@ -656,44 +510,11 @@ const CategoriesManagement = () => {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(handleAddOrUpdateCategory)} className="space-y-6 py-4">
-            <input type="hidden" {...register("id")} />
+            <input type="hidden" {...register("id")} /> {/* Hidden field for category ID */}
             <div className="space-y-2">
               <Label htmlFor="name">Category Name</Label>
               <Input id="name" {...register("name")} className={cn(errors.name && "border-destructive")} />
               {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
-            </div>
-
-            {/* Image Upload Section */}
-            <div className="space-y-2">
-              <Label htmlFor="categoryImageEdit">Category Image</Label>
-              <div className="flex items-center space-x-4">
-                <Input
-                  id="categoryImageEdit"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-                <Label
-                  htmlFor="categoryImageEdit"
-                  className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                >
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                      <p className="text-xs text-gray-500">Upload Image</p>
-                    </div>
-                  )}
-                </Label>
-                {imagePreview && (
-                  <Button type="button" variant="ghost" size="icon" onClick={handleRemoveImage}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              <Input type="hidden" {...register("image_url")} value={imagePreview || ""} />
             </div>
 
             <div className="flex items-center space-x-2">

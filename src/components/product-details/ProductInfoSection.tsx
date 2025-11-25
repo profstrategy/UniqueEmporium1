@@ -16,7 +16,6 @@ import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductInfoSectionProps {
   product: ProductDetailsType;
-  totalReviewsCount: number; // New prop for live review count
 }
 
 const keyFeatures = [
@@ -25,7 +24,7 @@ const keyFeatures = [
   { icon: Gem, title: "Premium Quality", description: "Curated luxury thrift" },
 ];
 
-const ProductInfoSection = ({ product, totalReviewsCount }: ProductInfoSectionProps) => {
+const ProductInfoSection = ({ product }: ProductInfoSectionProps) => {
   const [quantity, setQuantity] = useState(product.minOrderQuantity); // Initialize with minOrderQuantity
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { addToCart } = useCart();
@@ -111,7 +110,7 @@ const ProductInfoSection = ({ product, totalReviewsCount }: ProductInfoSectionPr
           ))}
         </div>
         <span className="text-sm text-muted-foreground">
-          {product.rating.toFixed(1)} ({totalReviewsCount} reviews)
+          {product.rating.toFixed(1)} ({product.reviewCount} reviews)
         </span>
       </div>
 
