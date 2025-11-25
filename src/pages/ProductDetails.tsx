@@ -152,7 +152,7 @@ const ProductDetails = () => {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" as Easing }}
           >
-            <ProductInfoSection product={product} />
+            <ProductInfoSection product={product} totalReviewsCount={totalReviewsCount} />
           </motion.div>
         </div>
 
