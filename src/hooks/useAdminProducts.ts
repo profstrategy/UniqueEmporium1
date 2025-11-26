@@ -47,6 +47,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
         tag: p.tag,
         tagVariant: p.tag_variant,
         limitedStock: p.limited_stock,
+        isFeatured: p.is_featured, // New: Map is_featured
         minOrderQuantity: p.min_order_quantity,
         status: p.status,
         shortDescription: p.short_description,
@@ -142,6 +143,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
+      is_featured: data.isFeatured, // New: Include is_featured
       short_description: data.shortDescription,
       full_description: data.fullDescription,
       images: imageUrls, // Store all newly uploaded image URLs
@@ -225,6 +227,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
+      is_featured: data.isFeatured, // New: Include is_featured
       short_description: data.shortDescription,
       full_description: data.fullDescription,
       images: finalImageUrls, // This is the crucial part: the final list of image URLs

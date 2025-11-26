@@ -27,6 +27,7 @@ export const productFormSchema = z.object({
   minOrderQuantity: z.coerce.number().min(1, "Minimum Order Quantity is required and must be positive"),
   status: z.enum(["active", "inactive"]).default("active"),
   limitedStock: z.boolean().default(false),
+  isFeatured: z.boolean().default(false), // New: Added isFeatured field
   shortDescription: z.string().max(500, "Concise description cannot exceed 500 characters.").optional(),
   fullDescription: z.string().min(1, "Full Description is required"),
   images: z.array(z.string()).optional(), // Existing image URLs (from DB)
@@ -80,9 +81,11 @@ const ProductForm = ({
       keyFeatures: initialData.keyFeatures || [],
       detailedSpecs: initialData.detailedSpecs || [],
       images: initialData.images || [], // Ensure images array is initialized
+      isFeatured: initialData.isFeatured || false, // New: Set initial value for isFeatured
     } : {
       status: "active",
       limitedStock: false,
+      isFeatured: false, // New: Default to false for new products
       rating: 4.5,
       reviewCount: 0,
       keyFeatures: [],
@@ -109,6 +112,7 @@ const ProductForm = ({
   });
 
   const currentLimitedStock = watch("limitedStock");
+  const currentIsFeatured = watch("isFeatured"); // New: Watch isFeatured
   const currentProductStatus = watch("status");
   const currentTagVariant = watch("tagVariant");
   const currentExistingImageUrls = watch("images") || []; // Watch the 'images' field for existing URLs
@@ -298,6 +302,15 @@ const ProductForm = ({
             onCheckedChange={(checked) => setValue("limitedStock", checked)}
           />
           <Label htmlFor="limitedStock-toggle">Limited Stock: {currentLimitedStock ? "Yes" : "No"}</Label>
+        </div>
+        {/* New: Featured Product Toggle */}
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="isFeatured-toggle"
+            checked={currentIsFeatured}
+            onCheckedChange={(checked) => setValue("isFeatured", checked)}
+          />
+          <Label htmlFor="isFeatured-toggle">Featured Product: {currentIsFeatured ? "Yes" : "No"}</Label>
         </div>
         <div className="space-y-2">
           <Label htmlFor="product-status">Product Status</Label>

@@ -16,6 +16,7 @@ export interface Product {
   limitedStock?: boolean;
   minOrderQuantity: number; // Added minOrderQuantity
   status: "active" | "inactive"; // Added status field
+  isFeatured?: boolean; // New: Added isFeatured field
 }
 
 // Define the Review interface here to be consistent across the app
@@ -81,6 +82,7 @@ export const getRandomProducts = async (count: number, excludeId?: string): Prom
     limitedStock: p.limitedStock,
     minOrderQuantity: p.minOrderQuantity,
     status: p.status,
+    isFeatured: p.isFeatured, // New: Include isFeatured
   }));
 };
 

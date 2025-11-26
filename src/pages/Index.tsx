@@ -8,7 +8,7 @@ import CustomerReviewsSection from "@/components/customer-reviews/CustomerReview
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, Easing } from "framer-motion";
-import { ProductDetails, getProductsByIds, getRecentlyViewedProducts } from "@/data/products.ts";
+import { ProductDetails, getRecentlyViewedProducts } from "@/data/products.ts";
 import RecentlyViewedProductsSection from "@/components/product-details/RecentlyViewedProductsSection.tsx";
 import TopSellingProductsSection from "@/components/top-selling-products/TopSellingProductsSection.tsx";
 import React, { useEffect, useState, useRef } from "react";
@@ -16,17 +16,7 @@ import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
 import { fetchProductsFromSupabase } from "@/integrations/supabase/products";
 
-// Select specific products from mockProducts to be featured
-const featuredProductNames = [
-  "SHEIN Elegant Floral Maxi Gown",
-  "Vintage 90s Graphic T-Shirt",
-  "Kids' Stylish Distressed Denim Jeans",
-  "Ladies' Casual Chic Fashion Bundle",
-  "Luxury Thrift Silk Scarf (Designer)",
-  "Men's Urban Streetwear Fashion Bundle",
-  "SHEIN Flowy Summer Midi Dress",
-  "Vintage Leather Crossbody Bag",
-];
+// Removed: featuredProductNames array is no longer needed as products will be filtered by isFeatured flag
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -72,9 +62,8 @@ const Index = () => {
   useEffect(() => {
     if (!loadingAllProducts) {
       setLoadingFeatured(true);
-      const fetchedFeatured = featuredProductNames
-        .map(name => allAvailableProducts.find(p => p.name === name))
-        .filter((product): product is ProductDetails => product !== undefined);
+      // New: Filter by the isFeatured flag instead of a static name list
+      const fetchedFeatured = allAvailableProducts.filter(product => product.isFeatured);
       setFeaturedProducts(fetchedFeatured);
       setLoadingFeatured(false);
     }

@@ -27,6 +27,7 @@ export async function fetchProductsFromSupabase(): Promise<ProductDetails[]> {
     tag: p.tag,
     tagVariant: p.tag_variant,
     limitedStock: p.limited_stock,
+    isFeatured: p.is_featured, // New: Map is_featured
     minOrderQuantity: p.min_order_quantity,
     status: p.status,
     shortDescription: p.short_description, // Added this line
@@ -70,6 +71,7 @@ export async function fetchProductByIdFromSupabase(id: string): Promise<ProductD
     tag: data.tag,
     tagVariant: data.tag_variant,
     limitedStock: data.limited_stock,
+    isFeatured: data.is_featured, // New: Map is_featured
     minOrderQuantity: data.min_order_quantity,
     status: data.status,
     shortDescription: data.short_description, // Added this line
