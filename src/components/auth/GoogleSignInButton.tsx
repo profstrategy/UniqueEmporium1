@@ -46,6 +46,7 @@ const GoogleSignInButton = () => {
 
   return (
     <button
+      type="button" // Added type="button" to prevent unintended form submission
       className={`${baseClasses}`} // Removed buttonState from class list
       data-provider-id="google.com"
       onClick={handleClick}
