@@ -8,25 +8,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import ProductCard, { Product } from "@/components/products/ProductCard.tsx";
 import { ProductDetails } from "@/data/products.ts";
 import ProductCardSkeleton from "@/components/products/ProductCardSkeleton.tsx";
-import { fetchProductsFromSupabase } from "@/integrations/supabase/products";
-
-// Hand-pick some products to represent "Top Selling" by name
-const topSellingProductNames = [
-  "SHEIN Elegant Floral Maxi Gown",
-  "Vintage 90s Graphic T-Shirt",
-  "Ladies' Casual Chic Fashion Bundle",
-  "Kids' Stylish Distressed Denim Jeans",
-  "Luxury Thrift Silk Scarf (Designer)",
-  "Men's Urban Streetwear Fashion Bundle",
-];
-
-const getTopSellingProducts = async (): Promise<Product[]> => {
-  const allLiveProducts = await fetchProductsFromSupabase();
-  const products = topSellingProductNames
-    .map(name => allLiveProducts.find(p => p.name === name))
-    .filter((product): product is ProductDetails => product !== undefined);
-  return products;
-};
+import { supabase } from "@/integrations/supabase/client"; // Import supabase client
+import { toast } from "sonner";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
@@ -54,14 +37,6 @@ const TopSellingProductsSection = () => {
   const [productsToDisplay, setProductsToDisplay] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    getTopSellingProducts().then(products => {
-      setProductsToDisplay(products);
-      setLoading(false);
-    });
-  }, []);
-
   const onSelect = useCallback((emblaApi: any) => {
     setCanScrollPrev(emblaApi.canScrollPrev());
     setCanScrollNext(emblaApi.canScrollNext());
@@ -73,6 +48,81 @@ const TopSellingProductsSection = () => {
     emblaApi.on("reInit", onSelect);
     emblaApi.on("select", onSelect);
   }, [emblaApi, onSelect]);
+
+  useEffect(() => {
+    const fetchTopSellingProducts = async () => {
+      setLoading(true);
+      try {
+        // 1. Call the RPC function to get top selling product IDs
+        const { data: topSellingIds, error: rpcError } = await supabase.rpc('get_top_selling_products', {
+          time_period_days: 30, // Using the default 30 days
+          limit_count: 10,
+        });
+
+        if (rpcError) {
+          console.error("Error fetching top selling product IDs:", rpcError);
+          toast.error("Failed to load top selling products.");
+          setProductsToDisplay([]);
+          setLoading(false);
+          return;
+        }
+
+        if (!topSellingIds || topSellingIds.length === 0) {
+          setProductsToDisplay([]);
+          setLoading(false);
+          return;
+        }
+
+        const productIds = topSellingIds.map(item => item.product_id);
+
+        // 2. Fetch full product details for these IDs
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('*')
+          .in('id', productIds)
+          .eq('status', 'active'); // Only show active products
+
+        if (productsError) {
+          console.error("Error fetching top selling product details:", productsError);
+          toast.error("Failed to load top selling product details.");
+          setProductsToDisplay([]);
+          setLoading(false);
+          return;
+        }
+
+        // Map snake_case from DB to camelCase for Product interface
+        const fetchedProducts: Product[] = productsData.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          images: p.images || [],
+          price: p.price,
+          originalPrice: p.original_price,
+          discountPercentage: p.discount_percentage,
+          rating: p.rating,
+          reviewCount: p.review_count,
+          tag: p.tag,
+          tagVariant: p.tag_variant,
+          limitedStock: p.limited_stock,
+          minOrderQuantity: p.min_order_quantity,
+          status: p.status,
+        }));
+
+        // Sort the fetched products to match the order from the RPC function
+        const sortedProducts = productIds.map(id => fetchedProducts.find(p => p.id === id)).filter((p): p is Product => p !== undefined);
+        setProductsToDisplay(sortedProducts);
+
+      } catch (error: any) {
+        console.error("An unexpected error occurred while fetching top selling products:", error);
+        toast.error("An unexpected error occurred.", { description: error.message });
+        setProductsToDisplay([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopSellingProducts();
+  }, []);
 
   if (productsToDisplay.length === 0 && !loading) {
     return null;
