@@ -13,6 +13,7 @@ import { useAuth } from "@/context/AuthContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import OrderDetailsDialog from "@/components/account/OrderDetailsDialog.tsx"; // Import the new dialog
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog for receipt view
 
 // Define the order item interface
 interface OrderItem {
@@ -223,9 +224,32 @@ const OrderHistoryPage = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" onClick={() => handleViewDetailsClick(order)}>
-                          <Info className="h-4 w-4 mr-2" /> View Details
-                        </Button>
+                        <div className="flex justify-end space-x-2">
+                          {order.receiptImageUrl && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <ReceiptText className="h-4 w-4 mr-2" /> Receipt
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-3xl p-0">
+                                <DialogHeader className="p-4 border-b">
+                                  <DialogTitle>Payment Receipt for {order.id}</DialogTitle>
+                                </DialogHeader>
+                                <div className="p-4">
+                                  <ImageWithFallback
+                                    src={order.receiptImageUrl}
+                                    alt={`Payment Receipt for ${order.id}`}
+                                    containerClassName="w-full h-auto max-h-[80vh] object-contain"
+                                  />
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          )}
+                          <Button variant="outline" size="sm" onClick={() => handleViewDetailsClick(order)}>
+                            <Info className="h-4 w-4 mr-2" /> Details
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
