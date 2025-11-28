@@ -56,16 +56,30 @@ const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({ productId }) => {
       toast.error("Failed to load product reviews.");
       setProductReviews([]);
     } else {
-      const fetchedReviews: Review[] = data.map((review: any) => ({
-        id: review.id,
-        user_id: review.user_id,
-        author: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`.trim() || 'Anonymous',
-        rating: review.rating,
-        date: review.created_at,
-        title: review.title,
-        comment: review.comment,
-        isVerifiedBuyer: review.is_verified_buyer,
-      }));
+      const fetchedReviews: Review[] = data.map((review: any) => {
+        const firstName = review.profiles?.first_name;
+        const lastName = review.profiles?.last_name;
+        let formattedAuthor = 'Anonymous';
+
+        if (firstName && lastName) {
+          formattedAuthor = `${firstName} ${lastName.charAt(0)}.`;
+        } else if (firstName) {
+          formattedAuthor = firstName;
+        } else if (lastName) {
+          formattedAuthor = `${lastName.charAt(0)}.`;
+        }
+
+        return {
+          id: review.id,
+          user_id: review.user_id,
+          author: formattedAuthor,
+          rating: review.rating,
+          date: review.created_at,
+          title: review.title,
+          comment: review.comment,
+          isVerifiedBuyer: review.is_verified_buyer,
+        };
+      });
       setProductReviews(fetchedReviews);
 
       // Check if the current user has an existing review
