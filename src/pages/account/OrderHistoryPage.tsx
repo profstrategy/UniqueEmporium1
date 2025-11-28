@@ -97,7 +97,7 @@ const OrderHistoryPage = () => {
         .from('orders')
         .select(`
           *,
-          order_number, -- NEW: Select the custom order_number
+          order_number,
           payment_receipts(status, receipt_image_url)
         `)
         .eq('user_id', user.id)
