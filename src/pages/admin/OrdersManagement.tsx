@@ -278,7 +278,7 @@ const OrdersManagement = () => {
       .from('orders')
       .select(`
         *,
-        order_number, -- NEW: Select the custom order_number
+        order_number,
         profiles(first_name, last_name, email, phone),
         payment_receipts(id, status, receipt_image_url)
       `)
