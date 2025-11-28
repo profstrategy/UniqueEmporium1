@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Package, CalendarDays, DollarSign, User, List, Copy, MessageSquarePlus, ReceiptText } from "lucide-react";
+import { ShoppingBag, Package, CalendarDays, DollarSign, User, List, Copy, MessageSquarePlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { Order } from "@/pages/account/OrderHistoryPage.tsx"; // Import the updated Order interface
+import { Order } from "@/pages/account/OrderHistoryPage.tsx";
 import { Link } from "react-router-dom";
 
 interface OrderDetailsDialogProps {
@@ -32,20 +32,6 @@ const getStatusBadgeVariant = (status: string) => {
   }
 };
 
-// Helper to get color-coded badge classes for Payment Status
-const getPaymentStatusBadgeVariant = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "confirmed":
-      return "default";
-    case "pending":
-      return "secondary";
-    case "declined":
-      return "destructive";
-    default:
-      return "outline";
-  }
-};
-
 const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps) => {
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
@@ -60,8 +46,8 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-3xl p-6 rounded-xl shadow-lg bg-card/80 backdrop-blur-md border border-border/50 overflow-y-auto max-h-[90vh]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-            <ShoppingBag className="h-6 w-6 text-primary" /> Order Details: {order.id}
+          <DialogTitle className="text-[13px] sm:text-xl font-bold flex items-center gap-2">
+            <ShoppingBag className="h-4 w-4 sm:h-6 sm:w-6 text-primary" /> Order Details: {order.id}
           </DialogTitle>
           <DialogDescription>
             Comprehensive details for your order.
@@ -71,48 +57,28 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
           {/* 1. Order Summary */}
           <div className="border-b pb-4">
             <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-foreground">
-              <DollarSign className="h-5 w-5" /> Order Summary
+              <CalendarDays className="h-5 w-5" /> Order Summary
             </h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <p className="text-muted-foreground">Order Date:</p>
-              <p className="font-medium text-foreground">{order.orderDate}</p>
-
-              <p className="text-muted-foreground">Total Amount:</p>
-              <p className="font-bold text-foreground text-lg">{formatCurrency(order.totalAmount)}</p>
-
-              <p className="text-muted-foreground">Order Status:</p>
-              <Badge variant={getStatusBadgeVariant(order.status)} className="w-fit">
-                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-              </Badge>
-
-              <p className="text-muted-foreground">Payment Status:</p>
-              <Badge variant={getPaymentStatusBadgeVariant(order.paymentStatus)} className="w-fit">
-                {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
-              </Badge>
-            </div>
-            {order.receiptImageUrl && (
-              <div className="mt-4">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <ReceiptText className="h-4 w-4 mr-2" /> View Payment Receipt
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl p-0">
-                    <DialogHeader className="p-4 border-b">
-                      <DialogTitle>Payment Receipt for {order.id}</DialogTitle>
-                    </DialogHeader>
-                    <div className="p-4">
-                      <ImageWithFallback
-                        src={order.receiptImageUrl}
-                        alt={`Payment Receipt for ${order.id}`}
-                        containerClassName="w-full h-auto max-h-[80vh] object-contain"
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Order Date</p>
+                <p className="font-medium text-foreground">{order.orderDate}</p>
               </div>
-            )}
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Total Amount</p>
+                <p className="font-bold text-foreground text-lg">{formatCurrency(order.totalAmount)}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Order Status</p>
+                <Badge variant={getStatusBadgeVariant(order.status)}>
+                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                </Badge>
+              </div>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Delivery Method</p>
+                <p className="font-medium text-foreground">{order.deliveryMethod}</p>
+              </div>
+            </div>
           </div>
 
           {/* 2. Shipping Details */}
@@ -125,21 +91,23 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
               <p><strong>Address:</strong> {order.shippingAddress.address}</p>
               <p><strong>City, State:</strong> {order.shippingAddress.city}, {order.shippingAddress.state}</p>
               {order.shippingAddress.phone && (
-                <div className="flex items-center gap-2">
-                  <p><strong>Phone:</strong> {order.shippingAddress.phone}</p>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" onClick={() => handleCopy(order.shippingAddress.phone!, 'Phone')} className="h-8 w-8">
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Copy Phone</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                <div className="space-y-1">
+                  <p><strong>Phone:</strong></p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold text-xl text-primary">{order.shippingAddress.phone}</p>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon" onClick={() => handleCopy(order.shippingAddress.phone!, 'Phone')} className="h-8 w-8">
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copy Phone</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                 </div>
               )}
-              <p><strong>Delivery Method:</strong> <Badge variant="secondary">{order.deliveryMethod}</Badge></p>
             </div>
           </div>
 
@@ -158,14 +126,28 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                     fallbackLogoClassName="h-8 w-8"
                   />
                   <div className="flex-grow">
-                    <p className="font-medium text-foreground">{item.product_name}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-[11.3px] sm:text-sm text-foreground">{item.product_name}</p>
+                    <p className="text-[10px] sm:text-sm text-muted-foreground">
                       {item.quantity} units @ {formatCurrency(item.unit_price)} / unit
                     </p>
                   </div>
-                  <p className="font-semibold text-foreground text-lg flex-shrink-0">
-                    {formatCurrency(item.quantity * item.unit_price)}
-                  </p>
+                  {/* New wrapper for price and button */}
+                  <div className="flex flex-col items-end">
+                    <p className="font-semibold text-foreground text-xs sm:text-lg flex-shrink-0">
+                      {formatCurrency(item.quantity * item.unit_price)}
+                    </p>
+                    <Button 
+                      variant="link" 
+                      size="sm" 
+                      asChild 
+                      className="p-0 h-auto text-secondary text-xs mt-1"
+                      onClick={onClose} // Close the dialog when this button is clicked
+                    >
+                      <Link to={`/products/${item.product_id}?tab=reviews`}>
+                        <MessageSquarePlus className="h-3 w-3 mr-1" /> Leave a Review
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

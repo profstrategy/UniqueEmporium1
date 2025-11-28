@@ -6,16 +6,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Package, CalendarDays, DollarSign, Info, Loader2, ReceiptText } from "lucide-react";
+import { ShoppingBag, Package, CalendarDays, DollarSign, Info, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import OrderDetailsDialog from "@/components/account/OrderDetailsDialog.tsx"; // Import the new dialog
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"; // Import Dialog for receipt view
 
-// Define the order item interface
+// Define the order interface based on your database structure
 interface OrderItem {
   product_id: string;
   product_name: string;
@@ -24,23 +23,20 @@ interface OrderItem {
   image_url: string;
 }
 
-// Define the Order interface based on your database structure, including payment status and receipt image
 export interface Order { // Exported for use in OrderDetailsDialog
   id: string;
-  orderDate: string;
-  totalAmount: number;
+  orderDate: string; // Changed to camelCase
+  totalAmount: number; // Changed to camelCase
   status: string;
-  paymentStatus: string; // New: Payment status
-  receiptImageUrl?: string; // New: Receipt image URL
   items: OrderItem[];
-  shippingAddress: {
+  shippingAddress: { // Changed to camelCase
     name: string;
     address: string;
     city: string;
     state: string;
-    phone?: string;
+    phone?: string; // Added phone to shipping address
   };
-  deliveryMethod: string;
+  deliveryMethod: string; // Changed to camelCase
 }
 
 const fadeInUp = {
@@ -48,7 +44,7 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
-const getOrderStatusBadgeVariant = (status: string) => {
+const getStatusBadgeVariant = (status: string) => {
   switch (status.toLowerCase()) {
     case "completed":
       return "default";
@@ -57,20 +53,6 @@ const getOrderStatusBadgeVariant = (status: string) => {
     case "pending":
       return "outline";
     case "cancelled":
-      return "destructive";
-    default:
-      return "outline";
-  }
-};
-
-// Helper to get color-coded badge classes for Payment Status
-const getPaymentStatusBadgeVariant = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "confirmed":
-      return "default";
-    case "pending":
-      return "secondary";
-    case "declined":
       return "destructive";
     default:
       return "outline";
@@ -92,13 +74,10 @@ const OrderHistoryPage = () => {
       }
 
       setIsLoading(true);
-      // Fetch orders for the logged-in user, joining with payment_receipts
+      // Fetch orders for the logged-in user
       const { data, error } = await supabase
         .from('orders')
-        .select(`
-          *,
-          payment_receipts(status, receipt_image_url)
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('order_date', { ascending: false });
 
@@ -107,16 +86,14 @@ const OrderHistoryPage = () => {
         toast.error("Failed to load orders.", { description: error.message });
       } else {
         // Transform the data to match the expected camelCase format
-        const transformedOrders: Order[] = data.map((order: any) => ({
+        const transformedOrders: Order[] = data.map(order => ({
           id: order.id,
-          orderDate: new Date(order.order_date).toLocaleDateString(),
-          totalAmount: order.total_amount,
+          orderDate: new Date(order.order_date).toLocaleDateString(), // Map from snake_case
+          totalAmount: order.total_amount, // Map from snake_case
           status: order.status,
-          paymentStatus: order.payment_receipts?.[0]?.status || 'pending', // Get status from first receipt, default to 'pending'
-          receiptImageUrl: order.payment_receipts?.[0]?.receipt_image_url, // Get image URL from first receipt
           items: order.items || [],
-          shippingAddress: order.shipping_address,
-          deliveryMethod: order.delivery_method,
+          shippingAddress: order.shipping_address, // Map from snake_case
+          deliveryMethod: order.delivery_method, // Map from snake_case
         }));
         setOrders(transformedOrders);
       }
@@ -184,8 +161,7 @@ const OrderHistoryPage = () => {
                     <TableHead>Date</TableHead>
                     <TableHead>Items</TableHead>
                     <TableHead>Total</TableHead>
-                    <TableHead>Payment Status</TableHead> {/* New column */}
-                    <TableHead>Order Status</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -214,42 +190,14 @@ const OrderHistoryPage = () => {
                       </TableCell>
                       <TableCell className="font-semibold">{formatCurrency(order.totalAmount)}</TableCell>
                       <TableCell>
-                        <Badge variant={getPaymentStatusBadgeVariant(order.paymentStatus)}>
-                          {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getOrderStatusBadgeVariant(order.status)}>
+                        <Badge variant={getStatusBadgeVariant(order.status)}>
                           {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end space-x-2">
-                          {order.receiptImageUrl && (
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                  <ReceiptText className="h-4 w-4 mr-2" /> Receipt
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="max-w-3xl p-0">
-                                <DialogHeader className="p-4 border-b">
-                                  <DialogTitle>Payment Receipt for {order.id}</DialogTitle>
-                                </DialogHeader>
-                                <div className="p-4">
-                                  <ImageWithFallback
-                                    src={order.receiptImageUrl}
-                                    alt={`Payment Receipt for ${order.id}`}
-                                    containerClassName="w-full h-auto max-h-[80vh] object-contain"
-                                  />
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                          )}
-                          <Button variant="outline" size="sm" onClick={() => handleViewDetailsClick(order)}>
-                            <Info className="h-4 w-4 mr-2" /> Details
-                          </Button>
-                        </div>
+                        <Button variant="outline" size="sm" onClick={() => handleViewDetailsClick(order)}>
+                          <Info className="h-4 w-4 mr-2" /> View Details
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
