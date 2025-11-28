@@ -22,12 +22,20 @@ const OrderPlacedState = () => {
     >
       <CheckCircle2 className="h-24 w-24 text-green-500 mx-auto mb-8" />
       <h2 className="text-2xl font-bold mb-4 text-foreground">Order Placed Successfully!</h2>
-      <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+      <p className="text-muted-foreground mb-4 max-w-md mx-auto">
         Thank you for your purchase. Your order has been confirmed and will be processed shortly.
       </p>
-      <Button asChild size="lg">
-        <Link to="/products">Continue Shopping</Link>
-      </Button>
+      <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+        You can track the status of your order and view details on your order history page.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button asChild size="lg" variant="outline">
+          <Link to="/account/orders">Track Your Order</Link>
+        </Button>
+        <Button asChild size="lg">
+          <Link to="/products">Continue Shopping</Link>
+        </Button>
+      </div>
     </motion.div>
   );
 };
