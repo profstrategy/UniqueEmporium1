@@ -58,6 +58,8 @@ export const CartProvider = ({ children, onOpenCartDrawer }: CartProviderProps) 
 
     if (error) {
       console.error("Error fetching cart:", error);
+      // ADDED THIS LINE for more detailed error information
+      console.error("Supabase error details:", error.message, error.details, error.hint, error.code);
       toast.error("Failed to load cart items.");
       setCartItems([]);
     } else {
