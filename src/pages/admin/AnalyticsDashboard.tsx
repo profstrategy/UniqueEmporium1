@@ -262,14 +262,14 @@ const AnalyticsDashboard = () => {
       // --- Fetch Recent Activity Feed ---
       const { data: recentOrdersData, error: recentOrdersError } = await supabase
         .from('orders')
-        .select('id, status, created_at, profiles(first_name, last_name)')
+        .select('id, order_number, status, created_at, profiles(first_name, last_name)') // Include order_number
         .order('created_at', { ascending: false })
         .limit(5);
       if (recentOrdersError) throw recentOrdersError;
 
       const { data: recentReceiptsData, error: recentReceiptsError } = await supabase
         .from('payment_receipts')
-        .select('id, status, created_at, orders(id)')
+        .select('id, status, created_at, orders(id, order_number)') // Include order_number from joined orders
         .order('created_at', { ascending: false })
         .limit(5);
       if (recentReceiptsError) throw recentReceiptsError;
@@ -278,20 +278,22 @@ const AnalyticsDashboard = () => {
 
       recentOrdersData.forEach((order: any) => {
         const customerName = `${order.profiles?.first_name || ''} ${order.profiles?.last_name || ''}`.trim();
+        const displayOrderId = order.order_number || order.id; // Use order_number if available
         combinedActivities.push({
           id: order.id,
           type: "order",
-          description: `${customerName || 'A user'} placed a new order (${order.id})`,
+          description: `${customerName || 'A user'} placed a new order (${displayOrderId})`,
           timestamp: order.created_at,
           status: order.status,
         });
       });
 
       recentReceiptsData.forEach((receipt: any) => {
+        const displayOrderId = receipt.orders?.order_number || receipt.orders?.id || 'N/A'; // Use order_number if available
         combinedActivities.push({
           id: receipt.id,
           type: "payment",
-          description: `Payment for order ${receipt.orders?.id || 'N/A'} is ${receipt.status}`,
+          description: `Payment for order ${displayOrderId} is ${receipt.status}`,
           timestamp: receipt.created_at,
           status: receipt.status,
         });
