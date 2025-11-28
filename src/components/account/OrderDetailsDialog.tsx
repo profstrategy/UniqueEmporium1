@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"; // NEW: Added DialogTrigger
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Package, CalendarDays, DollarSign, User, List, Copy, MessageSquarePlus, ReceiptText, Eye } from "lucide-react"; // NEW: Added ReceiptText, Eye
+import { ShoppingBag, Package, CalendarDays, DollarSign, User, List, Copy, MessageSquarePlus, ReceiptText, Eye } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import ImageWithFallback from "@/components/common/ImageWithFallback.tsx";
-import { Order } from "@/pages/account/OrderHistoryPage.tsx"; // Order interface now includes paymentStatus and receiptImageUrl
+import { Order } from "@/pages/account/OrderHistoryPage.tsx";
 import { Link } from "react-router-dom";
 
 interface OrderDetailsDialogProps {
@@ -32,15 +32,14 @@ const getStatusBadgeVariant = (status: string) => {
   }
 };
 
-// NEW: Helper to get color-coded badge classes for Payment Status (copied from OrderHistoryPage)
 const getPaymentStatusBadgeVariant = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
-      return "secondary"; // Yellowish for pending
+      return "secondary";
     case "confirmed":
-      return "default"; // Green for confirmed
+      return "default";
     case "declined":
-      return "destructive"; // Red for declined
+      return "destructive";
     default:
       return "outline";
   }
@@ -92,15 +91,7 @@ const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps)
                 <p className="text-muted-foreground">Delivery Method</p>
                 <p className="font-medium text-foreground">{order.deliveryMethod}</p>
               </div>
-            </div>
-          </div>
-
-          {/* NEW: Payment Information */}
-          <div className="border-b pb-4">
-            <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-foreground">
-              <ReceiptText className="h-5 w-5" /> Payment Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* NEW: Payment Information moved here */}
               <div className="space-y-1">
                 <p className="text-muted-foreground">Payment Status</p>
                 <Badge variant={getPaymentStatusBadgeVariant(order.paymentStatus)}>
