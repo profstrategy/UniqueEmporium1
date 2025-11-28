@@ -133,8 +133,8 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
           <FloatingTag text={product.tag} variant={product.tagVariant} className="absolute top-2 right-2 z-50" />
         )}
         {isOutOfStock && (
-          <Badge variant="destructive" className="absolute top-2 left-2 z-50 text-xs px-2 py-0.5 flex items-center gap-1">
-            <XCircle className="h-3 w-3" /> Out of Stock
+          <Badge variant="destructive" className="absolute top-2 left-2 z-50 text-xs sm:text-sm px-2 py-0.5 sm:px-3 sm:py-1 flex items-center gap-1">
+            <XCircle className="h-3 w-3 sm:h-4 sm:w-4" /> Out of Stock
           </Badge>
         )}
 
@@ -305,6 +305,10 @@ const ProductCard = ({ product, disableEntryAnimation = false }: ProductCardProp
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" as Easing }}
             >
+              <span className="relative flex h-2 w-2 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              </span>
               Limited Stock!
             </motion.p>
           )}
