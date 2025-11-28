@@ -174,7 +174,7 @@ const ProductReviewsTab: React.FC<ProductReviewsTabProps> = ({ productId }) => {
             </div>
             <div className="mt-2">
               <p className="text-xs text-foreground mb-2 flex items-center">
-                By <span className="font-medium text-xs ml-1">{review.author}</span> on {new Date(review.date).toLocaleDateString()}
+                By <span className="font-medium text-xs ml-1">{review.author}</span>  on {new Date(review.date).toLocaleDateString()}
                 {review.isVerifiedBuyer && (
                   <Badge variant="secondary" className="ml-3 text-xs px-2 py-0.5 flex items-center">
                     <CheckCircle className="h-3 w-3 mr-1" /> Verified Buyer
