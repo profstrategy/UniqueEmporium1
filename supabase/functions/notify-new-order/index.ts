@@ -1,4 +1,3 @@
-/// <reference lib="deno.ns" />
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const corsHeaders = {
@@ -75,7 +74,7 @@ Please review the order in the admin dashboard.`;
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(`Failed to send WhatsApp message to ${number}:`, response.status, errorData);
+        console.error(`Failed to send WhatsApp message to ${number}:`, errorData);
         throw new Error(`WhatsApp API error for ${number}: ${JSON.stringify(errorData)}`);
       }
       console.log(`WhatsApp notification sent to ${number} for order ${order.id}`);
