@@ -160,3 +160,13 @@
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
+
+/* SLOW DROPDOWN ANIMATION OVERRIDE (1000ms slide-in/out with fade/zoom) */
+.slow-dropdown [data-state="open"] {
+  animation-duration: 1000ms !important;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Smooth ease-out deceleration */
+}
+
+.slow-dropdown [data-state="closed"] {
+  animation-duration: 1000ms !important;
+}

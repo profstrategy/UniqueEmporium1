@@ -99,9 +99,7 @@ const Header = ({ isCartDrawerOpen, setIsCartDrawerOpen }: HeaderProps) => {
                   Categories <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-96 p-2 grid grid-cols-2 gap-2 bg-card border rounded-xl shadow-lg max-h-[70vh] overflow-y-auto"
-              >
+              <DropdownMenuContent className="slow-dropdown w-96 p-2 grid grid-cols-2 gap-2 bg-card border rounded-xl shadow-lg max-h-[70vh] overflow-y-auto">
                 {isLoading ? (
                   <div className="col-span-2 text-center py-2 text-muted-foreground">Loading...</div>
                 ) : categories.length === 0 ? (
