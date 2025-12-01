@@ -78,7 +78,7 @@ const DashboardHome = () => {
           pendingOrders: pendingOrders || 0,
           confirmedReceipts: confirmedReceipts || 0,
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching dashboard data:", error);
         toast.error("Failed to load dashboard data.", { description: error.message });
       } finally {
@@ -103,6 +103,7 @@ const DashboardHome = () => {
   }
 
   const userFirstName = user?.first_name || "Fashionista"; // Get first name from user object
+  const userCustomId = user?.custom_user_id; // NEW: Get custom_user_id
 
   return (
     <motion.div
@@ -115,6 +116,11 @@ const DashboardHome = () => {
         <motion.h1 className="text-2xl md:text-3xl font-bold text-foreground" variants={fadeInUp}>
           Welcome, {userFirstName}!
         </motion.h1>
+        {userCustomId && ( // NEW: Display custom_user_id if available
+          <motion.p className="text-sm text-muted-foreground" variants={fadeInUp}>
+            Your Unique ID: <span className="font-semibold text-foreground">{userCustomId}</span>
+          </motion.p>
+        )}
         <motion.p className="text-sm md:text-lg text-muted-foreground" variants={fadeInUp}>
           Here's a quick overview of your Unique Emporium account.
         </motion.p>

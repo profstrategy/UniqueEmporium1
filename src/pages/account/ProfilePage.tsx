@@ -21,6 +21,7 @@ const ProfilePage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
+    customUserId: "", // NEW: Add customUserId to form data
     firstName: "",
     lastName: "",
     email: "",
@@ -41,7 +42,7 @@ const ProfilePage = () => {
     setIsLoadingProfile(true);
     const { data, error } = await supabase
       .from('profiles')
-      .select('first_name, last_name, email, phone')
+      .select('first_name, last_name, email, phone, custom_user_id') // NEW: Select custom_user_id
       .eq('id', user.id)
       .single();
 
@@ -51,10 +52,12 @@ const ProfilePage = () => {
       setFormData((prev) => ({
         ...prev,
         email: user.email || "",
+        customUserId: user.custom_user_id || "", // NEW: Set customUserId from auth context
       }));
     } else if (data) {
       setFormData((prev) => ({
         ...prev,
+        customUserId: data.custom_user_id || "", // NEW: Set customUserId from fetched data
         firstName: data.first_name || "",
         lastName: data.last_name || "",
         email: data.email || user.email || "",
@@ -234,6 +237,11 @@ const ProfilePage = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="customUserId">Unique User ID</Label> {/* NEW: Display custom_user_id */}
+              <Input id="customUserId" name="customUserId" value={formData.customUserId} disabled />
+              <p className="text-xs text-muted-foreground">Your unique identifier in the system.</p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>

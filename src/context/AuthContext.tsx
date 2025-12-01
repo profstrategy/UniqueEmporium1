@@ -8,6 +8,7 @@ interface CustomUser extends User {
   first_name?: string;
   last_name?: string;
   role?: string;
+  custom_user_id?: string; // NEW: Add custom_user_id
 }
 
 interface AuthContextType {
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Fetch profile immediately if session exists
         const { data: profile, error } = await supabase
           .from('profiles')
-          .select('first_name, last_name, role')
+          .select('first_name, last_name, role, custom_user_id') // NEW: Select custom_user_id
           .eq('id', currentSession.user.id)
           .single();
 
@@ -63,7 +64,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             ...currentSession.user,
             first_name: profile.first_name,
             last_name: profile.last_name,
-            role: profile.role
+            role: profile.role,
+            custom_user_id: profile.custom_user_id // NEW: Assign custom_user_id
           });
         } else {
           // No profile found, but session exists. Treat as basic user.

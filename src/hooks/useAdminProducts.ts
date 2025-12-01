@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { ProductDetails } from "@/data/products.ts";
 import { AdminCategory } from "@/pages/admin/CategoriesManagement.tsx";
 import { ProductFormData } from "@/components/admin/products/ProductForm.tsx";
+import { generateProductId } from "@/utils/id-generator"; // Import the async ID generator
 
 interface UseAdminProductsResult {
   products: ProductDetails[];
@@ -117,7 +118,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
   };
 
   const addProduct = useCallback(async (data: ProductFormData, newFiles: File[]): Promise<boolean> => { // Updated signature
-    const newProductId = `prod-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const newProductId = await generateProductId(data.category); // NEW: Use the async ID generator
     let imageUrls: string[] = [];
 
     // Upload new images

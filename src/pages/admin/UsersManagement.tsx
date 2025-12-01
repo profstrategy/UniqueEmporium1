@@ -62,7 +62,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // Define the AdminUser interface based on your database structure
 export interface AdminUser {
-  id: string;
+  id: string; // Supabase UUID
+  custom_user_id: string; // NEW: Custom ID for display
   first_name: string;
   last_name: string;
   email: string;
@@ -91,7 +92,8 @@ const staggerContainer = {
 
 // Form Schema for Add/Edit User
 const userFormSchema = z.object({
-  id: z.string().optional(), // For editing
+  id: z.string().optional(), // For editing (Supabase UUID)
+  custom_user_id: z.string().optional(), // NEW: For display, not directly editable via form
   first_name: z.string().min(1, "First Name is required"),
   last_name: z.string().min(1, "Last Name is required"),
   email: z.string().email("Invalid email address"),
@@ -144,13 +146,14 @@ const UsersManagement = () => {
       .from('profiles')
       .select(`
         id,
+        custom_user_id, -- NEW: Select custom_user_id
         first_name,
         last_name,
         email,
         phone,
         role,
         status
-      `) // Removed the commented line that was causing the parsing error
+      `)
       .order('created_at', { ascending: false });
 
     if (profilesError) {
@@ -174,13 +177,13 @@ const UsersManagement = () => {
 
         return {
           id: profile.id,
+          custom_user_id: profile.custom_user_id || 'N/A', // NEW: Assign custom_user_id
           first_name: profile.first_name,
           last_name: profile.last_name,
           email: profile.email,
           phone: profile.phone,
           role: profile.role,
           status: profile.status,
-          // last_login_at: profile.auth_users?.last_sign_in_at || 'N/A', // Removed for client-side security
           total_orders: totalOrders || 0,
         };
       })
@@ -203,7 +206,8 @@ const UsersManagement = () => {
           user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.phone.includes(searchTerm) ||
-          user.id.toLowerCase().includes(searchTerm.toLowerCase())
+          user.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.custom_user_id.toLowerCase().includes(searchTerm.toLowerCase()) // NEW: Search by custom_user_id
       );
     }
 
@@ -245,6 +249,7 @@ const UsersManagement = () => {
     setEditingUser(user);
     reset({
       id: user.id,
+      custom_user_id: user.custom_user_id, // NEW: Set custom_user_id for display
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
@@ -454,7 +459,7 @@ const UsersManagement = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[120px]">User ID</TableHead>
+                    <TableHead className="w-[120px]">User ID</TableHead> {/* NEW: Display custom_user_id */}
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Phone</TableHead>
@@ -474,7 +479,7 @@ const UsersManagement = () => {
                         exit={{ opacity: 0, x: -100 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <TableCell className="font-medium text-xs">{user.id}</TableCell>
+                        <TableCell className="font-medium text-xs">{user.custom_user_id}</TableCell> {/* NEW: Display custom_user_id */}
                         <TableCell className="font-medium">{user.first_name} {user.last_name}</TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>{user.phone}</TableCell>
@@ -772,8 +777,12 @@ const UsersManagement = () => {
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">User ID</p>
-                  <p className="font-medium text-foreground">{viewingUser.id}</p>
+                  <p className="text-sm text-muted-foreground">Custom User ID</p> {/* NEW: Display custom_user_id */}
+                  <p className="font-medium text-foreground">{viewingUser.custom_user_id}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Supabase UUID</p> {/* Keep UUID for reference */}
+                  <p className="font-medium text-foreground text-xs">{viewingUser.id}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Email</p>

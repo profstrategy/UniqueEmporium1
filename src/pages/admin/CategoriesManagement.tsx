@@ -97,6 +97,61 @@ const categoryFormSchema = z.object({
 
 type CategoryFormData = z.infer<typeof categoryFormSchema>;
 
+// --- Category ID Generation Logic ---
+const categoryShortCodes: { [key: string]: string } = {
+  "Kids Patpat": "KP",
+  "Shein Gowns": "SG",
+  "Vintage Shirts": "VS",
+  "Children Jeans": "CJ",
+  "Children Shirts": "CS",
+  "Men Vintage Shirts": "MVS",
+  "Amazon Ladies": "AL",
+  "Others": "OT",
+  // Add more as needed
+};
+
+const generateCategoryShortCode = (categoryName: string): string => {
+  const mappedCode = categoryShortCodes[categoryName];
+  if (mappedCode) return mappedCode;
+
+  // Fallback: take first two letters, uppercase, or a generic code
+  return categoryName.substring(0, 2).toUpperCase() || "XX";
+};
+
+const generateUniqueCategoryId = async (categoryName: string): Promise<string> => {
+  const shortCode = generateCategoryShortCode(categoryName);
+  let newId: string;
+  let isUnique = false;
+  let attempts = 0;
+
+  do {
+    const randomDigits = Math.floor(1000 + Math.random() * 9000).toString(); // 4-digit number
+    newId = `UC-${shortCode}-${randomDigits}`;
+    attempts++;
+
+    // Check uniqueness in Supabase
+    const { count, error } = await supabase
+      .from('categories')
+      .select('id', { count: 'exact', head: true })
+      .eq('id', newId);
+
+    if (error) {
+      console.error("Error checking category ID uniqueness:", error);
+      // Fallback to a timestamp-based ID if database check fails
+      return `UC-${shortCode}-${Date.now()}`;
+    }
+
+    isUnique = (count === 0);
+    if (attempts > 10) { // Prevent infinite loops
+      console.warn("Failed to generate unique category ID after multiple attempts.");
+      return `UC-${shortCode}-${Date.now()}`; // Fallback
+    }
+  } while (!isUnique);
+
+  return newId;
+};
+// --- End Category ID Generation Logic ---
+
 const CategoriesManagement = () => {
   const [categoriesWithCounts, setCategoriesWithCounts] = useState<CategoryWithLiveCount[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -325,7 +380,8 @@ const CategoriesManagement = () => {
         fetchCategories();
       }
     } else {
-      const newId = data.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      // NEW: Generate unique category ID
+      const newId = await generateUniqueCategoryId(data.name);
       const { error } = await supabase
         .from('categories')
         .insert([{ ...categoryPayload, id: newId, product_count: 0 }]);

@@ -12,7 +12,8 @@ if (!process.env.VITE_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
 }
 
 import { supabase } from "../integrations/supabase/serverClient.ts";
-import { mockProducts } from "../data/products.ts";
+import { mockProducts as initialMockProducts } from "../data/products.ts"; // Renamed import
+import { generateProductId } from "../utils/id-generator.ts"; // Import the async ID generator
 
 // --- START DEBUG LOGS (from serverClient.ts, if reached) ---
 console.log("DEBUG: serverClient.ts import attempted.");
@@ -21,10 +22,13 @@ console.log("DEBUG: serverClient.ts import attempted.");
 async function seedProducts() {
   console.log("Starting product seeding...");
 
-  for (const product of mockProducts) {
+  for (const product of initialMockProducts) { // Use initialMockProducts
+    // NEW: Generate a unique product ID using the new format
+    const newProductId = await generateProductId(product.category);
+
     // Prepare product data for insertion, ensuring JSONB fields are handled correctly
     const productToInsert = {
-      id: product.id,
+      id: newProductId, // Use the newly generated ID
       name: product.name,
       category: product.category,
       images: product.images, // Array of text
@@ -45,6 +49,9 @@ async function seedProducts() {
       reviews: product.reviews, // JSONB
       related_products: product.relatedProducts, // Array of text
       created_at: new Date().toISOString(), // Add created_at for new entries
+      is_featured: product.isFeatured, // NEW: Include is_featured
+      short_description: product.shortDescription, // NEW: Include short_description
+      unit_type: product.unitType, // NEW: Include unit_type
     };
 
     const { error } = await supabase
@@ -52,12 +59,12 @@ async function seedProducts() {
       .upsert(productToInsert, { onConflict: 'id' }); // Upsert based on 'id'
 
     if (error) {
-      console.error(`Error upserting product ${product.name} (${product.id}):`, error);
+      console.error(`Error upserting product ${product.name} (${newProductId}):`, error);
       // If an error occurs, we should probably stop or at least log it clearly
       // and potentially re-throw if it's a critical setup error.
       // For now, just logging and continuing.
     } else {
-      console.log(`Successfully upserted product: ${product.name}`);
+      console.log(`Successfully upserted product: ${product.name} with ID: ${newProductId}`);
     }
   }
 
