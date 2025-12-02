@@ -162,11 +162,24 @@
 }
 
 /* SLOW DROPDOWN ANIMATION OVERRIDE (1000ms slide-in/out with fade/zoom) */
-.slow-dropdown [data-state="open"] {
+/* This targets the specific animation classes used by shadcn/Radix for the content */
+.slow-dropdown[data-state="open"] {
+  /* Override the animation duration for the opening state */
   animation-duration: 1000ms !important;
-  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Smooth ease-out deceleration */
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
-.slow-dropdown [data-state="closed"] {
+.slow-dropdown[data-state="closed"] {
+  /* Override the animation duration for the closing state */
+  animation-duration: 1000ms !important;
+}
+
+/* Ensure all animation utility classes within the dropdown also respect the duration */
+.slow-dropdown.animate-in,
+.slow-dropdown.animate-out,
+.slow-dropdown.slide-in-from-top-2,
+.slow-dropdown.zoom-in-95,
+.slow-dropdown.fade-in-0,
+.slow-dropdown.scale-in-95 {
   animation-duration: 1000ms !important;
 }
