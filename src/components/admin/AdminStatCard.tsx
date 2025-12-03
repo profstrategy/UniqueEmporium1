@@ -16,12 +16,12 @@ interface AdminStatCardProps {
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.0, ease: "easeOut" as Easing } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
 const AdminStatCard = ({ title, value, description, icon: Icon, iconColorClass = "text-primary", delay = 0 }: AdminStatCardProps) => {
   return (
-    <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay, duration: 1.0 }}>
+    <motion.div variants={fadeInUp} initial="hidden" animate="visible" transition={{ delay, duration: 0.5 }}>
       <Card className="rounded-xl shadow-lg border border-border/50 bg-card/80 backdrop-blur-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>

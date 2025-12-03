@@ -13,7 +13,7 @@ import { useFavorites } from "@/context/FavoritesContext.tsx";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.0, ease: "easeOut" as Easing } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
 };
 
 const staggerContainer = {
@@ -92,6 +92,15 @@ const DashboardHome = () => {
       setIsLoading(false);
     }
   }, [user, isLoadingAuth]);
+
+  if (isLoadingAuth || isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-3 text-muted-foreground">Loading dashboard...</p>
+      </div>
+    );
+  }
 
   const userFirstName = user?.first_name || "Fashionista"; // Get first name from user object
   const userCustomId = user?.custom_user_id; // NEW: Get custom_user_id

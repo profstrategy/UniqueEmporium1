@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const pageTransitionVariants = {
   initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 1.0, ease: "easeOut" as Easing } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as Easing } },
   exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: "easeIn" as Easing } },
 };
 

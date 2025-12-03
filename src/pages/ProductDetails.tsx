@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client"; // Import supabase cl
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50, x: -50 },
-  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 1.0, ease: "easeOut" as Easing } },
+  visible: { opacity: 1, y: 0, x: 0, transition: { duration: 0.6, ease: "easeOut" as Easing } },
 };
 
 const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
@@ -150,7 +150,7 @@ const ProductDetails = () => {
             initial="hidden"
             animate="visible"
             viewport={{ once: true, amount: 0.1 }}
-            transition={{ delay: 0.2, duration: 1.0, ease: "easeOut" as Easing }}
+            transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" as Easing }}
           >
             <ProductInfoSection product={product} totalReviewsCount={totalReviewsCount} />
           </motion.div>
@@ -163,7 +163,7 @@ const ProductDetails = () => {
           initial="hidden"
           animate="visible"
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ delay: 0.4, duration: 1.0, ease: "easeOut" as Easing }}
+          transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" as Easing }}
         >
           <ProductTabs product={product} totalReviewsCount={totalReviewsCount} /> {/* Pass totalReviewsCount */}
         </motion.div>
