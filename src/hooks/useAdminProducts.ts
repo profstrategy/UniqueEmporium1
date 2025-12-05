@@ -7,6 +7,7 @@ import { ProductDetails } from "@/data/products.ts";
 import { AdminCategory } from "@/pages/admin/CategoriesManagement.tsx";
 import { ProductFormData } from "@/components/admin/products/ProductForm.tsx";
 import { generateProductId } from "@/utils/id-generator"; // Import the async ID generator
+import { uploadMultipleImages } from "@/integrations/cloudinary/uploader"; // NEW: Import Cloudinary uploader
 
 interface UseAdminProductsResult {
   products: ProductDetails[];
@@ -83,47 +84,21 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     fetchCategories();
   }, [fetchProducts, fetchCategories]);
 
-  const uploadImages = async (files: File[], productId: string): Promise<string[]> => { // Changed FileList to File[]
-    if (files.length === 0) return [];
+  // NOTE: Removed the internal uploadImages function as it is replaced by Cloudinary uploader
 
-    const uploadPromises = files.map(async (file) => {
-      const fileExtension = file.name.split('.').pop();
-      const filePath = `products/${productId}/${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('product_images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        console.error(`Error uploading image ${file.name}:`, uploadError);
-        toast.error(`Failed to upload image: ${file.name}.`, { description: uploadError.message });
-        return null;
-      } else {
-        const { data: publicUrlData } = supabase.storage.from('product_images').getPublicUrl(uploadData.path);
-        return publicUrlData.publicUrl;
-      }
-    });
-
-    const results = await Promise.all(uploadPromises);
-    return results.filter(url => url !== null) as string[];
-  };
-
-  const getFilePathFromUrl = (url: string): string | null => {
-    // Assuming Supabase public URL format: https://<project_id>.supabase.co/storage/v1/object/public/<bucket_name>/<path_to_file>
-    const urlParts = url.split('/storage/v1/object/public/product_images/');
-    return urlParts.length > 1 ? urlParts[1] : null;
-  };
-
-  const addProduct = useCallback(async (data: ProductFormData, newFiles: File[]): Promise<boolean> => { // Updated signature
-    const newProductId = await generateProductId(data.category); // NEW: Use the async ID generator
+  const addProduct = useCallback(async (data: ProductFormData, newFiles: File[]): Promise<boolean> => {
+    const newProductId = await generateProductId(data.category);
     let imageUrls: string[] = [];
 
-    // Upload new images
+    // Upload new images to Cloudinary
     if (newFiles.length > 0) {
-      imageUrls = await uploadImages(newFiles, newProductId);
+      try {
+        imageUrls = await uploadMultipleImages(newFiles);
+      } catch (e) {
+        // Error handled and toasted inside uploadMultipleImages
+        return false;
+      }
+      
       if (imageUrls.length === 0 && newFiles.length > 0) {
         toast.error("Failed to upload product images. Product not added.");
         return false;
@@ -139,17 +114,17 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       id: newProductId,
       name: data.name,
       category: data.category,
-      unit_type: data.unitType, // NEW: Include unit_type
+      unit_type: data.unitType,
       price: data.price,
       original_price: data.originalPrice,
       discount_percentage: discountPercentage,
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
-      is_featured: data.isFeatured, // New: Include is_featured
+      is_featured: data.isFeatured,
       short_description: data.shortDescription,
       full_description: data.fullDescription,
-      images: imageUrls, // Store all newly uploaded image URLs
+      images: imageUrls, // Store Cloudinary URLs
       tag: data.tag,
       tag_variant: data.tagVariant,
       rating: data.rating,
@@ -173,47 +148,28 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     }
   }, [fetchProducts]);
 
-  const updateProduct = useCallback(async (id: string, data: ProductFormData, newFiles: File[]): Promise<boolean> => { // Updated signature
-    const originalProduct = products.find(p => p.id === id);
-    if (!originalProduct) {
-      toast.error("Original product not found for update.");
-      return false;
-    }
+  const updateProduct = useCallback(async (id: string, data: ProductFormData, newFiles: File[]): Promise<boolean> => {
+    // NOTE: Since we are using Cloudinary, we no longer need to delete images from Supabase Storage.
+    // Cloudinary handles image deletion via its API if needed, but for simplicity here, 
+    // we only focus on uploading new images and updating the URL list in Supabase.
+    
+    let finalImageUrls: string[] = data.images || []; // Retained existing URLs
 
-    let finalImageUrls: string[] = data.images || []; // This now contains the *desired* set of existing image URLs from the form
-
-    // 1. Identify images to delete from storage
-    const imagesToDeleteFromStorage: string[] = [];
-    originalProduct.images.forEach(originalUrl => {
-      if (!finalImageUrls.includes(originalUrl)) { // If an original URL is NOT in the final list, it means it was removed
-        const filePath = getFilePathFromUrl(originalUrl);
-        if (filePath) imagesToDeleteFromStorage.push(filePath);
-      }
-    });
-
-    if (imagesToDeleteFromStorage.length > 0) {
-      const { error: deleteStorageError } = await supabase.storage
-        .from('product_images')
-        .remove(imagesToDeleteFromStorage);
-
-      if (deleteStorageError) {
-        console.error("Error deleting old product images from storage:", deleteStorageError);
-        toast.error("Failed to delete some old product images from storage.", { description: deleteStorageError.message });
-      } else {
-        toast.info("Old product images removed from storage.");
-      }
-    }
-
-    // 2. Upload new images
+    // 1. Upload new images to Cloudinary
     let newlyUploadedUrls: string[] = [];
-    if (newFiles.length > 0) { // Use newFiles here
-      newlyUploadedUrls = await uploadImages(newFiles, id);
+    if (newFiles.length > 0) {
+      try {
+        newlyUploadedUrls = await uploadMultipleImages(newFiles);
+      } catch (e) {
+        // Error handled and toasted inside uploadMultipleImages
+        return false;
+      }
       if (newlyUploadedUrls.length === 0 && newFiles.length > 0) {
         toast.error("Failed to upload new product images. Product update may be incomplete.");
       }
     }
 
-    // 3. Combine retained existing URLs and newly uploaded URLs for the final list
+    // 2. Combine retained existing URLs and newly uploaded URLs for the final list
     finalImageUrls = finalImageUrls.concat(newlyUploadedUrls);
 
     let discountPercentage: number | undefined;
@@ -224,17 +180,17 @@ export const useAdminProducts = (): UseAdminProductsResult => {
     const productPayload = {
       name: data.name,
       category: data.category,
-      unit_type: data.unitType, // NEW: Include unit_type
+      unit_type: data.unitType,
       price: data.price,
       original_price: data.originalPrice,
       discount_percentage: discountPercentage,
       min_order_quantity: data.minOrderQuantity,
       status: data.status,
       limited_stock: data.limitedStock,
-      is_featured: data.isFeatured, // New: Include is_featured
+      is_featured: data.isFeatured,
       short_description: data.shortDescription,
       full_description: data.fullDescription,
-      images: finalImageUrls, // This is the crucial part: the final list of image URLs
+      images: finalImageUrls, // The final list of image URLs (Cloudinary URLs)
       tag: data.tag,
       tag_variant: data.tagVariant,
       rating: data.rating,
@@ -259,26 +215,13 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       fetchProducts();
       return true;
     }
-  }, [products, fetchProducts]);
+  }, [fetchProducts]);
 
+  // NOTE: The deleteProduct function is simplified as we no longer delete from Supabase Storage.
+  // If Cloudinary deletion is required, it would need a server-side function call.
   const deleteProduct = useCallback(async (id: string): Promise<boolean> => {
-    const productToDelete = products.find(p => p.id === id);
-    if (productToDelete && productToDelete.images && productToDelete.images.length > 0) {
-      const filePathsToDelete = productToDelete.images.map(url => getFilePathFromUrl(url)).filter(path => path !== null) as string[];
-
-      if (filePathsToDelete.length > 0) {
-        const { error: deleteStorageError } = await supabase.storage
-          .from('product_images')
-          .remove(filePathsToDelete);
-
-        if (deleteStorageError) {
-          console.error("Error deleting product images from storage:", deleteStorageError);
-          toast.error("Failed to delete some product images from storage.", { description: deleteStorageError.message });
-        } else {
-          toast.info("Product images deleted from storage.");
-        }
-      }
-    }
+    // We skip Cloudinary deletion here for simplicity, assuming images can remain on Cloudinary
+    // or will be cleaned up manually/via a separate process.
 
     const { error } = await supabase
       .from('products')
@@ -293,7 +236,7 @@ export const useAdminProducts = (): UseAdminProductsResult => {
       fetchProducts();
       return true;
     }
-  }, [products, fetchProducts]);
+  }, [fetchProducts]);
 
   return {
     products,
