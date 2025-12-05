@@ -10,6 +10,23 @@ import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useCategories, Category } from "@/hooks/useCategories";
 import { Button } from "@/components/ui/button";
 
+// Helper function to apply Cloudinary transformations for optimization
+const getOptimizedCategoryImageUrl = (url: string): string => {
+  if (!url || !url.includes('cloudinary.com')) {
+    return url; // Return original URL if it's not a Cloudinary URL
+  }
+  
+  // Split the URL at '/upload/' and insert the transformation parameters
+  const parts = url.split('/upload/');
+  if (parts.length < 2) {
+    return url;
+  }
+  
+  // Transformation: f_auto (auto format), q_auto (auto quality), c_fill (fill container), w_200, h_200, r_max (circular)
+  const transformation = 'f_auto,q_auto,c_fill,w_200,h_200,r_max/';
+  return parts[0] + '/upload/' + transformation + parts[1];
+};
+
 // Map category names to Lucide icons (fallback if no image)
 const getCategoryIcon = (categoryName: string): LucideIcon => {
   const lowerName = categoryName.toLowerCase();
@@ -197,7 +214,7 @@ const CategoriesSection = () => {
                     <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden shadow-md mb-3 bg-white flex items-center justify-center">
                       {category.image_url ? (
                         <ImageWithFallback
-                          src={category.image_url}
+                          src={getOptimizedCategoryImageUrl(category.image_url)} // Apply optimization here
                           alt={category.name}
                           containerClassName="w-full h-full object-cover"
                           fallbackLogoClassName="h-8 w-8"

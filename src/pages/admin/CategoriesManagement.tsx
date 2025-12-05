@@ -54,6 +54,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { uploadSingleImage } from "@/integrations/cloudinary/uploader"; // NEW: Import Cloudinary uploader
 
 // Define the AdminCategory interface based on your database structure
 export interface AdminCategory {
@@ -228,7 +229,7 @@ const CategoriesManagement = () => {
         // Ensure all categories from the list are represented in the map, even if count is 0
         categoriesData.forEach(cat => {
           if (liveCountsMap[cat.id] === undefined) {
-            liveCountsMap[cat.id] = 0; // Default to 0 if not found in counts
+            liveCountsMap[cat.id] = 0; // Default to 0 if somehow missing
           }
         });
       } else {
@@ -338,31 +339,22 @@ const CategoriesManagement = () => {
   const handleAddOrUpdateCategory = async (data: CategoryFormData) => {
     let imageUrl = data.image_url;
     
-    // If a new file is selected, upload it
+    // If a new file is selected, upload it to Cloudinary
     if (selectedImageFile) {
-      const fileExtension = selectedImageFile.name.split('.').pop();
-      const filePath = `categories/${data.name.replace(/\s+/g, '_')}_${Date.now()}.${fileExtension}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('category_images')
-        .upload(filePath, selectedImageFile, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        toast.error("Failed to upload category image.", { description: uploadError.message });
+      toast.loading("Uploading image...", { id: "category-upload" });
+      try {
+        imageUrl = await uploadSingleImage(selectedImageFile); // Use Cloudinary uploader
+        toast.success("Image uploaded successfully!", { id: "category-upload" });
+      } catch (e: any) {
+        toast.error("Failed to upload category image.", { description: e.message, id: "category-upload" });
         return;
-      } else {
-        const { data: publicUrlData } = supabase.storage.from('category_images').getPublicUrl(uploadData.path);
-        imageUrl = publicUrlData.publicUrl;
       }
     }
 
     const categoryPayload = {
       name: data.name,
       status: data.status,
-      image_url: imageUrl,
+      image_url: imageUrl, // Save the Cloudinary URL
     };
 
     if (editingCategory) {
@@ -398,6 +390,7 @@ const CategoriesManagement = () => {
 
   const confirmDeleteCategory = useCallback(async () => {
     if (deletingCategoryId) {
+      // NOTE: We are skipping Cloudinary deletion for simplicity, only deleting the record in Supabase.
       const { error } = await supabase
         .from('categories')
         .delete()

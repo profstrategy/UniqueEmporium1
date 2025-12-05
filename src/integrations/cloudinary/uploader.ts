@@ -66,3 +66,12 @@ export async function uploadMultipleImages(files: File[]): Promise<string[]> {
     throw error; // Re-throw the error to be handled by the calling component (e.g., ProductForm)
   }
 }
+
+/**
+ * Uploads a single image file and returns the secure URL.
+ * @param file The File object to upload.
+ * @returns The secure URL of the uploaded image.
+ */
+export async function uploadSingleImage(file: File): Promise<string> {
+  return uploadToCloudinary(file);
+}
