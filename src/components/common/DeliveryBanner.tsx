@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Easing } from 'framer-motion'; // Import Easing
 import { Truck, Megaphone, Gift, AlertTriangle, Info, Shirt, CalendarDays } from 'lucide-react'; // Import various icons
 import * as LucideIcons from 'lucide-react'; // Import all Lucide icons for dynamic rendering
 import { Badge } from '@/components/ui/badge';
 import { cn, getLucideIconComponent } from '@/lib/utils'; // NEW: Import getLucideIconComponent
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import useEmblaCarousel from 'embla-carousel-react';
+// Removed: import useEmblaCarousel from 'embla-carousel-react'; // No longer needed for continuous scroll
 import { Link } from 'react-router-dom';
 
 // Define the BannerMessage interface based on your database structure
@@ -30,23 +30,7 @@ interface BannerMessage {
 const DeliveryBanner: React.FC = () => {
   const [activeBanners, setActiveBanners] = useState<BannerMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, dragFree: true });
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi, setSelectedIndex]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  // Removed: emblaRef, emblaApi, selectedIndex, onSelect are no longer needed for continuous scroll
 
   const fetchActiveBanners = useCallback(async () => {
     setIsLoading(true);
@@ -86,23 +70,26 @@ const DeliveryBanner: React.FC = () => {
   }
 
   // Animation variants for continuous horizontal slide
-  const slide = {
+  const slideVariants = {
     animate: {
-      x: ["-100%", "100%"],
+      x: ["0%", "-100%"], // Animate from 0 to -100% of its own width
       transition: {
         x: {
           duration: 70, // 70 seconds for extremely slow speed
-          ease: "linear",
+          ease: "linear" as Easing, // Explicitly cast to Easing
           repeat: Infinity,
         },
       },
     },
   };
 
+  // Duplicate banners to create a seamless loop for continuous scroll
+  const duplicatedBanners = activeBanners.length > 1 ? [...activeBanners, ...activeBanners] : activeBanners;
+
   return (
     <div
       className={cn(
-        "sticky top-16 z-20 w-full overflow-hidden h-10 flex items-center rounded-xl", // Changed from fixed to sticky, z-50 to z-20, added rounded-xl
+        "sticky top-16 z-20 w-full overflow-hidden h-10 flex items-center rounded-xl",
         activeBanners.length > 1 ? "bg-background" : "" // Only show background if multiple banners for carousel effect
       )}
     >
@@ -126,35 +113,38 @@ const DeliveryBanner: React.FC = () => {
           </div>
         </div>
       ) : (
-        // Multiple banners, carousel display
-        <div className="embla h-full w-full" ref={emblaRef}>
-          <div className="embla__container flex h-full">
-            {activeBanners.map((banner, index) => {
-              const IconComponent = getLucideIconComponent(banner.icon_name); // Use the imported helper
-              return (
-                <div key={banner.id} className="embla__slide flex-none w-full h-full">
-                  <div
-                    className={cn(
-                      "h-10 flex items-center justify-center px-4",
-                      banner.background_color || "bg-primary",
-                      banner.text_color || "text-primary-foreground"
-                    )}
-                  >
-                    <div className="flex items-center font-semibold text-sm md:text-base">
-                      {IconComponent && React.createElement(IconComponent, { className: "h-4 w-4 mr-3 flex-shrink-0" })} {/* Corrected usage */}
-                      {banner.content}
-                      {banner.link_url && (
-                        <Link to={banner.link_url} className="ml-3 underline hover:opacity-80">
-                          {banner.link_text || "Learn More"}
-                        </Link>
-                      )}
-                    </div>
-                  </div>
+        // Multiple banners, continuous scrolling display using framer-motion
+        <motion.div
+          className="flex h-full items-center whitespace-nowrap"
+          variants={slideVariants}
+          initial="animate" // Start animation immediately
+          animate="animate"
+        >
+          {duplicatedBanners.map((banner, index) => {
+            const IconComponent = getLucideIconComponent(banner.icon_name);
+            return (
+              <div
+                key={`${banner.id}-${index}`} // Use a unique key for duplicated items
+                className={cn(
+                  "h-full flex items-center justify-center min-w-[400px] rounded-xl mr-4 px-4", // Added px-4 for padding
+                  banner.background_color || "bg-gradient-to-r from-red-600 to-pink-600", // Default gradient
+                  banner.text_color || "text-white", // Default text color
+                  "flex-shrink-0" // Prevent items from shrinking
+                )}
+              >
+                <div className="flex items-center font-semibold text-sm md:text-base">
+                  {IconComponent && React.createElement(IconComponent, { className: "h-4 w-4 mr-3 flex-shrink-0" })}
+                  {banner.content}
+                  {banner.link_url && (
+                    <Link to={banner.link_url} className="ml-3 underline hover:opacity-80">
+                      {banner.link_text || "Learn More"}
+                    </Link>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+            );
+          })}
+        </motion.div>
       )}
     </div>
   );
