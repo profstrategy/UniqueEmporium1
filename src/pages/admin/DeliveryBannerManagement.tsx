@@ -116,7 +116,7 @@ const bannerMessageFormSchema = z.object({
 type BannerMessageFormData = z.infer<typeof bannerMessageFormSchema>;
 
 // Helper to check if a string is a valid Lucide icon key
-const isLucideIconKey = (key: string): keyof typeof LucideIcons => {
+const isLucideIconKey = (key: string): key is keyof typeof LucideIcons => {
   return key in LucideIcons;
 };
 
@@ -197,7 +197,7 @@ const DeliveryBannerManagement = () => {
 
     if (error) {
       console.error("Error fetching banner messages:", error);
-      toast.error("Failed to load banner messages.", { description: error.message });
+      toast.error("Failed to load banner messages.");
       setBannerMessages([]);
     } else {
       setBannerMessages(data as DeliveryBannerMessage[]);
