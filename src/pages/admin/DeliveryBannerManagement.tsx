@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion, Easing } from "framer-motion";
-import { BellRing } from "lucide-react";
-import {
-  useAdminBanners,
-  DeliveryBannerMessage,
-  BannerFormData,
-} from "@/hooks/useAdminBanners";
-import BannerTable from "@/components/admin/delivery-banners/BannerTable";
-import BannerFormDialog from "@/components/admin/delivery-banners/BannerFormDialog";
-import DeleteBannerAlertDialog from "@/components/admin/delivery-banners/DeleteBannerAlertDialog";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { BellRing, Loader2 } from "lucide-react";
+import { useBanners, DeliveryBannerMessage, BannerFormData } from "./delivery-banner-management/hooks/useBanners";
+import { BannerFilters } from "./delivery-banner-management/components/BannerFilters";
+import { BannerTable } from "./delivery-banner-management/components/BannerTable";
+import { BannerFormDialog } from "./delivery-banner-management/components/BannerFormDialog";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -29,50 +26,74 @@ const staggerContainer = {
 };
 
 const DeliveryBannerManagement = () => {
-  const {
-    banners,
-    isLoadingBanners,
-    searchTerm,
-    setSearchTerm,
-    filterStatus,
-    setFilterStatus,
-    filterType,
-    setFilterType,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    totalFilteredBannersCount,
-    bannersPerPage,
-    addBanner,
-    updateBanner,
-    deleteBanner,
-  } = useAdminBanners();
+  const { banners, isLoadingBanners, addBanner, updateBanner, deleteBanner } = useBanners();
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterType, setFilterType] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const bannersPerPage = 10;
+
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingBanner, setEditingBanner] = useState<DeliveryBannerMessage | null>(null);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [deletingBannerId, setDeletingBannerId] = useState<string | null>(null);
-  const [deletingBannerContent, setDeletingBannerContent] = useState<string>("");
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
+
+  const filteredBanners = useMemo(() => {
+    let filtered = banners;
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (banner) =>
+          banner.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          banner.message_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          banner.link_text?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (filterStatus !== "all") {
+      filtered = filtered.filter(
+        (banner) => banner.is_active === (filterStatus === "active")
+      );
+    }
+
+    if (filterType !== "all") {
+      filtered = filtered.filter(
+        (banner) => banner.message_type === filterType
+      );
+    }
+
+    return filtered;
+  }, [banners, searchTerm, filterStatus, filterType]);
+
+  // Pagination logic
+  const indexOfLastBanner = currentPage * bannersPerPage;
+  const indexOfFirstBanner = indexOfLastBanner - bannersPerPage;
+  const currentBanners = filteredBanners.slice(indexOfFirstBanner, indexOfLastBanner);
+  const totalPages = Math.ceil(filteredBanners.length / bannersPerPage);
+
+  const goToFirstPage = () => setCurrentPage(1);
+  const goToLastPage = () => setCurrentPage(totalPages);
+  const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
+  const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
 
   const handleAddBannerClick = () => {
     setEditingBanner(null);
-    setIsAddModalOpen(true);
+    setIsFormModalOpen(true);
   };
 
   const handleEditBannerClick = (banner: DeliveryBannerMessage) => {
     setEditingBanner(banner);
-    setIsEditModalOpen(true);
+    setIsFormModalOpen(true);
   };
 
-  const handleDeleteBannerClick = (bannerId: string, bannerContent: string) => {
+  const handleDeleteBannerClick = (bannerId: string) => {
     setDeletingBannerId(bannerId);
-    setDeletingBannerContent(bannerContent);
     setIsDeleteAlertOpen(true);
   };
 
-  const handleAddOrUpdateBanner = async (data: BannerFormData) => {
+  const handleFormSubmit = useCallback(async (data: BannerFormData) => {
     setIsSubmittingForm(true);
     let success = false;
     if (editingBanner) {
@@ -82,23 +103,24 @@ const DeliveryBannerManagement = () => {
     }
     setIsSubmittingForm(false);
     if (success) {
-      setIsAddModalOpen(false);
-      setIsEditModalOpen(false);
+      setIsFormModalOpen(false);
     }
-  };
+  }, [editingBanner, addBanner, updateBanner]);
 
-  const confirmDeleteBanner = async () => {
+  const confirmDeleteBanner = useCallback(async () => {
     if (deletingBannerId) {
       await deleteBanner(deletingBannerId);
-      setIsDeleteAlertOpen(false);
       setDeletingBannerId(null);
-      setDeletingBannerContent("");
+      setIsDeleteAlertOpen(false);
     }
-  };
+  }, [deletingBannerId, deleteBanner]);
 
-  // Calculate pagination indices for passing to BannerTable
-  const indexOfLastBanner = currentPage * bannersPerPage;
-  const indexOfFirstBanner = indexOfLastBanner - bannersPerPage;
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setFilterStatus("all");
+    setFilterType("all");
+    setCurrentPage(1);
+  };
 
   return (
     <motion.div
@@ -116,50 +138,63 @@ const DeliveryBannerManagement = () => {
         </motion.p>
       </div>
 
-      <BannerTable
-        banners={banners}
-        isLoadingBanners={isLoadingBanners}
-        searchTerm={searchTerm}
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
-        filterStatus={filterStatus}
-        onFilterStatusChange={setFilterStatus}
-        filterType={filterType}
-        onFilterTypeChange={setFilterType}
-        onAddBanner={handleAddBannerClick}
-        onEditBanner={handleEditBannerClick}
-        onDeleteBanner={handleDeleteBannerClick}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        goToFirstPage={() => setCurrentPage(1)}
-        goToPrevPage={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-        goToNextPage={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-        goToLastPage={() => setCurrentPage(totalPages)}
-        totalFilteredBannersCount={totalFilteredBannersCount}
-        bannersPerPage={bannersPerPage}
-        indexOfFirstBanner={indexOfFirstBanner} {/* Passed as prop */}
-        indexOfLastBanner={indexOfLastBanner}   {/* Passed as prop */}
-      />
+      <Card className="rounded-xl shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <BellRing className="h-5 w-5 text-primary" /> All Banner Messages
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <BannerFilters
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            filterType={filterType}
+            setFilterType={setFilterType}
+            onAddBannerClick={handleAddBannerClick}
+            onClearFilters={handleClearFilters}
+            hasBanners={banners.length > 0}
+          />
+
+          {isLoadingBanners ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="ml-3 text-muted-foreground">Loading banners...</p>
+            </div>
+          ) : filteredBanners.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              <p>No banner messages found matching your filters.</p>
+            </div>
+          ) : (
+            <BannerTable
+              banners={currentBanners}
+              isLoading={isLoadingBanners}
+              onEdit={handleEditBannerClick}
+              onDelete={handleDeleteBannerClick}
+              onConfirmDelete={confirmDeleteBanner}
+              deletingBannerId={deletingBannerId}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              goToFirstPage={goToFirstPage}
+              goToLastPage={goToLastPage}
+              goToPrevPage={goToPrevPage}
+              goToNextPage={goToNextPage}
+              totalFilteredBanners={filteredBanners.length}
+              bannersPerPage={bannersPerPage}
+              indexOfFirstBanner={indexOfFirstBanner} // Pass the prop
+              indexOfLastBanner={indexOfLastBanner}   // Pass the prop
+            />
+          )}
+        </CardContent>
+      </Card>
 
       <BannerFormDialog
-        isOpen={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-        onSubmit={handleAddOrUpdateBanner}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        editingBanner={editingBanner}
+        onSubmit={handleFormSubmit}
         isSubmitting={isSubmittingForm}
-      />
-
-      <BannerFormDialog
-        isOpen={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-        initialData={editingBanner}
-        onSubmit={handleAddOrUpdateBanner}
-        isSubmitting={isSubmittingForm}
-      />
-
-      <DeleteBannerAlertDialog
-        isOpen={isDeleteAlertOpen}
-        onOpenChange={setIsDeleteAlertOpen}
-        onConfirm={confirmDeleteBanner}
-        bannerContent={deletingBannerContent}
       />
     </motion.div>
   );

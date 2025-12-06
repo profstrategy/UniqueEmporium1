@@ -44,8 +44,8 @@ interface BannerTableProps {
   goToNextPage: () => void;
   totalFilteredBanners: number;
   bannersPerPage: number;
-  indexOfFirstBanner: number;
-  indexOfLastBanner: number;
+  indexOfFirstBanner: number; // Added missing prop
+  indexOfLastBanner: number;  // Added missing prop
 }
 
 const getMessageTypeBadgeVariant = (type: string) => {
