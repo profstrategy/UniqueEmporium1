@@ -110,12 +110,16 @@ const bannerMessageFormSchema = z.object({
 
 type BannerMessageFormData = z.infer<typeof bannerMessageFormSchema>;
 
-// Type guard to check if a string is a valid Lucide icon key
-const isLucideIconKey = (key: string): keyof typeof LucideIcons => {
-  if (key && key in LucideIcons) {
-    return key as keyof typeof LucideIcons;
+// Helper function to get the Lucide icon component dynamically
+const getLucideIconComponent = (iconName: string | null): React.ElementType => {
+  if (typeof iconName === 'string' && iconName in LucideIcons) {
+    const Icon = (LucideIcons as any)[iconName]; // Use 'as any' to bypass initial type check
+    // Ensure the retrieved value is actually a React component
+    if (typeof Icon === 'function' || (Icon && typeof Icon === 'object' && '$$typeof' in Icon)) {
+      return Icon;
+    }
   }
-  return "Megaphone"; // Default fallback icon
+  return LucideIcons.Megaphone; // Default fallback icon
 };
 
 const messageTypes = [
@@ -312,16 +316,18 @@ const BannerMessagesManagement = () => {
     }
   }, [deletingMessageId, fetchBannerMessages]);
 
-  const getStatusBadgeVariant = (isActive: boolean) => {
+  const getStatusBadgeVariant = (isActive: boolean): "default" | "secondary" | "destructive" | "outline" => {
     return isActive ? "default" : "secondary";
   };
 
-  const getMessageTypeBadgeVariant = (type: string) => {
+  const getMessageTypeBadgeVariant = (type: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (type) {
       case "Delivery Info": return "default";
-      case "Promotion": return "primary";
+      case "Promotion": return "secondary"; // Mapped to secondary
       case "Warning": return "destructive";
-      case "Holiday Special": return "accent";
+      case "General Announcement": return "outline"; // Added for completeness
+      case "Holiday Special": return "default"; // Mapped to default
+      case "New Collection": return "secondary"; // Added for completeness
       default: return "outline";
     }
   };
@@ -409,7 +415,7 @@ const BannerMessagesManagement = () => {
                 <TableBody>
                   <AnimatePresence>
                     {currentMessages.map((message) => {
-                      const IconComponent = LucideIcons[isLucideIconKey(message.icon_name || "Megaphone")] as React.ElementType;
+                      const IconComponent = getLucideIconComponent(message.icon_name);
                       const isActiveNow = message.is_active &&
                         (!message.start_date || new Date(message.start_date) <= new Date()) &&
                         (!message.end_date || new Date(message.end_date) >= new Date());
@@ -733,7 +739,7 @@ const BannerMessagesManagement = () => {
               />
               {watch("icon_name") && (
                 <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  Preview: {React.createElement(LucideIcons[isLucideIconKey(watch("icon_name"))] as React.ElementType, { className: "h-4 w-4" })}
+                  Preview: {React.createElement(getLucideIconComponent(watch("icon_name")), { className: "h-4 w-4" })}
                   <span>{watch("icon_name")}</span>
                 </div>
               )}

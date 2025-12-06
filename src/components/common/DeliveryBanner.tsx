@@ -27,12 +27,16 @@ interface BannerMessage {
   icon_name: string | null;
 }
 
-// Type guard to check if a string is a valid Lucide icon key
-const isLucideIconKey = (key: string): keyof typeof LucideIcons => {
-  if (key && key in LucideIcons) {
-    return key as keyof typeof LucideIcons;
+// Helper function to get the Lucide icon component dynamically
+const getLucideIconComponent = (iconName: string | null): React.ElementType => {
+  if (typeof iconName === 'string' && iconName in LucideIcons) {
+    const Icon = (LucideIcons as any)[iconName]; // Use 'as any' to bypass initial type check
+    // Ensure the retrieved value is actually a React component
+    if (typeof Icon === 'function' || (Icon && typeof Icon === 'object' && '$$typeof' in Icon)) {
+      return Icon;
+    }
   }
-  return "Megaphone"; // Default fallback icon
+  return LucideIcons.Megaphone; // Default fallback icon
 };
 
 const DeliveryBanner: React.FC = () => {
@@ -124,7 +128,7 @@ const DeliveryBanner: React.FC = () => {
           )}
         >
           <div className="flex items-center font-semibold text-sm md:text-base">
-            {React.createElement(LucideIcons[isLucideIconKey(activeBanners[0].icon_name)], { className: "h-4 w-4 mr-3" })}
+            {React.createElement(getLucideIconComponent(activeBanners[0].icon_name), { className: "h-4 w-4 mr-3" })}
             {activeBanners[0].content}
             {activeBanners[0].link_url && (
               <Link to={activeBanners[0].link_url} className="ml-3 underline hover:opacity-80">
@@ -138,7 +142,7 @@ const DeliveryBanner: React.FC = () => {
         <div className="embla h-full w-full" ref={emblaRef}>
           <div className="embla__container flex h-full">
             {activeBanners.map((banner, index) => {
-              const IconComponent = LucideIcons[isLucideIconKey(banner.icon_name)];
+              const IconComponent = getLucideIconComponent(banner.icon_name);
               return (
                 <div key={banner.id} className="embla__slide flex-none w-full h-full">
                   <div
