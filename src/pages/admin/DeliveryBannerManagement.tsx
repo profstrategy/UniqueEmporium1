@@ -96,6 +96,10 @@ const DeliveryBannerManagement = () => {
     }
   };
 
+  // Calculate pagination indices for passing to BannerTable
+  const indexOfLastBanner = currentPage * bannersPerPage;
+  const indexOfFirstBanner = indexOfLastBanner - bannersPerPage;
+
   return (
     <motion.div
       className="space-y-8"
@@ -132,6 +136,8 @@ const DeliveryBannerManagement = () => {
         goToLastPage={() => setCurrentPage(totalPages)}
         totalFilteredBannersCount={totalFilteredBannersCount}
         bannersPerPage={bannersPerPage}
+        indexOfFirstBanner={indexOfFirstBanner} {/* Passed as prop */}
+        indexOfLastBanner={indexOfLastBanner}   {/* Passed as prop */}
       />
 
       <BannerFormDialog

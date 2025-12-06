@@ -82,6 +82,7 @@ const BannerFormDialog = ({
   }, [isOpen, initialData, reset]);
 
   const handleFormSubmit = async (data: BannerFormData) => {
+    // Pass the data object directly, as 'id' is already optional in BannerFormData
     await onSubmit(data);
     if (!isSubmitting) { // Only close if submission was successful and not still submitting
       onOpenChange(false);

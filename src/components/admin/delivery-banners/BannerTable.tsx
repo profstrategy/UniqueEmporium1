@@ -51,6 +51,8 @@ interface BannerTableProps {
   goToLastPage: () => void;
   totalFilteredBannersCount: number;
   bannersPerPage: number;
+  indexOfFirstBanner: number; // Added
+  indexOfLastBanner: number;   // Added
 }
 
 const getStatusBadgeVariant = (isActive: boolean) => {
@@ -87,6 +89,8 @@ const BannerTable = ({
   goToLastPage,
   totalFilteredBannersCount,
   bannersPerPage,
+  indexOfFirstBanner, // Destructured
+  indexOfLastBanner,   // Destructured
 }: BannerTableProps) => {
   return (
     <Card className="rounded-xl shadow-sm">
