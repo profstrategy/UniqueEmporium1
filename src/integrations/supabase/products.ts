@@ -1,5 +1,6 @@
 import { supabase } from "./client";
 import { ProductDetails } from "@/data/products"; // Re-use your existing ProductDetails interface
+// Removed: getOptimizedImageUrl import is no longer needed here
 
 export async function fetchProductsFromSupabase(): Promise<ProductDetails[]> {
   const { data, error } = await supabase

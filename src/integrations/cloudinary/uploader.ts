@@ -1,6 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
+// Removed: getOptimizedImageUrl import is no longer needed here
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUD_UPLOAD_PRESET;
