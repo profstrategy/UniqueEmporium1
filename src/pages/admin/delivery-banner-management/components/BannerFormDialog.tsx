@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,47 +12,31 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Edit, Plus } from "lucide-react";
+import { Loader2, Plus, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DeliveryBannerMessage, BannerFormData } from "../hooks/useBanners";
-
-// Form Schema for Add/Edit Banner Message
-const bannerFormSchema = z.object({
-  id: z.string().optional(), // Only for editing, not part of BannerFormData
-  message_type: z.string().min(1, "Message Type is required"),
-  content: z.string().min(1, "Content is required").max(200, "Content cannot exceed 200 characters"),
-  start_date: z.string().nullable().optional(),
-  end_date: z.string().nullable().optional(),
-  is_active: z.boolean().default(true),
-  priority: z.coerce.number().min(0).default(0),
-  link_url: z.string().url("Invalid URL format").nullable().optional().or(z.literal("")),
-  link_text: z.string().nullable().optional(),
-  background_color: z.string().nullable().optional(),
-  text_color: z.string().nullable().optional(),
-  icon_name: z.string().nullable().optional(),
-});
+import { BannerFormData, bannerFormSchema, DeliveryBannerMessage } from "@/hooks/useAdminBanners";
 
 interface BannerFormDialogProps {
   isOpen: boolean;
-  onClose: () => void;
-  editingBanner: DeliveryBannerMessage | null;
+  onOpenChange: (open: boolean) => void;
+  initialData?: DeliveryBannerMessage | null;
   onSubmit: (data: BannerFormData) => Promise<void>;
   isSubmitting: boolean;
 }
 
-export const BannerFormDialog: React.FC<BannerFormDialogProps> = ({
+const BannerFormDialog = ({
   isOpen,
-  onClose,
-  editingBanner,
+  onOpenChange,
+  initialData,
   onSubmit,
   isSubmitting,
-}) => {
+}: BannerFormDialogProps) => {
   const {
     register,
     handleSubmit,
@@ -58,7 +44,7 @@ export const BannerFormDialog: React.FC<BannerFormDialogProps> = ({
     setValue,
     watch,
     formState: { errors },
-  } = useForm<z.infer<typeof bannerFormSchema>>({
+  } = useForm<BannerFormData>({ // Changed type to BannerFormData directly
     resolver: zodResolver(bannerFormSchema),
     defaultValues: {
       message_type: "delivery",
@@ -79,47 +65,45 @@ export const BannerFormDialog: React.FC<BannerFormDialogProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      if (editingBanner) {
-        reset({
-          id: editingBanner.id,
-          message_type: editingBanner.message_type,
-          content: editingBanner.content,
-          start_date: editingBanner.start_date ? new Date(editingBanner.start_date).toISOString().split('T')[0] : null,
-          end_date: editingBanner.end_date ? new Date(editingBanner.end_date).toISOString().split('T')[0] : null,
-          is_active: editingBanner.is_active,
-          priority: editingBanner.priority,
-          link_url: editingBanner.link_url,
-          link_text: editingBanner.link_text,
-          background_color: editingBanner.background_color,
-          text_color: editingBanner.text_color,
-          icon_name: editingBanner.icon_name,
-        });
-      } else {
-        reset(); // Reset to default values for new banner
-      }
+      reset({
+        // No need to explicitly omit 'id' here, as BannerFormData already excludes it
+        message_type: initialData?.message_type || "delivery",
+        content: initialData?.content || "",
+        start_date: initialData?.start_date ? new Date(initialData.start_date).toISOString().split('T')[0] : null,
+        end_date: initialData?.end_date ? new Date(initialData.end_date).toISOString().split('T')[0] : null,
+        is_active: initialData?.is_active ?? true,
+        priority: initialData?.priority ?? 0,
+        link_url: initialData?.link_url || null,
+        link_text: initialData?.link_text || null,
+        background_color: initialData?.background_color || null,
+        text_color: initialData?.text_color || null,
+        icon_name: initialData?.icon_name || null,
+      });
     }
-  }, [isOpen, editingBanner, reset]);
+  }, [isOpen, initialData, reset]);
 
-  const handleFormSubmit = async (data: z.infer<typeof bannerFormSchema>) => {
-    // Exclude 'id' from the payload passed to the onSubmit prop
-    const { id, ...payload } = data;
-    await onSubmit(payload);
+  const handleFormSubmit = async (data: BannerFormData) => {
+    // 'id' is already omitted from BannerFormData, so 'data' is directly the payload
+    await onSubmit(data);
+    if (!isSubmitting) { // Only close if submission was successful and not still submitting
+      onOpenChange(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] p-6 rounded-xl shadow-lg bg-card/80 backdrop-blur-md border border-border/50">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-            {editingBanner ? <Edit className="h-6 w-6 text-primary" /> : <Plus className="h-6 w-6 text-primary" />}
-            {editingBanner ? "Edit Banner Message" : "Add New Banner Message"}
+            {initialData ? <Edit className="h-6 w-6 text-primary" /> : <Plus className="h-6 w-6 text-primary" />}
+            {initialData ? "Edit Banner Message" : "Add New Banner Message"}
           </DialogTitle>
           <DialogDescription>
-            {editingBanner ? "Update the details for this banner message." : "Create a new banner message to display on your site."}
+            {initialData ? "Update the details for this banner message." : "Create a new banner message to display on your site."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 py-4">
-          <input type="hidden" {...register("id")} />
+          {/* Removed hidden input for 'id' as it's not part of BannerFormData */}
           <div className="space-y-2">
             <Label htmlFor="message_type">Message Type</Label>
             <Select onValueChange={(value) => setValue("message_type", value)} value={watch("message_type")}>
@@ -200,7 +184,7 @@ export const BannerFormDialog: React.FC<BannerFormDialogProps> = ({
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
                 </>
               ) : (
-                editingBanner ? "Save Changes" : "Add Banner"
+                initialData ? "Save Changes" : "Add Banner"
               )}
             </Button>
           </DialogFooter>
@@ -209,3 +193,5 @@ export const BannerFormDialog: React.FC<BannerFormDialogProps> = ({
     </Dialog>
   );
 };
+
+export default BannerFormDialog;
