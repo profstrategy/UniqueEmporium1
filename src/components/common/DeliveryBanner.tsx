@@ -102,7 +102,7 @@ const DeliveryBanner: React.FC = () => {
   return (
     <div
       className={cn(
-        "fixed top-16 z-50 w-full overflow-hidden h-10 flex items-center",
+        "sticky top-16 z-20 w-full overflow-hidden h-10 flex items-center rounded-xl", // Changed from fixed to sticky, z-50 to z-20, added rounded-xl
         activeBanners.length > 1 ? "bg-background" : "" // Only show background if multiple banners for carousel effect
       )}
     >
