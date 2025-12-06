@@ -7,7 +7,7 @@ import { BellRing, Loader2 } from "lucide-react";
 import { useBanners, DeliveryBannerMessage, BannerFormData } from "./delivery-banner-management/hooks/useBanners";
 import { BannerFilters } from "./delivery-banner-management/components/BannerFilters";
 import { BannerTable } from "./delivery-banner-management/components/BannerTable";
-import { BannerFormDialog } from "./delivery-banner-management/components/BannerFormDialog";
+import BannerFormDialog from "./delivery-banner-management/components/BannerFormDialog"; // Changed to default import
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -192,7 +192,7 @@ const DeliveryBannerManagement = () => {
       <BannerFormDialog
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
-        editingBanner={editingBanner}
+        initialData={editingBanner}
         onSubmit={handleFormSubmit}
         isSubmitting={isSubmittingForm}
       />
