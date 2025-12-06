@@ -68,8 +68,8 @@ export interface DeliveryBannerMessage {
   priority: number;
   link_url: string | null;
   link_text: string | null;
-  background_color: string | null;
-  text_color: string | null;
+  background_color: string | null; // Not used for styling as per user request
+  text_color: string | null;      // Not used for styling as per user request
   icon_name: string | null;
   created_at: string;
   updated_at: string;
@@ -308,7 +308,7 @@ const DeliveryBannerManagement = () => {
     switch (type.toLowerCase()) {
       case "delivery": return "secondary";
       case "promo": return "default";
-      case "discount": return "primary";
+      case "discount": return "default"; // Changed from "primary" to "default"
       case "alert": return "destructive";
       default: return "outline";
     }
